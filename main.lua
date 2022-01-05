@@ -12,7 +12,7 @@ function love.update(dt)
 	player:update(dt)
 	if player.shoot then
 		table.insert(bullets, player.gun:make_bullet())
-	end
+	end 
 
 	for i,b in ipairs(bullets) do
 		b:update(dt)
