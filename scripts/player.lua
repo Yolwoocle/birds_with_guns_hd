@@ -2,6 +2,7 @@ require "scripts/sprites"
 require "scripts/gun"
 require "scripts/utility"
 require "scripts/input"
+require "scripts/gun_list"
 
 function init_player()
 	local player = {
@@ -21,7 +22,7 @@ function init_player()
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = make_gun(player)
+	player.gun = guns.revolver
 	return player
 end
 
@@ -39,16 +40,14 @@ function update_player(p, dt)
 			p.gun:shoot()
 		end
 	end
-	p.gun:update(dt)
+	p.gun:update(dt,p)
 end
 
 function draw_player(p)
 	draw_centered(p.spr, p.x, p.y, 0, 2, 2)
 	love.graphics.print(tostring(spr_pigeon), 10, 10)
 
-	local x = p.x + math.cos(p.rot) * p.gun_dist
-	local y = p.y + math.sin(p.rot) * p.gun_dist
-	draw_centered(p.gun.spr, x, y, p.rot, 2, 2)
+	draw_gun(p)
 
 	circ_color("fill", p.x, p.y, 3, {0,0,1})
 end

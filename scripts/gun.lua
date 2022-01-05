@@ -1,31 +1,38 @@
-require "scripts/sprites"
+
 require "scripts/utility"
 
-function make_gun(player)
+function make_gun(bname,bspr,bspd,bcd,bmaxammo,bofbuld,bofbula,mkbullet)
 	local gun = {
-		player = player,
-		
-		spr = spr_revolver,
-		bullet_spd = 600,
-		cooldown = 0.25,
-		ammo = 100,
+
+		name=bname,
+		spr = bspr,
+		bullet_spd = bspd,
+		cooldown = bcd,
+		ammo = bmaxammo,
+		maxammo=bmaxammo,
 
 		cooldown_timer = 0,
 
-		make_bullet = make_bullet,
+		make_bullet = mkbullet,
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
+		ofbuld=bofbuld,
+		ofbula=bofbula,
 	}
 	return gun
 end
 
-function update_gun(g, dt)
+function update_gun(g, dt,p)
 	g.cooldown_timer = math.max(0, g.cooldown_timer - dt) 
+	g.flip = -sng((p.rot+pi/2)%(pi*2)-pi)
 end
 
-function draw_gun(g)
-	love.graphics.draw(g.spr, g.player.x, g.player.y)
+function draw_gun(p)
+	local x = p.x + math.cos(p.rot) * p.gun_dist 
+	local y = p.y + math.sin(p.rot) * p.gun_dist 
+	draw_centered(p.gun.spr, x, y, p.rot, 1.75, 1.75*p.gun.flip)
+	
 end
 
 function shoot_gun(g)
@@ -37,13 +44,13 @@ end
 --- BULLET ---
 --------------
 
-function make_bullet(g)
+function make_bullet(g,p)
 	local bullet = {
-		x = g.player.x,
-		y = g.player.y,
-		dx = math.cos(g.player.rot) * g.bullet_spd,
-		dy = math.sin(g.player.rot) * g.bullet_spd,
-		rot = g.player.rot,
+		x = p.x + math.cos(p.rot+g.ofbula*g.flip)*g.ofbuld ,
+		y = p.y + math.sin(p.rot+g.ofbula*g.flip)*g.ofbuld ,
+		dx = math.cos(p.rot) * g.bullet_spd,
+		dy = math.sin(p.rot) * g.bullet_spd,
+		rot = p.rot,
 
 		spr = spr_bullet,
 		
