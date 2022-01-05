@@ -1,3 +1,5 @@
+pi = math.pi
+
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 	r = r or 0
 	sx = sx or 1
@@ -26,4 +28,12 @@ function color(hex)
 	local g = bit.rshift(hex, 8) % 256
 	local b =            hex     % 256 
 	return {r/255, g/255, b/255}
+end
+
+function sng(hex)
+	if hex >= 0 then
+		return 1
+	else
+		return -1
+	end
 end
