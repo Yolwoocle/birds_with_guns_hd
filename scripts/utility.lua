@@ -30,10 +30,13 @@ function color(hex)
 	return {r/255, g/255, b/255}
 end
 
-function sng(hex)
+function sgn(hex)
 	if hex >= 0 then
 		return 1
-	else
-		return -1
 	end
+	return -1
+end
+
+function str(s)
+	return tostring(s)
 end

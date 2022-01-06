@@ -4,6 +4,8 @@ require "scripts/player"
 require "scripts/sprites"
 
 function love.load()
+	init_keybinds()
+
 	player = init_player()
 	bullets = {}
 end
@@ -27,6 +29,8 @@ function love.draw()
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
+
+	love.graphics.print(str())
 end
 
 
