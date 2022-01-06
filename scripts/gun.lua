@@ -25,32 +25,32 @@ function make_gun(a)
 	return gun
 end
 
-function update_gun(g,dt,p)
-	g.cooldown_timer = math.max(0, g.cooldown_timer - dt) 
-	g.flip = -sgn( (p.rot + pi/2) % (pi*2) - pi)
+function update_gun(self, dt, p)
+	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
+	self.flip = -sgn( (p.rot + pi/2) % (pi*2) - pi)
 end
 
-function draw_gun(p)
+function draw_gun(self, p)
 	local x = p.x + math.cos(p.rot) * p.gun_dist 
 	local y = p.y + math.sin(p.rot) * p.gun_dist 
 	draw_centered(p.gun.spr, x, y, p.rot, 1.75, 1.75 * p.gun.flip)
 end
 
-function shoot_gun(g)
-	g.ammo = g.ammo - 1
-	g.cooldown_timer = g.cooldown
+function shoot_gun(self)
+	self.ammo = self.ammo - 1
+	self.cooldown_timer = self.cooldown
 end
 
 --------------
 --- BULLET ---
 --------------
 
-function make_bullet(g,p)
+function make_bullet(self, p)
 	local bullet = {
-		x = p.x + math.cos(p.rot + g.angle_var * g.flip) * g.spawn_x,
-		y = p.y + math.sin(p.rot + g.angle_var * g.flip) * g.spawn_y,
-		dx = math.cos(p.rot) * g.bullet_spd,
-		dy = math.sin(p.rot) * g.bullet_spd,
+		x = p.x + math.cos(p.rot + self.angle_var * self.flip) * self.spawn_x,
+		y = p.y + math.sin(p.rot + self.angle_var * self.flip) * self.spawn_y,
+		dx = math.cos(p.rot) * self.bullet_spd,
+		dy = math.sin(p.rot) * self.bullet_spd,
 		rot = p.rot,
 
 		spr = spr_bullet,
@@ -63,17 +63,17 @@ function make_bullet(g,p)
 	return bullet
 end
 
-function update_bullet(b,dt)
-	b.life = b.life - dt
-	b.x = b.x + b.dx * dt
-	b.y = b.y + b.dy * dt 
+function update_bullet(self, dt)
+	self.life = self.life - dt
+	self.x = self.x + self.dx * dt
+	self.y = self.y + self.dy * dt 
 
-	if b.life < 0 then
-		b.delete = true
+	if self.life < 0 then
+		self.delete = true
 	end
 end
 
-function draw_bullet(b)
-	draw_centered(b.spr, b.x, b.y, 1, 2, 2)
-	circ_color("fill", b.x, b.y, 3, {0, 1, 0})
+function draw_bullet(self)
+	draw_centered(self.spr, self.x, self.y, 1, 2, 2)
+	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
 end

@@ -1,9 +1,9 @@
-function init_keybinds()
+function init_keybinds() --TODO: use scancodes instead
 	keybinds = {
-		left  = {"left", "a", "q"}, 
+		left  = {"left",  "a", "q"}, 
 		right = {"right", "d"}, 
-		up    = {"up", "w", "z"},
-		down  = {"down", "s"},
+		up    = {"up",    "w", "z"},
+		down  = {"down",  "s"},
 		fire  = {"c"},
 		alt   = {"x"},
 	}

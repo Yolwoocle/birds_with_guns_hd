@@ -37,6 +37,6 @@ function sgn(hex)
 	return -1
 end
 
-function str(s)
+function tostr(s)
 	return tostring(s)
 end
