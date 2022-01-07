@@ -8,8 +8,12 @@ guns = {
         bullet_spd = 300,
         cooldown = 0,
         max_ammo = math.huge,
-        bullet_offset_dist = 100,
-        angle_var = 0.1,
+
+        spawn_x =  70,
+        spawn_y =  0,
+
+        life	= 4,
+
         make_bullet = make_bullet,
     }),
 }
