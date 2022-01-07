@@ -5,16 +5,15 @@ function make_gun(a)
 	--name, spr, bullet_spd, cooldown, max_ammo, ofbuld,bofbula,mkbullet
 	spr = a.spr or spr_revolver
 	local gun = {
-		name       = a.name       or "null",
-		spr 	   = a.spr        or spr,
-		bullet_spd = a.bullet_spd or 80,
-		cooldown   = a.cooldown   or 0.2,
-		ammo       = a.max_ammo   or 100,
-		maxammo    = a.max_ammo   or 100,
-		angle_var  = a.angle_var  or 0,
-		spawn_x    = a.spawn_x    or spr:getWidth(),
-		spawn_y    = a.spawn_y    or spr:getHeight(),
-
+		              name = a.name       or "null",
+		               spr = a.spr        or spr,
+		        bullet_spd = a.bullet_spd or 80,
+		          cooldown = a.cooldown   or 0.2,
+		              ammo = a.max_ammo   or 100,
+		           maxammo = a.max_ammo   or 100,
+		         angle_var = a.angle_var  or 0,
+		bullet_offset_dist = a.bullet_offset_dist or spr:getWidth(),
+		
 		cooldown_timer = 0,
 
 		make_bullet = a.make_bullet,
@@ -27,7 +26,7 @@ end
 
 function update_gun(self, dt, p)
 	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
-	self.flip = -sgn( (p.rot + pi/2) % (pi*2) - pi)
+	self.flip = 1 -- -sgn( (p.rot + pi/2) % (pi*2) - pi)
 end
 
 function draw_gun(self, p)
@@ -47,8 +46,8 @@ end
 
 function make_bullet(self, p)
 	local bullet = {
-		x = p.x + math.cos(p.rot + self.angle_var * self.flip) * self.spawn_x,
-		y = p.y + math.sin(p.rot + self.angle_var * self.flip) * self.spawn_y,
+		x = p.x + math.cos(p.rot + self.angle_var * self.flip) * self.bullet_offset_dist,
+		y = p.y + math.sin(p.rot + self.angle_var * self.flip) * self.bullet_offset_dist,
 		dx = math.cos(p.rot) * self.bullet_spd,
 		dy = math.sin(p.rot) * self.bullet_spd,
 		rot = p.rot,

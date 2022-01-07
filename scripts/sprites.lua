@@ -12,3 +12,5 @@ spr_pigeon = {
 spr_bullet = load_pixel_image("bullet_1")
 
 spr_revolver = load_pixel_image("gun_revolver")
+
+spr_ground_dum = load_pixel_image("dummy_ground")

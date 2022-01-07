@@ -36,8 +36,7 @@ function love.draw()
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
-
-	love.graphics.print(str())
+	--love.graphics.print()
 end
 
 

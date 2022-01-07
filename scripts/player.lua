@@ -3,6 +3,7 @@ require "scripts/gun"
 require "scripts/utility"
 require "scripts/input"
 require "scripts/gun_list"
+require "scripts/options"
 
 function init_player()
 	local player = {
@@ -40,11 +41,11 @@ function update_player(self, dt)
 			self.gun:shoot()
 		end
 	end
-	self.gun:update(dt,p)
+	self.gun:update(dt, self)
 end
 
 function draw_player(self)
-	draw_centered(self.spr, self.x, self.y, 0, 2, 2)
+	draw_centered(self.spr, self.x, self.y, 0, pixel_scale, pixel_scale)
 	love.graphics.print(tostr(spr_pigeon), 10, 10)
 
 	self.gun:draw(self)
