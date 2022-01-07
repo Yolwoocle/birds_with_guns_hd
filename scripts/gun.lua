@@ -27,6 +27,9 @@ end
 function update_gun(self, dt, p)
 	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
 	self.flip = 1 -- -sgn( (p.rot + pi/2) % (pi*2) - pi)
+	if pi2*0.25 < p.rot and p.rot < pi2*0.75 then 
+		self.flip = -1
+	end
 end
 
 function draw_gun(self, p)

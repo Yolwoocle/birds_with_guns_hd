@@ -2,12 +2,10 @@ require "scripts/sprites"
 require "scripts/gun"
 
 guns = {
-    --                  name       sprite        spd  cd     maxammo  ofdist    ofangle  
-
     revolver = make_gun({
         name = "revolver",
         spr = spr_revolver, 
-        bullet_spd = 0,
+        bullet_spd = 300,
         cooldown = 0,
         max_ammo = math.huge,
         bullet_offset_dist = 100,

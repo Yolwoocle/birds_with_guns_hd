@@ -5,10 +5,13 @@ require "scripts/sprites"
 require "scripts/map"
 
 function love.load()
+	love.window.setMode(800, 600, {resizable=true, vsync=false, minwidth=400, minheight=300})
 	init_keybinds()
 	
 	map = init_map(20, 20)
-	local l = {1,2,3,4, r="azerty"}
+	map:set_tile(2,2,1)
+	map:set_tile(1,1,1)
+	local l = {[0]=3,1,2,3,4, r="azerty"}
 	for i,v in ipairs(l) do
 		print("i="..i.." v="..v)
 	end
@@ -32,11 +35,12 @@ function love.update(dt)
 end
 
 function love.draw()
+	-- TODO: y-sorting
+	map:draw()
 	player:draw()
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
-	--love.graphics.print()
 end
 
 

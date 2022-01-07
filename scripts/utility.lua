@@ -1,4 +1,6 @@
 pi = math.pi
+pi2 = 2 * math.pi
+inf = math.huge
 
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 	r = r or 0
