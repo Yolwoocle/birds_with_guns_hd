@@ -14,6 +14,7 @@ function make_gun(a)
 		maxammo    = a.max_ammo   or 100,
 		spawn_x    = a.spawn_x    or spr:getWidth(),
 		spawn_y    = a.spawn_y    or spr:getHeight(),
+		life	   = a.life		  or 2,	
 
 		cooldown_timer = 0,
 
@@ -27,7 +28,7 @@ end
 
 function update_gun(self, dt, p)
 	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
-	self.flip = 1 -- -sgn( (p.rot + pi/2) % (pi*2) - pi)
+	self.flip = -sgn( (p.rot + pi/2) % (pi*2) - pi)
 end
 
 function draw_gun(self, p)
@@ -59,7 +60,7 @@ function make_bullet(self, p)
 
 		spr = spr_bullet,
 		
-		life = 2,
+		life = self.life,
 		delete = false,
 		update = update_bullet,
 		draw = draw_bullet,

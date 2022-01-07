@@ -6,12 +6,14 @@ guns = {
     revolver = make_gun({
         name = "revolver",
         spr = spr_revolver, 
-        bullet_spd = 0,
+        bullet_spd = 100,
         cooldown = 0,
         max_ammo = math.huge,
 
         spawn_x =  70,
-        spawn_y =  8,
+        spawn_y =  0,
+
+        life	= 4,
 
         make_bullet = make_bullet,
     }),
