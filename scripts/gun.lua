@@ -5,6 +5,7 @@ function make_gun(a)
 
 	spr = a.spr or spr_revolver
 	local gun = {
+
 		name       = a.name       or "null",
 		spr 	   = a.spr        or spr,
 		bullet_spd = a.bullet_spd or 80,
@@ -26,7 +27,7 @@ end
 
 function update_gun(self, dt, p)
 	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
-	self.flip = -sgn( (p.rot + pi/2) % (pi*2) - pi)
+	self.flip = 1 -- -sgn( (p.rot + pi/2) % (pi*2) - pi)
 end
 
 function draw_gun(self, p)
@@ -48,8 +49,10 @@ function make_bullet(self, p)
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
 	local bullet = {
+
 		x = p.x + math.cos(p.rot + offsetangle * self.flip) * dist,
 		y = p.y + math.sin(p.rot + offsetangle * self.flip) * dist,
+
 		dx = math.cos(p.rot) * self.bullet_spd,
 		dy = math.sin(p.rot) * self.bullet_spd,
 		rot = p.rot,

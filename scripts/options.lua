@@ -1,0 +1,1 @@
+pixel_scale = 3
