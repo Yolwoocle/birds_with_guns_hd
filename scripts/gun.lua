@@ -2,13 +2,13 @@
 require "scripts/utility"
 
 function make_gun(a)
-
-	spr = a.spr or spr_revolver
+	spr 	   = a.spr or spr_revolver
 	local gun = {
 
 		name       = a.name       or "null",
-		spr 	   = a.spr        or spr,
-		bullet_spd = a.bullet_spd or 80,
+		spr 	   = a.spr        or spr_revolver,
+		bullet_spd = a.bullet_spd or 600,
+		offset_spd = a.ospd		  or 0,
 		cooldown   = a.cooldown   or 0.2,
 		ammo       = a.max_ammo   or 100,
 		maxammo    = a.max_ammo   or 100,
@@ -20,10 +20,11 @@ function make_gun(a)
 		life	   = a.life		  or 2,	
 		nbshot 	   = a.nbshot	  or 1,
         spred 	   = a.spred	  or pi/5,
+		spdslow	   = a.spdslow	  or 1,
 
 		cooldown_timer = 0,
 
-		make_bullet = a.make_bullet,
+		make_bullet = a.make_bullet or function (g,p)return normaleshoot(g,p)end,
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
@@ -64,10 +65,10 @@ function make_bullet(self, p,angle,_spred)
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
 		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
 
-		dx = math.cos(angle+scatter+spred) * self.bullet_spd,
-		dy = math.sin(angle+scatter+spred) * self.bullet_spd,
+		dx = math.cos(angle+scatter+spred) * (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2),
+		dy = math.sin(angle+scatter+spred) * (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2),
 		rot = angle,
-
+		spdslow = self.spdslow,
 		spr = spr_bullet,
 		
 		life = self.life,
@@ -79,6 +80,8 @@ function make_bullet(self, p,angle,_spred)
 end
 
 function update_bullet(self, dt)
+	self.dx = self.dx*self.spdslow
+	self.dy = self.dy*self.spdslow
 	self.life = self.life - dt
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 

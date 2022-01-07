@@ -23,7 +23,7 @@ function init_player()
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = guns.revolver
+	player.gun = guns.pistolet
 	return player
 end
 
@@ -46,8 +46,8 @@ function update_player(self, dt)
 end
 
 function draw_player(self)
-	draw_centered(self.spr, self.x, self.y, 0, pixel_scale, pixel_scale)
-	love.graphics.print(tostr(spr_pigeon), 10, 10)
+	draw_centered(self.spr, self.x, self.y, 0, pixel_scale* self.gun.flip, pixel_scale)
+	--love.graphics.print(tostr(spr_pigeon), 10, 10)
 
 	self.gun:draw(self)
 	circ_color("fill", self.x, self.y, 3, {0,0,1})
