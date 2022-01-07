@@ -12,9 +12,14 @@ function make_gun(a)
 		cooldown   = a.cooldown   or 0.2,
 		ammo       = a.max_ammo   or 100,
 		maxammo    = a.max_ammo   or 100,
+		scattering = a.scattering or 0,
 		spawn_x    = a.spawn_x    or spr:getWidth(),
 		spawn_y    = a.spawn_y    or spr:getHeight(),
+		rafale     = a.rafale	  or 1,
+        rafaledt   = a.rafaledt	  or .5,
 		life	   = a.life		  or 2,	
+		nbshot 	   = a.nbshot	  or 1,
+        spred 	   = a.spred	  or pi/5,
 
 		cooldown_timer = 0,
 
@@ -46,17 +51,19 @@ end
 --- BULLET ---
 --------------
 
-function make_bullet(self, p)
+function make_bullet(self, p,angle,_spred)
+	local spred = _spred or 0
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
+	local scatter = randomFloat(-self.scattering/2,self.scattering/2)
 	local bullet = {
 
-		x = p.x + math.cos(p.rot + offsetangle * self.flip) * dist,
-		y = p.y + math.sin(p.rot + offsetangle * self.flip) * dist,
+		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
+		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
 
-		dx = math.cos(p.rot) * self.bullet_spd,
-		dy = math.sin(p.rot) * self.bullet_spd,
-		rot = p.rot,
+		dx = math.cos(angle+scatter+spred) * self.bullet_spd,
+		dy = math.sin(angle+scatter+spred) * self.bullet_spd,
+		rot = angle,
 
 		spr = spr_bullet,
 		

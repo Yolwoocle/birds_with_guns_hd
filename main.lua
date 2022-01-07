@@ -8,19 +8,30 @@ function love.load()
 	init_keybinds()
 	
 	map = init_map(20, 20)
-	local l = {1,2,3,4, r="azerty"}
+	local l = {1,2,4,4, r="azerty"}
 	for i,v in ipairs(l) do
 		print("i="..i.." v="..v)
 	end
 
 	player = init_player()
 	bullets = {}
+	_shot={}
 end
 
 function love.update(dt)
 	player:update(dt)
 	if player.shoot then
-		table.insert(bullets, player.gun:make_bullet(player))
+		_shot = player.gun:make_bullet(player,player.rot)
+	end
+
+	for i,v in ipairs(_shot) do
+		if v[5]<=0 then
+			v[3]=player.rot
+			table.insert(bullets,make_bullet(v[1],v[2],v[3],v[4],v[5]))
+			table.remove(_shot, i)
+		else
+			v[5]=v[5]-dt
+		end
 	end
 
 	for i,b in ipairs(bullets) do
@@ -37,8 +48,7 @@ function love.draw()
 		b:draw()
 	end 
 
-	--love.graphics.print()
-
+	love.graphics.print(#bullets,20,20)
 end
 
 
