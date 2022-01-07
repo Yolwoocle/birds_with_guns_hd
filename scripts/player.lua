@@ -26,50 +26,49 @@ function init_player()
 	return player
 end
 
-function update_player(p, dt)
-	player_movement(p,dt)
+function update_player(self, dt)
+	player_movement(self,dt)
 	
 	-- Aiming
 	local mx, my = love.mouse.getPosition()
-	p.rot = math.atan2(my-p.y, mx-p.x)
+	self.rot = math.atan2(my - self.y, mx - self.x)
 
-	p.shoot = false
-	if button_down("fire") and p.gun.cooldown_timer <= 0 then
-		if p.gun.ammo > 0 then
-			p.shoot = true
-			p.gun:shoot()
+	self.shoot = false
+	if button_down("fire") and self.gun.cooldown_timer <= 0 then
+		if self.gun.ammo > 0 then
+			self.shoot = true
+			self.gun:shoot()
 		end
 	end
-	p.gun:update(dt,p)
+	self.gun:update(dt,p)
 end
 
-function draw_player(p)
-	draw_centered(p.spr, p.x, p.y, 0, 2, 2)
-	love.graphics.print(tostring(spr_pigeon), 10, 10)
+function draw_player(self)
+	draw_centered(self.spr, self.x, self.y, 0, 2, 2)
+	love.graphics.print(tostr(spr_pigeon), 10, 10)
 
-	draw_gun(p)
-
-	circ_color("fill", p.x, p.y, 3, {0,0,1})
+	self.gun:draw(self)
+	circ_color("fill", self.x, self.y, 3, {0,0,1})
 end
 
-function player_movement(p, dt)
+function player_movement(self, dt)
 	-- TODO: player moves faster in diagonals
 	if button_down("left") then
-		p.dx = p.dx - p.speed
+		self.dx = self.dx - self.speed
 	end
 	if button_down("right") then
-		p.dx = p.dx + p.speed
+		self.dx = self.dx + self.speed
 	end
 	if button_down("up") then
-		p.dy = p.dy - p.speed
+		self.dy = self.dy - self.speed
 	end
 	if button_down("down") then
-		p.dy = p.dy + p.speed
+		self.dy = self.dy + self.speed
 	end
 
-	p.dx = p.dx * p.friction
-	p.dy = p.dy * p.friction
+	self.dx = self.dx * self.friction
+	self.dy = self.dy * self.friction
 
-	p.x = p.x + p.dx * dt
-	p.y = p.y + p.dy * dt
+	self.x = self.x + self.dx * dt
+	self.y = self.y + self.dy * dt
 end

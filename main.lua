@@ -2,8 +2,17 @@
 require "scripts/utility"
 require "scripts/player"
 require "scripts/sprites"
+require "scripts/map"
 
 function love.load()
+	init_keybinds()
+	
+	map = init_map(20, 20)
+	local l = {1,2,3,4, r="azerty"}
+	for i,v in ipairs(l) do
+		print("i="..i.." v="..v)
+	end
+
 	player = init_player()
 	bullets = {}
 end
@@ -27,6 +36,8 @@ function love.draw()
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
+
+	love.graphics.print(str())
 end
 
 
