@@ -40,7 +40,7 @@ function update_player(self, dt)
 			self.gun:shoot()
 		end
 	end
-	self.gun:update(dt,p)
+	self.gun:update(dt,self)
 end
 
 function draw_player(self)

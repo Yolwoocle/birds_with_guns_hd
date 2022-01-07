@@ -2,7 +2,7 @@
 require "scripts/utility"
 
 function make_gun(a)
-	--name, spr, bullet_spd, cooldown, max_ammo, ofbuld,bofbula,mkbullet
+
 	spr = a.spr or spr_revolver
 	local gun = {
 		name       = a.name       or "null",
@@ -11,7 +11,6 @@ function make_gun(a)
 		cooldown   = a.cooldown   or 0.2,
 		ammo       = a.max_ammo   or 100,
 		maxammo    = a.max_ammo   or 100,
-		angle_var  = a.angle_var  or 0,
 		spawn_x    = a.spawn_x    or spr:getWidth(),
 		spawn_y    = a.spawn_y    or spr:getHeight(),
 
@@ -46,9 +45,11 @@ end
 --------------
 
 function make_bullet(self, p)
+	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
+	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
 	local bullet = {
-		x = p.x + math.cos(p.rot + self.angle_var * self.flip) * self.spawn_x,
-		y = p.y + math.sin(p.rot + self.angle_var * self.flip) * self.spawn_y,
+		x = p.x + math.cos(p.rot + offsetangle * self.flip) * dist,
+		y = p.y + math.sin(p.rot + offsetangle * self.flip) * dist,
 		dx = math.cos(p.rot) * self.bullet_spd,
 		dy = math.sin(p.rot) * self.bullet_spd,
 		rot = p.rot,

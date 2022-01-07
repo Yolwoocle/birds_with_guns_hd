@@ -37,7 +37,7 @@ function love.draw()
 		b:draw()
 	end 
 
-	love.graphics.print(str())
+	--love.graphics.print(str())
 end
 
 
