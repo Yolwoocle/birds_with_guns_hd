@@ -3,12 +3,13 @@ require "scripts/gun"
 require "scripts/utility"
 
 guns = {
-
     revolver = make_gun({
         name = "revolver",
         spr = spr_revolver, 
+
         bullet_spd = 600,
         cooldown = 0.5,
+
         max_ammo = math.huge,
         scattering = 0,
 

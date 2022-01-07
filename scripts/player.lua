@@ -3,11 +3,11 @@ require "scripts/gun"
 require "scripts/utility"
 require "scripts/input"
 require "scripts/gun_list"
-require "scripts/options"
+require "scripts/settings"
 
 function init_player()
 	local player = {
-		x = 200,
+		x = 500,
 		y = 200,
 		dx = 0,
 		dy = 0,
@@ -41,8 +41,8 @@ function update_player(self, dt)
 			self.gun:shoot()
 		end
 	end
-	self.gun:update(dt,self)
-
+	self.rot = self.rot % pi2
+	self.gun:update(dt, self)
 end
 
 function draw_player(self)
