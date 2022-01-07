@@ -3,6 +3,7 @@ require "scripts/gun"
 
 guns = {
     --                  name       sprite        spd  cd     maxammo  ofdist    ofangle  
+
     revolver = make_gun({
         name = "revolver",
         spr = spr_revolver, 
@@ -18,3 +19,4 @@ guns = {
 function my_func(g,p)
     make_bullet(g,p)
 end
+
