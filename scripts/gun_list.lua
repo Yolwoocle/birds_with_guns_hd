@@ -10,9 +10,9 @@ guns = {
         category = "persistant",
         spr = spr_revolver, 
 
-        bullet_spd = 1000,
+        bullet_spd = 10000,
         ospd = 0,
-        cooldown = 2,
+        cooldown = .5,
 
         max_ammo = inf,
         scattering = 0,
@@ -20,7 +20,7 @@ guns = {
 		spawn_x =  70,
 		spawn_y =  0,
 
-		life	= .001,
+		life	= .15,
 
         laser_length = 10000,
 
@@ -28,7 +28,7 @@ guns = {
         rafaledt  = .1,
 
 		nbshot = 10,
-		spread  = pi/4,
+		spread  = pi/3,
 
 		spdslow = .995,
 

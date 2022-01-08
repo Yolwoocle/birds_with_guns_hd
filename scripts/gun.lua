@@ -4,13 +4,7 @@ require "scripts/settings"
 
 function make_gun(a)
 	spr = a.spr or spr_revolver
-	local type = a.type or "bullet"
-	if type=="bullet" then
-		local type_shoot = default_shoot
-	elseif type=="laser" then
-		local type_shoot = default_laser
-	end
-
+	
 	local gun = {
 		name          = a.name          or "null",
 		type          = a.type          or "bullet",
@@ -34,7 +28,7 @@ function make_gun(a)
 
 		cooldown_timer = 0,
 
-		make_shot = a.make_shot or type_shoot, 
+		make_shot = a.make_shot or default_shoot, 
 
 		shoot = shoot_gun,
 		update = update_gun,
@@ -47,7 +41,7 @@ end
 function update_gun(self, dt, p)
 	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
 	self.flip = 1 -- -sgn( (p.rot + pi/2) % (pi*2) - pi)
-	if pi2*0.25 < p.rot and p.rot < pi2*0.75 then 
+	if pi2*0.25 < p.rot and p.rot < pi2*0.75 then
 		self.flip = -1
 	end
 end
@@ -63,7 +57,7 @@ function shoot_gun(self)
 	self.cooldown_timer = self.cooldown
 end
 
---default_shoot_bullet
+--default_shoot
 
 function default_shoot(g,p)
 	local shot = {}
@@ -73,7 +67,7 @@ function default_shoot(g,p)
 			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
 		else
 			for i=0,nbshot do
-				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spread
+				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot)+(1/g.nbshot/2))*g.spread
 				table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
 			end
 		end
@@ -81,23 +75,6 @@ function default_shoot(g,p)
 	return shot
 end
 
---default_shoot_laser
-
-function default_laser(g,p)
-    local shot = {}
-      nbshot = g.nbshot-1
-      for k=0,g.rafale-1 do
-        if nbshot==0 then
-            table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
-        else
-          for i=0,nbshot do
-              local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spread
-              table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
-          end
-        end
-      end
-      return shot
-end
 
 --------------
 --- BULLET ---
@@ -170,11 +147,10 @@ function update_laser(self, dt)
 	self.life = self.life - dt 
 
 	local ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
-
+	self.length = ray.dist
 	if self.life < 0 then
 		self.delete = true
 	end
-	self.length = ray.dist
 end
 
 function draw_bullet(self)
