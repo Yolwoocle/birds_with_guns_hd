@@ -3,6 +3,8 @@ require "scripts/utility"
 require "scripts/player"
 require "scripts/sprites"
 require "scripts/map"
+require "scripts/gun"
+require "scripts/gun_list"
 
 function love.load()
 	love.window.setMode(800, 600, {resizable=true, vsync=false, minwidth=400, minheight=300})
@@ -27,16 +29,17 @@ end
 function love.update(dt)
 	player:update(dt)
 	if player.shoot then
-		_shot = player.gun:make_bullet(player,player.rot)
+		--_shot = player.gun:make_bullet(player,player.rot)
+		addend(_shot,player.gun:make_bullet(player,player.rot))
 	end
 
 	for i,v in ipairs(_shot) do
-		if v[5]<=0 then
-			v[3]=player.rot
-			table.insert(bullets,make_bullet(v[1],v[2],v[3],v[4],v[5]))
+		if v.time<=0 then
+			v.angle=player.rot
+			table.insert(bullets,make_bullet(v.gun,v.player,v.angle,v.offset))
 			table.remove(_shot, i)
 		else
-			v[5]=v[5]-dt
+			v.time=v.time-dt
 		end
 	end
 

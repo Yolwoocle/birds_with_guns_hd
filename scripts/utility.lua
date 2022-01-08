@@ -69,3 +69,10 @@ function copy(ls)
 	end
 	return newls
 end
+
+function addend(ls1,ls2)
+	for i,v in pairs(ls2) do
+		table.insert(ls1,v)
+	end
+	return ls1
+end

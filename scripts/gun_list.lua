@@ -8,18 +8,18 @@ guns = {
         spr = spr_revolver, 
 
         bullet_spd = 1000,
-        ospd = 100,
-        cooldown = 1,
+        ospd = 0,
+        cooldown = 1.1,
 
         max_ammo = inf,
-        scattering = 0.1,
+        scattering = 0,
 
         spawn_x =  70,
         spawn_y =  0,
 
         life	= 1.25,
 
-        rafale  = 5,
+        rafale  = 10,
         rafaledt  = .1,
 
         nbshot = 10,
@@ -50,11 +50,11 @@ function normaleshoot(g,p)
       nbshot = g.nbshot-1
       for k=0,g.rafale-1 do
         if nbshot==0 then
-            table.insert(shot,{g,p,p.rot,0,k*g.rafaledt})
+            table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
         else
           for i=0,nbshot do
               local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spred
-              table.insert(shot,{g,p,p.rot,o,k*g.rafaledt})
+              table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
           end
         end
       end
