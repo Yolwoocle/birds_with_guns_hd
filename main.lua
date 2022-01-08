@@ -19,6 +19,7 @@ function love.load()
 end
 
 function love.update(dt)
+	dta=dt
 	player:update(dt)
 	if player.shoot then
 		--_shot = player.gun:make_bullet(player,player.rot)
@@ -52,6 +53,7 @@ function love.draw()
 	end 
 
 	love.graphics.print(#bullets,20,20)
+	love.graphics.print(dta,30,30)
 
 end
 
