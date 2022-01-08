@@ -3,9 +3,17 @@ require "scripts/utility"
 
 function make_gun(a)
 	spr = a.spr or spr_revolver
+	type = a.type or "bullet"
+	if type=="bullet" then
+		local type_shoot = default_shoot
+	elseif type=="laser" then
+		local type_shoot = make_laser
+	end
+
 	local gun = {
-		name	   = a.name	   or "null",
-		spr 	   = a.spr		or spr_revolver,
+		name       = a.name       or "null",
+		type       = a.type       or "bullet",
+		spr 	   = a.spr        or spr_revolver,
 		bullet_spd = a.bullet_spd or 600,
 		offset_spd = a.ospd	   or 0,
 		cooldown   = a.cooldown   or 0.2,
@@ -23,7 +31,8 @@ function make_gun(a)
 
 		cooldown_timer = 0,
 
-		make_shot = a.make_shot or default_shoot, 
+		make_bullet = a.make_bullet or type_shoot, 
+
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,

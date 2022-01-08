@@ -3,9 +3,11 @@ require "scripts/gun"
 require "scripts/utility"
 
 guns = {
-	revolver = make_gun({
-		name = "revolver",
-		spr = spr_revolver, 
+
+    revolver = make_gun({
+        name = "revolver",
+        type = "bullet",
+        spr = spr_revolver, 
 
         bullet_spd = 1000,
         ospd = 0,
