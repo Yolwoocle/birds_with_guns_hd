@@ -200,7 +200,7 @@ function draw_laser(self)
 	----circ_color("fill", self.x, self.y, 3, {0, 1, 0})
 	--end
 	--end
-	draw_centered(self.spr, self.x+(self.dx*(self.length/self.spd)*1.1)/2, self.y+(self.dy*(self.length/self.spd)*1.1)/2, self.rot+pi/2, 1, 2*self.length/1.8)
+	draw_centered(self.spr, self.x+(self.dx*(self.length/self.spd)*1.1)/2, self.y+(self.dy*(self.length/self.spd)*1.1)/2, self.rot+pi/2, 1, 2*(self.length/1.8186))
 end
 
 function checkdeath(self)

@@ -20,9 +20,9 @@ guns = {
 		spawn_x =  70,
 		spawn_y =  0,
 
-		life	= 1,
+		life	= .001,
 
-        laser_length = 300,
+        laser_length = 10000,
 
         rafale  = 1,
         rafaledt  = .1,
