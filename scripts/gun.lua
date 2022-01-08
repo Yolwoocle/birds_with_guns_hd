@@ -168,24 +168,13 @@ function update_laser(self, dt)
 		shoot_gun(self.gun)
 	end
 	self.life = self.life - dt 
-	local dist = 0
-	local continue = true
-	self.laser_spr={}
-	while continue do
-		local length = self.laser_length-dist
-		local nextx = self.x+(self.dx*(dist/self.spd)*1.1)
-		local nexty = self.y+(self.dy*(dist/self.spd)*1.1)
-		local newelt = {x=nextx , y=nexty ,life = length}
-		continue = not(checkdeath(newelt))
-		if continue then
-			table.insert(self.laser_spr,{x=nextx,y=nexty})
-		end
-		dist=dist+1
-	end
+
+	local ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
+
 	if self.life < 0 then
 		self.delete = true
 	end
-	self.length = dist-1
+	self.length = ray.dist
 end
 
 function draw_bullet(self)
