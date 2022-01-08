@@ -54,3 +54,18 @@ end
 function dist(x1,y1,x2,y2)
 	return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
 end
+
+function randomFloat(min, max)
+	local range = max - min
+	local offset = range * math.random()
+	local num = min + offset
+	return num
+end
+
+function copy(ls)
+	local newls = {}
+	for i,v in ipairs(ls) do
+		table.insert(newls,v) 
+	end
+	return newls
+end

@@ -5,18 +5,25 @@ function make_gun(a)
 	spr = a.spr or spr_revolver
 	local gun = {
 		name       = a.name       or "null",
-		spr 	   = a.spr        or spr,
-		bullet_spd = a.bullet_spd or 80,
+		spr 	   = a.spr        or spr_revolver,
+		bullet_spd = a.bullet_spd or 600,
+		offset_spd = a.ospd		  or 0,
 		cooldown   = a.cooldown   or 0.2,
 		ammo       = a.max_ammo   or 100,
 		maxammo    = a.max_ammo   or 100,
+		scattering = a.scattering or 0,
 		spawn_x    = a.spawn_x    or spr:getWidth(),
 		spawn_y    = a.spawn_y    or spr:getHeight()/2,
-		life	   = a.life		  or 2,	
+		rafale     = a.rafale	  or 1, --FIXME: burst pas rafale
+        rafaledt   = a.rafaledt	  or .5, --FIXME: burst_spd ou jsp quoi
+		life	   = a.life		  or 2,	--FIXME: bullet_life
+		nbshot 	   = a.nbshot	  or 1, --??????
+        spred 	   = a.spred	  or pi/5, --FIXME: spread
+		spdslow	   = a.spdslow	  or 1, --FIXME: slowdown/speed_mult
 
 		cooldown_timer = 0,
 
-		make_bullet = a.make_bullet,
+		make_bullet = a.make_bullet or function (g,p)return normaleshoot(g,p)end,
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
@@ -48,18 +55,20 @@ end
 --- BULLET ---
 --------------
 
-function make_bullet(self, p)
+function make_bullet(self, p,angle,_spred)
+	local spred = _spred or 0
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
+	local scatter = randomFloat(-self.scattering/2,self.scattering/2)
 	local bullet = {
 
-		x = p.x + math.cos(p.rot + offsetangle * self.flip) * dist,
-		y = p.y + math.sin(p.rot + offsetangle * self.flip) * dist,
+		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
+		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
 
-		dx = math.cos(p.rot) * self.bullet_spd,
-		dy = math.sin(p.rot) * self.bullet_spd,
-		rot = p.rot,
-
+		dx = math.cos(angle+scatter+spred) * (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2),
+		dy = math.sin(angle+scatter+spred) * (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2),
+		rot = angle,
+		spdslow = self.spdslow,
 		spr = spr_bullet,
 		
 		life = self.life,
@@ -71,6 +80,8 @@ function make_bullet(self, p)
 end
 
 function update_bullet(self, dt)
+	self.dx = self.dx*self.spdslow
+	self.dy = self.dy*self.spdslow
 	self.life = self.life - dt
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 
