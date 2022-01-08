@@ -70,9 +70,14 @@ function copy(ls)
 	return newls
 end
 
+
 function addend(ls1,ls2)
 	for i,v in pairs(ls2) do
 		table.insert(ls1,v)
 	end
 	return ls1
+end
+
+function random_pos_neg(n)
+	return math.random(2*n) - n
 end

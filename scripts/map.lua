@@ -1,5 +1,6 @@
 require "scripts/sprites"
 require "scripts/settings"
+require "scripts/files"
 
 function init_map(w, h)
 	local map = {data = {}}

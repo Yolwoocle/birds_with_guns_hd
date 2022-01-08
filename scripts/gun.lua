@@ -7,7 +7,7 @@ function make_gun(a)
 		name       = a.name       or "null",
 		spr 	   = a.spr        or spr_revolver,
 		bullet_spd = a.bullet_spd or 600,
-		offset_spd = a.ospd		  or 0,
+		offset_spd = a.ospd       or 0,
 		cooldown   = a.cooldown   or 0.2,
 		ammo       = a.max_ammo   or 100,
 		maxammo    = a.max_ammo   or 100,
@@ -18,12 +18,12 @@ function make_gun(a)
         rafaledt   = a.rafaledt	  or .5, --FIXME: burst_spd ou jsp quoi
 		life	   = a.life		  or 2,	--FIXME: bullet_life
 		nbshot 	   = a.nbshot	  or 1, --??????
-        spred 	   = a.spred	  or pi/5, --FIXME: spread
+        spread 	   = a.spread	  or pi/5, 
 		spdslow	   = a.spdslow	  or 1, --FIXME: slowdown/speed_mult
 
 		cooldown_timer = 0,
 
-		make_bullet = a.make_bullet or function (g,p)return normaleshoot(g,p)end,
+		make_bullet = a.make_bullet or make_bullet, 
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
@@ -55,19 +55,20 @@ end
 --- BULLET ---
 --------------
 
-function make_bullet(self, p,angle,_spred)
-	local spred = _spred or 0
+function make_bullet(self, p,angle,spread)
+	local spread = spread or 0
 	local spd = (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2)
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
 	local scatter = randomFloat(-self.scattering/2,self.scattering/2)
-	local bullet = {
 
+	local bullet = {
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
 		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
 
-		dx = math.cos(angle+scatter+spred) * spd,
-		dy = math.sin(angle+scatter+spred) * spd,
+		dx = math.cos(angle+scatter+spread) * spd,
+		dy = math.sin(angle+scatter+spread) * spd,
+
 		rot = angle,
 		spdslow = self.spdslow,
 		spr = spr_bullet,
@@ -81,8 +82,8 @@ function make_bullet(self, p,angle,_spred)
 end
 
 function update_bullet(self, dt)
-	self.dx = self.dx*self.spdslow
-	self.dy = self.dy*self.spdslow
+	self.dx = self.dx * self.spdslow
+	self.dy = self.dy * self.spdslow
 	self.life = self.life - dt
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 

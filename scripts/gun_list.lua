@@ -23,7 +23,7 @@ guns = {
         rafaledt  = .1,
 
         nbshot = 10,
-        spred  = pi/4,
+        spread  = pi/4,
 
         spdslow = .995,
 
