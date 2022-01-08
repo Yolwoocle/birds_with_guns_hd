@@ -22,7 +22,7 @@ function love.update(dt)
 	player:update(dt)
 	if player.shoot then
 		--_shot = player.gun:make_bullet(player,player.rot)
-		append_list(_shot, player.gun:make_bullet(player,player.rot))
+		append_list(_shot, player.gun:make_shot(player,player.rot))
 	end
 
 	for i,v in ipairs(_shot) do

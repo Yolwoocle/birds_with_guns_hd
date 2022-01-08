@@ -27,7 +27,7 @@ guns = {
 		nbshot = 10,
 		spread  = pi/4,
 
-		spdslow = .995,
+		spdslow = 0.995,
 
 		make_shot = default_shoot
 		--function (g,p)
