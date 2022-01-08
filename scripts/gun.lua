@@ -11,9 +11,9 @@ function make_gun(a)
 	end
 
 	local gun = {
-		name       = a.name       or "null",
-		type       = a.type       or "bullet",
-		spr 	   = a.spr        or spr_revolver,
+		name	   = a.name	   or "null",
+		type	   = a.type	   or "bullet",
+		spr 	   = a.spr		or spr_revolver,
 		bullet_spd = a.bullet_spd or 600,
 		offset_spd = a.ospd	   or 0,
 		cooldown   = a.cooldown   or 0.2,
@@ -81,19 +81,19 @@ end
 --default_shoot_laser
 
 function default_laser(g,p)
-    local shot = {}
-      nbshot = g.nbshot-1
-      for k=0,g.rafale-1 do
-        if nbshot==0 then
-            table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
-        else
-          for i=0,nbshot do
-              local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spread
-              table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
-          end
-        end
-      end
-      return shot
+	local shot = {}
+	  nbshot = g.nbshot-1
+	  for k=0,g.rafale-1 do
+		if nbshot==0 then
+			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
+		else
+			for i=0,nbshot do
+				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spread
+				table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
+			end
+		end
+	end
+	return shot
 end
 
 --------------

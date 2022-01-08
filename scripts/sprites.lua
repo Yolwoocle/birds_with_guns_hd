@@ -15,3 +15,4 @@ spr_revolver = load_pixel_image("gun_revolver")
 
 spr_ground_dum = load_pixel_image("dummy_ground")
 spr_wall_dum = load_pixel_image("dummy_wall")
+spr_box = load_pixel_image("box")
