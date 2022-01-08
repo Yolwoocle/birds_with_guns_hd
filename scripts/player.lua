@@ -14,7 +14,7 @@ function init_player()
 		h = 30,
 		dx = 0,
 		dy = 0,
-		speed = 10,
+		speed = 20,
 		friction = 0.95,
 		bounce = 0.6,
 
