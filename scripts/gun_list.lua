@@ -11,7 +11,7 @@ guns = {
         ospd = 100,
         cooldown = 1,
 
-        max_ammo = math.huge,
+        max_ammo = inf,
         scattering = 0.1,
 
         spawn_x =  70,
@@ -38,7 +38,7 @@ guns = {
         spawn_x =  70,
         spawn_y =  0,
 
-        max_ammo = math.huge,
+        max_ammo = inf,
     
     }),
 }
