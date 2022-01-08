@@ -2,9 +2,8 @@
 require "scripts/utility"
 
 function make_gun(a)
-	spr 	   = a.spr or spr_revolver
+	spr = a.spr or spr_revolver
 	local gun = {
-
 		name       = a.name       or "null",
 		spr 	   = a.spr        or spr_revolver,
 		bullet_spd = a.bullet_spd or 600,
@@ -14,13 +13,13 @@ function make_gun(a)
 		maxammo    = a.max_ammo   or 100,
 		scattering = a.scattering or 0,
 		spawn_x    = a.spawn_x    or spr:getWidth(),
-		spawn_y    = a.spawn_y    or spr:getHeight(),
-		rafale     = a.rafale	  or 1,
-        rafaledt   = a.rafaledt	  or .5,
-		life	   = a.life		  or 2,	
-		nbshot 	   = a.nbshot	  or 1,
-        spred 	   = a.spred	  or pi/5,
-		spdslow	   = a.spdslow	  or 1,
+		spawn_y    = a.spawn_y    or spr:getHeight()/2,
+		rafale     = a.rafale	  or 1, --FIXME: burst pas rafale
+        rafaledt   = a.rafaledt	  or .5, --FIXME: burst_spd ou jsp quoi
+		life	   = a.life		  or 2,	--FIXME: bullet_life
+		nbshot 	   = a.nbshot	  or 1, --??????
+        spred 	   = a.spred	  or pi/5, --FIXME: spread
+		spdslow	   = a.spdslow	  or 1, --FIXME: slowdown/speed_mult
 
 		cooldown_timer = 0,
 
@@ -28,6 +27,7 @@ function make_gun(a)
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
+		--new = new_of_self, TODO: not have to rely on copy() function 
 	}
 	return gun
 end
@@ -86,6 +86,9 @@ function update_bullet(self, dt)
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 
 
+	if map:is_solid(self.x / block_width, self.y / block_width) then
+		self.delete = true
+	end
 	if self.life < 0 then
 		self.delete = true
 	end

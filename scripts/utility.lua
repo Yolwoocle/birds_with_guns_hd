@@ -2,6 +2,10 @@ pi = math.pi
 pi2 = 2 * math.pi
 inf = math.huge
 
+tostr = tostring
+floor = math.floor
+ceil = math.ceil
+
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 	r = r or 0
 	sx = sx or 1
@@ -19,6 +23,13 @@ function circ_color(mode,x,y,radius,col)
 	love.graphics.setColor(col)
 	love.graphics.circle(mode, x, y, radius)
 	love.graphics.setColor(1,1,1)
+end
+
+function rect_color(mode, x, y, w, h, col)
+	love.graphics.setColor(col)
+	love.graphics.rectangle(mode, x, y, w, h)
+	love.graphics.setColor(1,1,1)
+
 end
 
 function setColor(hex)
@@ -39,9 +50,6 @@ function sgn(hex)
 	return -1
 end
 
-function tostr(s)
-	return tostring(s)
-end
 
 function dist(x1,y1,x2,y2)
 	return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
