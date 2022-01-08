@@ -4,21 +4,21 @@ require "scripts/utility"
 function make_gun(a)
 	spr = a.spr or spr_revolver
 	local gun = {
-		name       = a.name       or "null",
-		spr 	   = a.spr        or spr_revolver,
+		name	   = a.name	   or "null",
+		spr 	   = a.spr		or spr_revolver,
 		bullet_spd = a.bullet_spd or 600,
-		offset_spd = a.ospd       or 0,
+		offset_spd = a.ospd	   or 0,
 		cooldown   = a.cooldown   or 0.2,
-		ammo       = a.max_ammo   or 100,
-		maxammo    = a.max_ammo   or 100,
+		ammo	   = a.max_ammo   or 100,
+		maxammo	= a.max_ammo   or 100,
 		scattering = a.scattering or 0,
-		spawn_x    = a.spawn_x    or spr:getWidth(),
-		spawn_y    = a.spawn_y    or spr:getHeight()/2,
-		rafale     = a.rafale	  or 1, --FIXME: burst pas rafale
-        rafaledt   = a.rafaledt	  or .5, --FIXME: burst_spd ou jsp quoi
+		spawn_x	= a.spawn_x	or spr:getWidth(),
+		spawn_y	= a.spawn_y	or spr:getHeight()/2,
+		rafale	 = a.rafale	  or 1, --FIXME: burst pas rafale
+		rafaledt   = a.rafaledt	  or .5, --FIXME: burst_spd ou jsp quoi
 		life	   = a.life		  or 2,	--FIXME: bullet_life
 		nbshot 	   = a.nbshot	  or 1, --??????
-        spread 	   = a.spread	  or pi/5, 
+		spread 	   = a.spread	  or pi/5, 
 		spdslow	   = a.spdslow	  or 1, --FIXME: slowdown/speed_mult
 
 		cooldown_timer = 0,
@@ -52,19 +52,19 @@ function shoot_gun(self)
 end
 
 function default_shoot(g,p)
-    local shot = {}
-      nbshot = g.nbshot-1
-      for k=0,g.rafale-1 do
-        if nbshot==0 then
-            table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
-        else
-          for i=0,nbshot do
-              local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spread
-              table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
-          end
-        end
-      end
-      return shot
+	local shot = {}
+		nbshot = g.nbshot-1
+		for k=0,g.rafale-1 do
+		if nbshot==0 then
+			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
+		else
+			for i=0,nbshot do
+				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spread
+				table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
+			end
+		end
+	end
+	return shot
 end
 
 --------------
