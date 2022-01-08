@@ -11,15 +11,7 @@ function love.load()
 	init_keybinds()
 	
 	map = init_map(20, 20)
-
-
-	map:set_tile(2,2,1)
-	map:set_tile(1,1,1)
-	local l = {[0]=3,1,2,3,4, r="azerty"}
-
-	for i,v in ipairs(l) do
-		print("i="..i.." v="..v)
-	end
+	map:load_from_string(str)
 
 	player = init_player()
 	bullets = {}
@@ -30,7 +22,7 @@ function love.update(dt)
 	player:update(dt)
 	if player.shoot then
 		--_shot = player.gun:make_bullet(player,player.rot)
-		addend(_shot,player.gun:make_bullet(player,player.rot))
+		append_list(_shot, player.gun:make_bullet(player,player.rot))
 	end
 
 	for i,v in ipairs(_shot) do

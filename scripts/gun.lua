@@ -5,7 +5,7 @@ function make_gun(a)
 	spr = a.spr or spr_revolver
 	type = a.type or "bullet"
 	if type=="bullet" then
-		local type_shoot = make_bullet
+		local type_shoot = default_shoot
 	elseif type=="laser" then
 		local type_shoot = make_laser
 	end
@@ -32,6 +32,7 @@ function make_gun(a)
 		cooldown_timer = 0,
 
 		make_bullet = a.make_bullet or type_shoot, 
+
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
@@ -57,6 +58,22 @@ end
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown
+end
+
+function default_shoot(g,p)
+    local shot = {}
+      nbshot = g.nbshot-1
+      for k=0,g.rafale-1 do
+        if nbshot==0 then
+            table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
+        else
+          for i=0,nbshot do
+              local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spred
+              table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
+          end
+        end
+      end
+      return shot
 end
 
 --------------

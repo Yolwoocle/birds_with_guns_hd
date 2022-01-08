@@ -1,5 +1,5 @@
 function load_pixel_image(name)
-    local img = love.graphics.newImage("assets/"..name..".png")
+    local img = love.graphics.newImage("assets/textures/"..name..".png")
     img:setFilter("linear", "nearest")
     return img 
 end

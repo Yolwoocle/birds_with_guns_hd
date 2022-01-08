@@ -10,7 +10,7 @@ end
 -- get all lines from a file, returns an empty 
 -- list/table if the file does not exist
 function read_lines(file)
-	if not file_exists(file) then return {} end
+	if not file_exists(file) then error("file does not exist") end
 	lines = {}
 	for line in io.lines(file) do 
 		lines[#lines + 1] = line
