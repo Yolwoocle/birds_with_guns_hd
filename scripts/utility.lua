@@ -53,3 +53,11 @@ function randomFloat(min, max)
 	local num = min + offset
 	return num
 end
+
+function copy(ls)
+	local newls = {}
+	for i,v in ipairs(ls) do
+		table.insert(newls,v) 
+	end
+	return newls
+end
