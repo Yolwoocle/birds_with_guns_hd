@@ -7,20 +7,20 @@ guns = {
 		name = "revolver",
 		spr = spr_revolver, 
 
-		bullet_spd = 1000,
-		ospd = 100,
-		cooldown = 1,
+        bullet_spd = 1000,
+        ospd = 0,
+        cooldown = 1.1,
 
-		max_ammo = inf,
-		scattering = 0.1,
+        max_ammo = inf,
+        scattering = 0,
 
 		spawn_x =  70,
 		spawn_y =  0,
 
 		life	= 1.25,
 
-		rafale  = 5,
-		rafaledt  = .1,
+        rafale  = 10,
+        rafaledt  = .1,
 
 		nbshot = 10,
 		spread  = pi/4,

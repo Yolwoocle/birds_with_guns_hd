@@ -16,3 +16,16 @@ function make_mob(a)
 	}
 	return gun
 end
+
+function make_mob(self, p,angle,_spred)
+
+end
+
+function update_bullet(self, dt)
+	
+end
+
+function draw_bullet(self)
+	draw_centered(self.spr, self.x, self.y, 1, 2, 2)
+	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
+end

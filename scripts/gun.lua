@@ -72,17 +72,20 @@ end
 --- BULLET ---
 --------------
 
-function make_bullet(self, p, angle, spread)
-	spread = spread or 0
-	local offsetangle = math.atan2(-self.spawn_y, self.spawn_x)
-	local dist = dist(self.spawn_x+p.x, self.spawn_y+p.y, p.x, p.y)
-	local scatter = randomFloat(-self.scattering/2, self.scattering/2)
+function make_bullet(self, p,angle,spread)
+	local spread = spread or 0
+	local spd = (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2)
+	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
+	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
+	local scatter = randomFloat(-self.scattering/2,self.scattering/2)
+
 	local bullet = {
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
 		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
 
-		dx = math.cos(angle+scatter+spread) * (self.bullet_spd + random_pos_neg(self.offset_spd / 2)),
-		dy = math.sin(angle+scatter+spread) * (self.bullet_spd + random_pos_neg(self.offset_spd / 2)),
+		dx = math.cos(angle+scatter+spread) * spd,
+		dy = math.sin(angle+scatter+spread) * spd,
+
 		rot = angle,
 		spdslow = self.spdslow,
 		spr = spr_bullet,
