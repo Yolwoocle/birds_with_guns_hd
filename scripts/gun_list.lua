@@ -11,7 +11,7 @@ guns = {
         ospd = 100,
         cooldown = 1,
 
-        max_ammo = math.huge,
+        max_ammo = inf,
         scattering = 0.1,
 
         spawn_x =  70,
@@ -38,7 +38,8 @@ guns = {
         spawn_x =  70,
         spawn_y =  0,
 
-        max_ammo = math.huge,
+        max_ammo = inf,
+    
     }),
 }
 
@@ -53,7 +54,7 @@ function normaleshoot(g,p)
         else
           for i=0,nbshot do
               local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spred
-              table.insert(shot,{g,p,p.rot,o,k*g.rafaledt})
+              table.insert(shot,{g,p, p.rot, o, k*g.rafaledt})
           end
         end
       end
