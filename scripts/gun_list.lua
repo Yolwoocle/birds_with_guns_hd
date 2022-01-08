@@ -6,12 +6,13 @@ guns = {
 
     revolver = make_gun({
         name = "revolver",
-        type = "bullet",
+        type = "laser",
+        category = "persistant",
         spr = spr_revolver, 
 
         bullet_spd = 1000,
         ospd = 0,
-        cooldown = 1.1,
+        cooldown = 2,
 
         max_ammo = inf,
         scattering = 0,
@@ -19,15 +20,17 @@ guns = {
 		spawn_x =  70,
 		spawn_y =  0,
 
-		life	= 1.25,
+		life	= .02,
 
-        rafale  = 10,
+        laser_length = 300,
+
+        rafale  = 1,
         rafaledt  = .1,
 
-		nbshot = 10,
+		nbshot = 6,
 		spread  = pi/4,
 
-		spdslow = 0.995,
+		spdslow = .995,
 
 		make_shot = default_shoot
 		--function (g,p)

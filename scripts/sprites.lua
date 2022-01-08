@@ -10,6 +10,7 @@ spr_pigeon = {
 }
 
 spr_bullet = load_pixel_image("bullet_1")
+spr_laser = load_pixel_image("laser")
 
 spr_revolver = load_pixel_image("gun_revolver")
 
