@@ -19,15 +19,16 @@ function init_map(w, h)
 	map.height = h
 	map.tile_size = map.palette[0]:getWidth() * pixel_scale
 
-	map.get_tile = get_map
-	map.set_tile = set_map
+	map.get_tile = get_tile
+	map.set_tile = set_tile
+	map.is_solid = is_solid
 	return map
 end
 
-function set_map(self, x, y, elt)
+function set_tile(self, x, y, elt)
 	self.data[y][x] = elt
 end	
-function get_map(self, x, y)
+function get_tile(self, x, y)
 	if x < 0            then return 0 end
 	if x >= self.width  then return 0 end
 	if y < 0            then return 0 end
@@ -35,6 +36,10 @@ function get_map(self, x, y)
 
 	return self.data[y][x]
 end	
+
+function is_solid(self, x, y)
+	return self:get_tile(floor(x), floor(y)) == 1
+end
 
 function draw_map(self)
 	local w = self.tile_size

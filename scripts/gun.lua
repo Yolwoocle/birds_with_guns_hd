@@ -2,10 +2,8 @@
 require "scripts/utility"
 
 function make_gun(a)
-
 	spr = a.spr or spr_revolver
 	local gun = {
-
 		name       = a.name       or "null",
 		spr 	   = a.spr        or spr,
 		bullet_spd = a.bullet_spd or 80,
@@ -13,7 +11,7 @@ function make_gun(a)
 		ammo       = a.max_ammo   or 100,
 		maxammo    = a.max_ammo   or 100,
 		spawn_x    = a.spawn_x    or spr:getWidth(),
-		spawn_y    = a.spawn_y    or spr:getHeight(),
+		spawn_y    = a.spawn_y    or spr:getHeight()/2,
 		life	   = a.life		  or 2,	
 
 		cooldown_timer = 0,
@@ -22,6 +20,7 @@ function make_gun(a)
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
+		--new = new_of_self, TODO: not have to rely on copy() function 
 	}
 	return gun
 end
@@ -76,6 +75,9 @@ function update_bullet(self, dt)
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 
 
+	if map:is_solid(self.x / block_width, self.y / block_width) then
+		self.delete = true
+	end
 	if self.life < 0 then
 		self.delete = true
 	end
