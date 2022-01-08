@@ -185,6 +185,7 @@ function update_laser(self, dt)
 	if self.life < 0 then
 		self.delete = true
 	end
+	self.length = dist-1
 end
 
 function draw_bullet(self)
@@ -193,12 +194,13 @@ function draw_bullet(self)
 end
 
 function draw_laser(self)
-	if not(self.laser_spr==nil) then
-	for i,v in pairs(self.laser_spr) do
-	draw_centered(self.spr, v.x, v.y, self.rot+pi/2, 2, 2)
-	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
-	end
-	end
+	--if not(self.laser_spr==nil) then
+	--for i,v in pairs(self.laser_spr) do
+	--draw_centered(self.spr, v.x, v.y, self.rot+pi/2, 2, 2)
+	----circ_color("fill", self.x, self.y, 3, {0, 1, 0})
+	--end
+	--end
+	draw_centered(self.spr, self.x+(self.dx*(self.length/self.spd)*1.1)/2, self.y+(self.dy*(self.length/self.spd)*1.1)/2, self.rot+pi/2, 1, 2*self.length/1.8)
 end
 
 function checkdeath(self)

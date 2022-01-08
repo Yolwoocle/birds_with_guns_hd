@@ -20,14 +20,14 @@ guns = {
 		spawn_x =  70,
 		spawn_y =  0,
 
-		life	= .02,
+		life	= 1,
 
         laser_length = 300,
 
         rafale  = 1,
         rafaledt  = .1,
 
-		nbshot = 6,
+		nbshot = 10,
 		spread  = pi/4,
 
 		spdslow = .995,
