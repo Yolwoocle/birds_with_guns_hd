@@ -27,16 +27,16 @@ end
 function love.update(dt)
 	player:update(dt)
 	if player.shoot then
-		_shot = player.gun:make_bullet(player,player.rot)
+		_shot = player.gun:make_bullet(player, player.rot)
 	end
 
 	for i,v in ipairs(_shot) do
-		if v[5]<=0 then
-			v[3]=player.rot
-			table.insert(bullets,make_bullet(v[1],v[2],v[3],v[4],v[5]))
+		if v[5] <= 0 then
+			v[3] = player.rot
+			table.insert(bullets, make_bullet(v[1],v[2],v[3],v[4],v[5]))
 			table.remove(_shot, i)
 		else
-			v[5]=v[5]-dt
+			v[5] = v[5] - dt
 		end
 	end
 

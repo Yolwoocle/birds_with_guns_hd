@@ -69,3 +69,7 @@ function copy(ls)
 	end
 	return newls
 end
+
+function random_pos_neg(n)
+	return math.random(2*n) - n
+end
