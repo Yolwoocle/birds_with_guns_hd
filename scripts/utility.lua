@@ -71,7 +71,7 @@ function copy(ls)
 end
 
 
-function addend(ls1,ls2)
+function append_list(ls1,ls2)
 	for i,v in pairs(ls2) do
 		table.insert(ls1,v)
 	end
@@ -79,5 +79,6 @@ function addend(ls1,ls2)
 end
 
 function random_pos_neg(n)
+	-- Random number between -n and n
 	return math.random(2*n) - n
 end
