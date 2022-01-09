@@ -60,7 +60,7 @@ function love.draw()
 	player:draw()
 
 	for i,m in ipairs(mobs) do
-		m:draw()
+		m:draw(player)
 	end
 
 	for _,b in pairs(bullets) do

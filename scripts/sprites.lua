@@ -8,6 +8,10 @@ spr_pigeon = {
     load_pixel_image("pigeon_walk_1"),
     load_pixel_image("pigeon_walk_2"),
 }
+spr_pigeon = {
+    load_pixel_image("crow_walk_1"),
+    load_pixel_image("pigeon_walk_2"),
+}
 
 spr_bullet = load_pixel_image("bullet_1")
 spr_laser = load_pixel_image("laser")
