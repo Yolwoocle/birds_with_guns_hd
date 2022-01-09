@@ -5,6 +5,8 @@ require "scripts/sprites"
 require "scripts/map"
 require "scripts/gun"
 require "scripts/gun_list"
+require "scripts/mob_list"
+require "scripts/mob"
 
 function love.load()
 	love.window.setMode(800, 600, {resizable=true, vsync=false, minwidth=400, minheight=300})
@@ -16,6 +18,9 @@ function love.load()
 	player = init_player()
 	bullets = {}
 	_shot={}
+	mobs = {}
+	table.insert(mobs,mob_list.Leo_renome)
+
 end
 
 function love.update(dt)
@@ -42,12 +47,22 @@ function love.update(dt)
 			table.remove(bullets, i)
 		end
 	end
+
+	for i,m in ipairs(mobs) do
+		--m:update(dt)
+	end
+
 end
 
 function love.draw()
 	-- TODO: y-sorting
 	map:draw()
 	player:draw()
+
+	for i,m in ipairs(mobs) do
+		m:draw()
+	end
+
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
