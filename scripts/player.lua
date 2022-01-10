@@ -58,12 +58,12 @@ function update_player(self, dt)
 
 				self.gun.rafale 	 		= self.gun.rafale 		+ floor( self.gun.charge_nbrafale 		* avancement)
 				self.gun.bullet_spd 		= self.gun.bullet_spd 	+ self.gun.charge_bullet_spd 			* avancement
-				self.gun.laser_length 		= self.gun.laser_length	+ floor( self.gun.charge_laser_length 	* avancement)
+				self.gun.laser_length 		= self.gun.laser_length	+ self.gun.charge_laser_length 			* avancement
 				self.gun.nbshot 		 	= self.gun.nbshot 		+ floor( self.gun.charge_nbshot 		* avancement)
 				self.gun.spread 		 	= self.gun.spread 		+ self.gun.charge_spread 				* avancement	
 				self.gun.scattering	 		= self.gun.scattering	+ self.gun.charge_scattering			* avancement	 		 
 				self.gun.offset_spd 		= self.gun.offset_spd 	+ self.gun.charge_ospd 					* avancement
-				self.gun.life 		 		= self.gun.life 		+ floor( self.gun.charge_life 			* avancement)
+				self.gun.life 		 		= self.gun.life 		+ self.gun.charge_life 					* avancement
 				self.gun.rafaledt	 		= self.gun.rafaledt		+ self.gun.charge_rafaledt				* avancement
 				self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
 				self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement

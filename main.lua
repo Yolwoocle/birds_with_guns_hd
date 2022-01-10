@@ -74,7 +74,7 @@ function love.draw()
 
 	for i,m in ipairs(mobs) do
 
-		m:draw(player)
+		draw_mob(m)
 
 	end
 

@@ -33,6 +33,6 @@ function update_mob(self, dt)
 end
 
 function draw_mob(self)
-	draw_centered(self.spr, self.x, self.y, 1, 2, 2)
-	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
+	--draw_centered(self.spr, self.x, self.y, 1, 2, 2)
+	--circ_color("fill", self.x, self.y, 3, {0, 1, 0})
 end
