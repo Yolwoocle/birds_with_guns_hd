@@ -8,6 +8,7 @@ function make_gun(a)
 	local gun = {
 		name          = a.name          or "null",
 		type          = a.type          or "bullet",
+		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		spr 	      = a.spr           or spr_revolver,
 		bullet_spd    = a.bullet_spd    or 600,
@@ -15,7 +16,7 @@ function make_gun(a)
 		cooldown      = a.cooldown      or 0.2,
 		ammo	      = a.max_ammo      or 100,
 		maxammo	      = a.max_ammo      or 100,
-		scattering    = a.scattering    or 0,
+		scattering    = a.scattering    or .1,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or spr:getHeight()/2,
 		rafale	      = a.rafale	    or 1, --FIXME: burst pas rafale
@@ -25,8 +26,25 @@ function make_gun(a)
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1, --FIXME: slowdown/speed_mult
+		scale 		  = a.scale			or 2,
+
+		charge				= a.charge 				or false,
+		charge_time 		= a.charge_time 		or 1,
+		charge_nbrafale 	= a.charge_nbrafale 	or 0,
+		charge_bullet_spd 	= a.charge_bullet_spd 	or 0,
+		charge_laser_length = a.charge_laser_length or 0,
+		charge_nbshot 		= a.charge_nbshot 		or 0,
+		charge_spread 		= a.charge_spread 		or 0,
+		charge_scattering	= a.charge_scattering 	or 0,
+		charge_scale 		= a.charge_scale 		or 0,
+		charge_ospd 		= a.charge_ospd 		or 0,
+		charge_life 		= a.charge_life 		or 0,
+		charge_rafaledt		= a.charge_rafaledt 	or 0,
+		charge_spdslow 		= a.charge_spdslow 		or 0,
+		charge_damage		= a.charge_damage		or 0,
 
 		cooldown_timer = 0,
+		dt 			   = 0,
 
 		make_shot = a.make_shot or default_shoot, 
 
@@ -99,12 +117,13 @@ end
 --------------
 
 function make_bullet(self, p,angle,spread,type)
+
 	local spread = spread or 0
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
 	local scatter = randomFloat(-self.scattering/2,self.scattering/2)
 	local spd = (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2)
-	
+
 	local bullet = {
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
 		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
@@ -124,6 +143,8 @@ function make_bullet(self, p,angle,spread,type)
 		spd = spd,
 		scatter = scatter,
 		spread = spread,
+		scale = self.scale,
+		damage		= self.damage,
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
@@ -173,7 +194,7 @@ function update_laser(self, dt)
 end
 
 function draw_bullet(self)
-	draw_centered(self.spr, self.x, self.y, 1, 2, 2)
+	draw_centered(self.spr, self.x, self.y, 1, self.scale, self.scale)
 	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
 end
 
@@ -184,6 +205,7 @@ function draw_laser(self)
 	----circ_color("fill", self.x, self.y, 3, {0, 1, 0})
 	--end
 	--end
+	self.length = self.length or 0
 	local x = self.x + (self.dx*(self.length/self.spd)*1.1)/2
 	local y = self.y + (self.dy*(self.length/self.spd)*1.1)/2
 

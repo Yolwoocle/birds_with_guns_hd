@@ -20,10 +20,11 @@ function love.load()
 	_shot={}
 	mobs = {}
 	table.insert(mobs,mob_list.Leo_renome)
-
+	prevfire = button_down("fire")
 end
 
 function love.update(dt)
+
 	dta=dt
 	player:update(dt)
 	if player.shoot then
@@ -36,6 +37,7 @@ function love.update(dt)
 			v.angle=player.rot
 			table.insert(bullets,make_bullet(v.gun,v.player,v.angle,v.offset))
 			table.remove(_shot, i)
+
 		else
 			v.time=v.time-dt
 		end
@@ -51,7 +53,7 @@ function love.update(dt)
 	for i,m in ipairs(mobs) do
 		--m:update(dt)
 	end
-
+	prevfire = button_down("fire")
 end
 
 function love.draw()
@@ -61,6 +63,7 @@ function love.draw()
 
 	for i,m in ipairs(mobs) do
 		--m:draw()
+		--draw_mob(m)
 	end
 
 	for _,b in pairs(bullets) do
