@@ -15,6 +15,7 @@ function init_map(w, h)
 	map.palette = {
 		[0] = spr_ground_dum,
 		spr_wall_dum,
+		spr_box,
 	}
 	map.width = w
 	map.height = h
@@ -57,10 +58,10 @@ function load_from_string(self, str)
 	--TODO: implement
 	-- . ground
 	-- # wall
-	-- c crate
+	-- b box
 	--[[ example:
 		# # # # # # # # #
-		# . . . c c . . #
+		# . . . b b . . #
 		# . . . . . . . #
 		# . . . . . . . #
 		# # # # # # # # #
@@ -73,7 +74,7 @@ function load_from_string(self, str)
 			local tile = 0
 			if     chr == "." then tile = 0 
 			elseif chr == "#" then tile = 1
-			elseif chr == "c" then tile = 2
+			elseif chr == "b" then tile = 2
 			end
 
 			self:set_tile(x, y, tile)
