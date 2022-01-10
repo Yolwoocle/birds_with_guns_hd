@@ -43,12 +43,41 @@ function update_player(self, dt)
 	local mx, my = love.mouse.getPosition()
 	self.rot = math.atan2(my - self.y, mx - self.x)
 	self.shoot = false
-	if button_down("fire") and self.gun.cooldown_timer <= 0 then
-		if self.gun.ammo > 0 then
-			self.shoot = true
-			self.gun:shoot()
+	if self.gun.cooldown_timer <= 0 then
+		if (not(self.gun.charge) and button_down("fire")) or (prevfire and not(button_down("fire")) and self.gun.charge) then
+			if self.gun.ammo > 0 then
+
+
+				if self.gun.charge then
+				local avancement = self.gun.dt/self.gun.charge_time
+				if self.gun.save_rafale then
+				load_save_stats(self)
+				end
+
+				save_stats(self)
+
+				self.gun.rafale 	 		= self.gun.rafale 		+ floor( self.gun.charge_nbrafale 		* avancement)
+				self.gun.bullet_spd 		= self.gun.bullet_spd 	+ self.gun.charge_bullet_spd 			* avancement
+				self.gun.laser_length 		= self.gun.laser_length	+ floor( self.gun.charge_laser_length 	* avancement)
+				self.gun.nbshot 		 	= self.gun.nbshot 		+ floor( self.gun.charge_nbshot 		* avancement)
+				self.gun.spread 		 	= self.gun.spread 		+ self.gun.charge_spread 				* avancement	
+				self.gun.scattering	 		= self.gun.scattering	+ self.gun.charge_scattering			* avancement	 		 
+				self.gun.offset_spd 		= self.gun.offset_spd 	+ self.gun.charge_ospd 					* avancement
+				self.gun.life 		 		= self.gun.life 		+ floor( self.gun.charge_life 			* avancement)
+				self.gun.rafaledt	 		= self.gun.rafaledt		+ self.gun.charge_rafaledt				* avancement
+				self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
+				self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement
+				end
+
+				self.shoot = true
+				self.gun:shoot()
+				self.gun.dt = 0
+				
+			end
+		elseif button_down("fire") and self.gun.charge then
+			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
 		end
-	end
+	end --prevfire = button_down("fire")
 	self.rot = self.rot % pi2
 
 	self.gun:update(dt, self)
@@ -93,3 +122,31 @@ end
 function collide_player(self)
 
 end	
+
+function save_stats(self)
+	self.gun.save_rafale 	 	= self.gun.rafale
+	self.gun.save_bullet_spd  	= self.gun.bullet_spd
+	self.gun.save_laser_length 	= self.gun.laser_length
+	self.gun.save_nbshot 	 	= self.gun.nbshot
+	self.gun.save_spread 	 	= self.gun.spread
+	self.gun.save_scattering	= self.gun.scattering
+	self.gun.save_offset_spd  	= self.gun.offset_spd
+	self.gun.save_life 		 	= self.gun.life			
+	self.gun.save_rafaledt	 	= self.gun.rafaledt 
+	self.gun.save_spdslow 	 	= self.gun.spdslow	
+	self.gun.save_scale 		= self.gun.scale
+end
+
+function load_save_stats(self)
+	self.gun.rafale 	 	= self.gun.save_rafale
+	self.gun.bullet_spd  	= self.gun.save_bullet_spd
+	self.gun.laser_length 	= self.gun.save_laser_length
+	self.gun.nbshot 	 	= self.gun.save_nbshot
+	self.gun.spread 	 	= self.gun.save_spread
+	self.gun.scattering		= self.gun.save_scattering
+	self.gun.offset_spd  	= self.gun.save_offset_spd
+	self.gun.life 			= self.gun.save_life			
+	self.gun.rafaledt	 	= self.gun.save_rafaledt 
+	self.gun.spdslow 	 	= self.gun.save_spdslow	
+	self.gun.scale 			= self.gun.save_scale
+end

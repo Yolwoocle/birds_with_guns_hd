@@ -20,15 +20,27 @@ function love.load()
 	_shot={}
 	mobs = {}
 	table.insert(mobs,mob_list.Leo_renome)
-
+	prevfire = button_down("fire")
 end
 
 function love.update(dt)
+
 	dta=dt
 	player:update(dt)
 	if player.shoot then
 		--_shot = player.gun:make_bullet(player,player.rot)
 		append_list(_shot, player.gun:make_shot(player,player.rot))
+		--player.gun.rafale 	 	= player.gun.save_rafale
+		--player.gun.bullet_spd  	= player.gun.save_bullet_spd
+		--player.gun.laser_length = player.gun.save_laser_length
+		--player.gun.nbshot 	 	= player.gun.save_nbshot
+		--player.gun.spread 	 	= player.gun.save_spread
+		--player.gun.scattering	= player.gun.save_scattering
+		--player.gun.offset_spd  	= player.gun.save_offset_spd
+		--player.gun.life 		= player.gun.save_life			
+		--player.gun.rafaledt	 	= player.gun.save_rafaledt 
+		--player.gun.spdslow 	 	= player.gun.save_spdslow	
+		--player.gun.scale 		= player.gun.save_scale
 	end
 
 	for i,v in ipairs(_shot) do
@@ -36,6 +48,7 @@ function love.update(dt)
 			v.angle=player.rot
 			table.insert(bullets,make_bullet(v.gun,v.player,v.angle,v.offset))
 			table.remove(_shot, i)
+
 		else
 			v.time=v.time-dt
 		end
@@ -51,7 +64,7 @@ function love.update(dt)
 	for i,m in ipairs(mobs) do
 		--m:update(dt)
 	end
-
+	prevfire = button_down("fire")
 end
 
 function love.draw()
@@ -60,7 +73,7 @@ function love.draw()
 	player:draw()
 
 	for i,m in ipairs(mobs) do
-		m:draw()
+		--m:draw()
 	end
 
 	for _,b in pairs(bullets) do
@@ -69,6 +82,7 @@ function love.draw()
 
 	love.graphics.print(#bullets,20,20)
 	love.graphics.print(dta,30,30)
+	love.graphics.print(player.gun.dt/player.gun.charge_time,30,50)
 
 end
 
