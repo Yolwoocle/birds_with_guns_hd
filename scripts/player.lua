@@ -20,8 +20,9 @@ function init_player()
 
 		spr = spr_pigeon[1],
 		rot = 0,
+		looking_up = false,
 
-		gun_dist = 40,
+		gun_dist = 30,
 
 		update = update_player,
 		draw = draw_player,
@@ -81,16 +82,20 @@ function update_player(self, dt)
 	end --prevfire = button_down("fire")
 	self.rot = self.rot % pi2
 
+	self.looking_up = self.rot > math.pi
+
 	self.gun:update(dt, self)
 end
 
 function draw_player(self)
+	if     self.looking_up then self.gun:draw(self) end
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale* self.gun.flip, pixel_scale)
-	love.graphics.print(tostr(spr_pigeon), 10, 10)
-	self.gun:draw(self)
+	if not self.looking_up then self.gun:draw(self) end
+
+	love.graphics.print(tostr(self.looking_up), self.x, self.y - 100)
 	
-	rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
-	circ_color("fill", self.x, self.y, 3, {0,0,1})
+	--rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
+	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 end
 
 function player_movement(self, dt)

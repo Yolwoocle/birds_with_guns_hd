@@ -19,5 +19,12 @@ spr_laser = load_pixel_image("laser")
 spr_revolver = load_pixel_image("gun_revolver")
 
 spr_ground_dum = load_pixel_image("dummy_ground")
+sprs_floor_wood = {
+    load_pixel_image("floor_wood_1"),
+    load_pixel_image("floor_wood_2"),
+    load_pixel_image("floor_wood_3"),
+    load_pixel_image("floor_wood_4"),
+}
+spr_floor_wood_detail = load_pixel_image("floor_wood_detail")
 spr_wall_dum = load_pixel_image("dummy_wall")
 spr_box = load_pixel_image("box")

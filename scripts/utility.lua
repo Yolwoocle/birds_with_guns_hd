@@ -101,3 +101,8 @@ function raycast(x,y,dx,dy,distmax,pas)
 	end
 	return {dist = dist - 1,hit = hit}
 end
+
+function debug_print(txt)
+	love.graphics.print(tostr(txt),10,debug_y)
+	debug_y = debug_y + 20
+end

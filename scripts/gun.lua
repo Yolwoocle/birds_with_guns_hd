@@ -162,11 +162,12 @@ function make_bullet(self, p,angle,spread,type)
 		bullet.spr = spr_laser
 	end
 
+	bullet.interact_map = interact_map
+
 	return bullet
 end
 
 function update_bullet(self, dt)
-	
 	self.dx = self.dx * self.spdslow
 	self.dy = self.dy * self.spdslow
 	self.life = self.life - dt
@@ -182,9 +183,9 @@ function update_laser(self, dt)
 		self.x = self.player.x + math.cos(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
 		self.y = self.player.y + math.sin(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
 		
-		self.dx = math.cos(self.player.rot+self.scatter+self.spread) * self.spd
-		self.dy = math.sin(self.player.rot+self.scatter+self.spread) * self.spd
-		self.rot = self.player.rot+self.scatter+self.spread
+		self.dx = math.cos(self.player.rot + self.scatter + self.spread) * self.spd
+		self.dy = math.sin(self.player.rot + self.scatter + self.spread) * self.spd
+		self.rot = self.player.rot + self.scatter + self.spread
 
 		shoot_gun(self.gun)
 	end
@@ -211,18 +212,35 @@ function draw_laser(self)
 	--end
 	--end
 	self.length = self.length or 0
-	draw_centered(self.spr, self.x+(self.dx*(self.length/self.spd)*1.1)/2, self.y+(self.dy*(self.length/self.spd)*1.1)/2, self.rot+pi/2, self.scale, 2*(self.length/1.8186))
+	local x = self.x + (self.dx*(self.length/self.spd)*1.1)/2
+	local y = self.y + (self.dy*(self.length/self.spd)*1.1)/2
+
+	draw_centered(self.spr, x, y, self.rot + pi2*0.25, 1, 2*(self.length/1.8186))
+end
+
+function interact_map(self, map, x, y)
+	local tile = map:get_tile(x, y)
+	if tile.is_destructible then
+		map:set_tile(x, y, 0)
+	end
 end
 
 function checkdeath(self)
+
+	-- bullet
 	if self.life < 0 then
 		self.delete = true
 		return true
 	end
-	if map:is_solid(self.x / block_width, self.y / block_width) then
+
+	local mapx, mapy = self.x / block_width, self.y / block_width
+	if map:is_solid(mapx, mapy) then
+
 		self.delete = true
+		interact_map(self, map, mapx, mapy)
 		return true
 	end
+
 	if self.bounce then
 		collide_object(self,1)
 	end
