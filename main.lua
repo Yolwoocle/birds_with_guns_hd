@@ -30,17 +30,6 @@ function love.update(dt)
 	if player.shoot then
 		--_shot = player.gun:make_bullet(player,player.rot)
 		append_list(_shot, player.gun:make_shot(player,player.rot))
-		--player.gun.rafale 	 	= player.gun.save_rafale
-		--player.gun.bullet_spd  	= player.gun.save_bullet_spd
-		--player.gun.laser_length = player.gun.save_laser_length
-		--player.gun.nbshot 	 	= player.gun.save_nbshot
-		--player.gun.spread 	 	= player.gun.save_spread
-		--player.gun.scattering	= player.gun.save_scattering
-		--player.gun.offset_spd  	= player.gun.save_offset_spd
-		--player.gun.life 		= player.gun.save_life			
-		--player.gun.rafaledt	 	= player.gun.save_rafaledt 
-		--player.gun.spdslow 	 	= player.gun.save_spdslow	
-		--player.gun.scale 		= player.gun.save_scale
 	end
 
 	for i,v in ipairs(_shot) do
@@ -74,7 +63,7 @@ function love.draw()
 
 	for i,m in ipairs(mobs) do
 
-		draw_mob(m)
+		--draw_mob(m)
 
 	end
 
