@@ -67,6 +67,7 @@ function update_player(self, dt)
 				self.gun.rafaledt	 		= self.gun.rafaledt		+ self.gun.charge_rafaledt				* avancement
 				self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
 				self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement
+				self.gun.damage				= self.gun.damage		+ self.gun.charge_damage				* avancement
 				end
 
 				self.shoot = true
@@ -135,6 +136,7 @@ function save_stats(self)
 	self.gun.save_rafaledt	 	= self.gun.rafaledt 
 	self.gun.save_spdslow 	 	= self.gun.spdslow	
 	self.gun.save_scale 		= self.gun.scale
+	self.gun.save_damage 		= self.gun.damage
 end
 
 function load_save_stats(self)
@@ -149,4 +151,5 @@ function load_save_stats(self)
 	self.gun.rafaledt	 	= self.gun.save_rafaledt 
 	self.gun.spdslow 	 	= self.gun.save_spdslow	
 	self.gun.scale 			= self.gun.save_scale
+	self.gun.damage 		= self.gun.save_damage
 end

@@ -8,6 +8,7 @@ function make_gun(a)
 	local gun = {
 		name          = a.name          or "null",
 		type          = a.type          or "bullet",
+		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		spr 	      = a.spr           or spr_revolver,
 		bullet_spd    = a.bullet_spd    or 600,
@@ -40,6 +41,7 @@ function make_gun(a)
 		charge_life 		= a.charge_life 		or 0,
 		charge_rafaledt		= a.charge_rafaledt 	or 0,
 		charge_spdslow 		= a.charge_spdslow 		or 0,
+		charge_damage		= a.charge_damage		or 0,
 
 		cooldown_timer = 0,
 		dt 			   = 0,
@@ -142,6 +144,7 @@ function make_bullet(self, p,angle,spread,type)
 		scatter = scatter,
 		spread = spread,
 		scale = self.scale,
+		damage		= self.damage,
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet

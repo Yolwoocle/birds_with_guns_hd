@@ -10,7 +10,7 @@ guns = {
         category = "instant",	--"persistant" "instant"
 
 		charge = true,
-		charge_time = 2,
+		charge_time = 1,
 		charge_nbrafale = 10,
 		charge_bullet_spd = 1,
 		charge_laser_length = 300,
@@ -22,17 +22,20 @@ guns = {
 		charge_life = 1,
 		charge_rafaledt = 0,
 		charge_spdslow = .002,
+		charge_damage = 10,
 
         spr = spr_revolver, 
 
         bullet_spd = 1000,
         ospd = 0,
-        cooldown = 10,
+        cooldown = 1,
 
 		scale = 1,
 
         max_ammo = inf,
         scattering = .6,
+
+		damage = 1,
 
 		spawn_x =  70,
 		spawn_y =  0,
