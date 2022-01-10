@@ -60,16 +60,15 @@ function love.draw()
 	player:draw()
 
 	for i,m in ipairs(mobs) do
-		m:draw(player)
+		--m:draw()
 	end
 
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
-
-	love.graphics.print(#bullets,20,20)
-	love.graphics.print(dta,30,30)
-
+	
+	debug_y = 10
+	debug_print("FPS: "..tostr(love.timer.getFPS()))
 end
 
 
