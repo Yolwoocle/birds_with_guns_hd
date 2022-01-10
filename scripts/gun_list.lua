@@ -40,7 +40,7 @@ guns = {
 		spawn_x =  70,
 		spawn_y =  0,
 
-		life	= .1,
+		life	= .5,
 
         laser_length = 300,
 
