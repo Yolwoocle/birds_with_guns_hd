@@ -34,7 +34,7 @@ function update_player(self, dt)
 	-- Movement
 	player_movement(self,dt)
 	-- Collisions
-	collide_object(self)
+	collide_object(self,.2)
 	-- Apply movement
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt

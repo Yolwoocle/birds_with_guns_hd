@@ -43,12 +43,12 @@ function is_solid_rect(map, x, y, w, h)
         map:is_solid(x,   y+h)    --l
 end
 
-function collide_object(o)
+function collide_object(o,bounce)
 	--TODO: Swept AABB
 	local dt = love.timer.getDelta() 
 	local nextx = o.x + o.dx * dt
 	local nexty = o.y + o.dy * dt
-	local bounce = 0.2
+	local bounce = bounce or 0.2
 
 	if nextx < 0 then
 		o.dx = 0
