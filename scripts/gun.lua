@@ -10,6 +10,7 @@ function make_gun(a)
 		type          = a.type          or "bullet",
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
+		bounce 		  = a.bounce		or false,
 		spr 	      = a.spr           or spr_revolver,
 		bullet_spd    = a.bullet_spd    or 600,
 		offset_spd    = a.ospd	        or 0,
@@ -145,6 +146,10 @@ function make_bullet(self, p,angle,spread,type)
 		spread = spread,
 		scale = self.scale,
 		damage		= self.damage,
+		bounce   =  self.bounce,
+
+		w=self.scale*4,
+		h=self.scale*4,
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
@@ -196,6 +201,7 @@ end
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, 1, self.scale, self.scale)
 	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
+	rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
 end
 
 function draw_laser(self)
@@ -220,16 +226,23 @@ function interact_map(self, map, x, y)
 end
 
 function checkdeath(self)
+
 	-- bullet
+	if self.life < 0 then
+		self.delete = true
+		return true
+	end
+
 	local mapx, mapy = self.x / block_width, self.y / block_width
 	if map:is_solid(mapx, mapy) then
+
 		self.delete = true
 		interact_map(self, map, mapx, mapy)
 		return true
 	end
-	if self.life < 0 then
-		self.delete = true
-		return true
+
+	if self.bounce then
+		collide_object(self,1)
 	end
 	return false
 end
