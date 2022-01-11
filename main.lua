@@ -21,7 +21,8 @@ function love.load()
 	bullets = {}
 	_shot = {}
 	mobs = {}
-	table.insert(mobs,mob_list.Leo_renome)
+	table.insert(mobs, mob_list.Leo_renome:spawn())
+	
 	prevfire = button_down("fire")
 end
 

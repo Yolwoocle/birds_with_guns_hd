@@ -22,7 +22,7 @@ function make_gun(a)
 		spawn_y	      = a.spawn_y	    or spr:getHeight()/2,
 		rafale	      = a.rafale	    or 1, --FIXME: burst pas rafale
 		rafaledt      = a.rafaledt	    or .5, --FIXME: burst_spd ou jsp quoi
-		life	      = a.life		    or 2,	--FIXME: bullet_life
+		bullet_life	  = a.nullet_life   or 2,	--bullet_life
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
@@ -68,7 +68,7 @@ end
 function draw_gun(self, p)
 	local x = p.x + math.cos(p.rot) * p.gun_dist 
 	local y = p.y + math.sin(p.rot) * p.gun_dist 
-	draw_centered(p.gun.spr, x, y, p.rot, 1.75, 1.75 * p.gun.flip)
+	draw_centered(p.gun.spr, x, y, p.rot, 1.75, 1.75 * p.gun.flip, pixel_scale)
 end
 
 function shoot_gun(self)
@@ -87,7 +87,13 @@ function default_shoot(g,p)
 		else
 			for i=0,nbshot do
 				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot)+(1/g.nbshot/2))*g.spread
-				table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
+				table.insert(shot,{
+					gun = g,
+					player = p,
+					angle = p.rot,
+					offset = o,
+					time = k*g.rafaledt
+				})
 			end
 		end
 	end
@@ -118,12 +124,11 @@ end
 --------------
 
 function make_bullet(self, p,angle,spread,type)
-
 	local spread = spread or 0
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
-	local scatter = randomFloat(-self.scattering/2,self.scattering/2)
-	local spd = (self.bullet_spd+math.random(self.offset_spd)-self.offset_spd/2)
+	local scatter = random_float(-self.scattering/2,self.scattering/2)
+	local spd = (self.bullet_spd + random_pos_neg(self.offset_spd/2))
 
 	local bullet = {
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
@@ -132,7 +137,7 @@ function make_bullet(self, p,angle,spread,type)
 		dy = math.sin(angle+scatter+spread) * spd,
 		rot = angle+scatter+spread,
 		spdslow = self.spdslow,
-		life = self.life,
+		life = self.bullet_life,
 		delete = false,
 		category	  = self.category,
 		type = self.type,
@@ -199,7 +204,7 @@ function update_laser(self, dt)
 end
 
 function draw_bullet(self)
-	draw_centered(self.spr, self.x, self.y, 1, self.scale, self.scale)
+	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
 	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
 	rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
 end
@@ -226,7 +231,6 @@ function interact_map(self, map, x, y)
 end
 
 function checkdeath(self)
-
 	-- bullet
 	if self.life < 0 then
 		self.delete = true

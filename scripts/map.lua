@@ -60,7 +60,7 @@ function draw_map(self)
 			if type(tile.spr) == "table" then
 				--print(type(tile))
 				local sprs = tile.spr_size
-				local spr = tile.spr[ (y%sprs)*sprs + x%sprs + 1]
+				local spr = tile.spr[ (y%sprs)*sprs + x%sprs + 1 ]
 				if spr == nil then spr = spr_wall_dum end
 				love.graphics.draw(spr, x*w, y*w, 0, pixel_scale)
 			else

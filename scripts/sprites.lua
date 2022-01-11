@@ -7,6 +7,8 @@ end
 spr_pigeon = {
     load_pixel_image("pigeon_walk_1"),
     load_pixel_image("pigeon_walk_2"),
+    load_pixel_image("pigeon_walk_3"),
+    load_pixel_image("pigeon_walk_2"),
 }
 spr_drow = {
     load_pixel_image("crow_walk_1"),

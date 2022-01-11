@@ -7,7 +7,10 @@ function init_camera()
 		sx = 1,
 		sy = 1,
 
-		smoothing = 0.7,
+		lock_x = false,
+		lock_y = false,
+
+		smoothing = 20,
 
 		update = update_camera,
 		draw = draw_camera,
@@ -19,8 +22,12 @@ function init_camera()
 end
 
 function update_camera(self, dt)
-	self.x = self.x + (self.target_x - self.x) * self.smoothing * dt
-	self.y = self.y + (self.target_y - self.y) * self.smoothing * dt
+	if not self.lock_x then 
+		self.x = self.x + (self.target_x - self.x) * math.min(self.smoothing * dt, 1)  
+	end
+	if not self.lock_y then 
+		self.y = self.y + (self.target_y - self.y) * math.min(self.smoothing * dt, 1)
+	end
 end
 
 function draw_camera(self, dt)

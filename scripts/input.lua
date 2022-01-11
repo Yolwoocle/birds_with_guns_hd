@@ -25,3 +25,8 @@ function button_down(command)
 	end
 	return false
 end
+
+function get_mouse_pos(camera)
+	local mx, my = love.mouse.getPosition()
+	return mx + camera.x, my + camera.y
+end
