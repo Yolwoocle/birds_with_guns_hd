@@ -31,15 +31,15 @@ guns = {
         ospd = 1000,
         cooldown = 0,
 
-		scale = 1,
+		scale = 3,
 
         max_ammo = inf,
         scattering = .6,
 
 		damage = 1,
 
-		spawn_x =  70,
-		spawn_y =  0,
+		spawn_x = 70,
+		spawn_y = 0,
 
 		life	= .5,
 
@@ -48,7 +48,7 @@ guns = {
         rafale  = 10,
         rafaledt  = .1,
 
-		nbshot = 10,
+		nbshot = 1,
 		spread  = pi/2,
 
 		spdslow = 1,

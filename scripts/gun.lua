@@ -68,15 +68,13 @@ end
 function draw_gun(self, p)
 	local x = p.x + math.cos(p.rot) * p.gun_dist 
 	local y = p.y + math.sin(p.rot) * p.gun_dist 
-	draw_centered(p.gun.spr, x, y, p.rot, 1.75, 1.75 * p.gun.flip, pixel_scale)
+	draw_centered(p.gun.spr, x, y, p.rot, 1, p.gun.flip)
 end
 
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown
 end
-
---default_shoot
 
 function default_shoot(g,p)
 	local shot = {}
@@ -205,8 +203,8 @@ end
 
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
-	circ_color("fill", self.x, self.y, 3, {0, 1, 0})
-	rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
+	--circ_color("fill", self.x, self.y, 3, {0, 1, 0})
+	--rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
 end
 
 function draw_laser(self)
