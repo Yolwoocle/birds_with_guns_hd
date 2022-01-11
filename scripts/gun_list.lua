@@ -6,7 +6,7 @@ guns = {
 
     revolver = make_gun({
         name = "revolver",
-        type = "laser",			--"bullet" "laser"
+        type = "bullet",			--"bullet" "laser"
         category = "instant",	--"persistant" "instant"
 		bounce = true,
 

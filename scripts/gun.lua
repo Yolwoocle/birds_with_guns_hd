@@ -233,16 +233,16 @@ function checkdeath(self)
 		return true
 	end
 
+	if self.bounce then
+		collide_object(self,1)
+	end
+
 	local mapx, mapy = self.x / block_width, self.y / block_width
 	if map:is_solid(mapx, mapy) then
-
 		self.delete = true
 		interact_map(self, map, mapx, mapy)
 		return true
 	end
 
-	if self.bounce then
-		collide_object(self,1)
-	end
 	return false
 end
