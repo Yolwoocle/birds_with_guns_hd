@@ -31,7 +31,7 @@ function init_player()
 	return player
 end
 
-function update_player(self, dt)
+function update_player(self, dt, camera)
 	-- Movement
 	player_movement(self,dt)
 	-- Collisions
@@ -101,16 +101,16 @@ end
 function player_movement(self, dt)
 	local dir_vector = {x = 0, y = 0}
 
-	if love.keyboard.isScancodeDown("a") or love.keyboard.isScancodeDown("left") then
+	if button_down("left") then
 		dir_vector.x = dir_vector.x - 1
 	end
-	if love.keyboard.isScancodeDown("d") or love.keyboard.isScancodeDown("right") then
+	if button_down("right") then
 		dir_vector.x = dir_vector.x + 1
 	end
-	if love.keyboard.isScancodeDown("w") or love.keyboard.isScancodeDown("up") then
+	if button_down("up") then
 		dir_vector.y = dir_vector.y - 1
 	end
-	if love.keyboard.isScancodeDown("s") or love.keyboard.isScancodeDown("down") then
+	if button_down("down") then
 		dir_vector.y = dir_vector.y + 1
 	end
 

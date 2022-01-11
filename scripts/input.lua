@@ -1,8 +1,8 @@
 function init_keybinds() --TODO: use scancodes instead
 	keybinds = {
-		left  = {"left",  "a", "q"}, 
+		left  = {"left",  "a"}, 
 		right = {"right", "d"}, 
-		up    = {"up",    "w", "z"},
+		up    = {"up",    "w"},
 		down  = {"down",  "s"},
 		fire  = {"c"},
 		alt   = {"x"},
@@ -19,7 +19,7 @@ function button_down(command)
 	-- TODO: use scancode for compatibility with all keyboards
 	local keys = keybinds[command]
 	for _,k in pairs(keys) do
-		if love.keyboard.isDown(k) then
+		if love.keyboard.isScancodeDown(k) then
 			return true
 		end
 	end
