@@ -7,8 +7,8 @@ guns = {
     revolver = make_gun({
         name = "revolver",
         type = "bullet",			--"bullet" "laser"
-        category = "persistant",	--"persistant" "instant"
-		bounce = true,
+        category = "instant",	--"persistant" "instant"
+		bounce = false,
 
 		charge = false,
 		charge_time = 1,
@@ -27,25 +27,25 @@ guns = {
 
         spr = spr_revolver, 
 
-        bullet_spd = 1000,
-        ospd = 1000,
+        bullet_spd = 500,
+        ospd = 0,
         cooldown = 0,
 
-		scale = 3,
+		scale = 1,
 
         max_ammo = inf,
         scattering = .6,
 
 		damage = 1,
 
-		spawn_x = 70,
+		spawn_x = 37,
 		spawn_y = 0,
 
 		life	= .5,
 
         laser_length = 300,
 
-        rafale  = 10,
+        rafale  = 1,
         rafaledt  = .1,
 
 		nbshot = 1,

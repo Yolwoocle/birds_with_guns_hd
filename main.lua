@@ -10,14 +10,19 @@ require "scripts/mob_list"
 require "scripts/camera"
 
 function love.load()
-	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
+	love.window.setMode(0, 0, {fullscreen = false, resizable=false, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
-	
-	window_w, window_h = 384, 216
+
+	window_w, window_h = 512, 18*16
 	ratio_w = screen_w/window_w or screen_w
 	ratio_h = screen_h/window_h or screen_h
 	canvas = love.graphics.newCanvas(window_w, window_h)
+
+	font_def = love.graphics.getFont()
+	font_def = love.graphics.setNewFont(10)
+	
+	notification = ""
 	
 	init_keybinds()
 	camera = init_camera()
@@ -35,7 +40,7 @@ function love.load()
 end
 
 function love.update(dt)
-	camera:set_target(player.x-window_w/2, player.y-window_h/2)
+	camera:set_target(player.x-window_w/2, 0)--player.y-window_h/2)
 	camera:update(dt)
 
 	player:update(dt, camera)
@@ -45,8 +50,8 @@ function love.update(dt)
 	end
 
 	for i,v in ipairs(_shot) do
-		if v.time<=0 then
-			v.angle=player.rot
+		if v.time <= 0 then
+			v.angle = player.rot
 			table.insert(bullets,make_bullet(v.gun,v.player,v.angle,v.offset))
 			table.remove(_shot, i)
 		else
@@ -75,8 +80,8 @@ function love.draw()
 	-- TODO: y-sorting
 	map:draw()
 	
-	for i,m in ipairs(mobs) do
-		--m:draw()
+	for _,m in pairs(mobs) do
+		m:draw()
 		--draw_mob(m)
 	end
 	
@@ -87,11 +92,11 @@ function love.draw()
 	player:draw()
 
 	debug_y = 10
+	debug_print(notification)
 	debug_print("FPS: "..tostr(love.timer.getFPS()))
 	
 	love.graphics.setCanvas()
 	love.graphics.origin()
-	love.graphics.print("0,0 here", 0, 0)
 	love.graphics.scale(1, 1)
 	love.graphics.draw(canvas, 0, 0, 0, ratio_w, ratio_h)
 end
@@ -99,9 +104,18 @@ end
 
 function love.keypressed(key)
 	if key == "f5" then
+		--remove for release
 		love.event.quit("restart")
 	elseif key == "escape" then
+		--remove for release
 		love.event.quit()
+	
+	elseif key == "f2" then
+		if canvas then
+			local filename = os.date('birds_with_guns_%Y-%m-%d_%H-%M-%S.png') --get the date/time
+			canvas:newImageData():encode("png", filename)
+			notification = "Image saved at: "..love.filesystem.getSaveDirectory().."/"..filename
+		end
 	end
 end
 

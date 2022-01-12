@@ -8,8 +8,8 @@ function make_mob(a)
 		life	       = a.life		  or 2,	
 		cooldown_timer = 0,
 
-		x        = a.x		  or 500,
-		y        = a.y          or 200,
+		x        = a.x		  or 30,
+		y        = a.y          or 30,
 		w        = a.w          or 20,
 		h        = a.h          or 30,
 		dx       = a.dx         or 0,
@@ -30,8 +30,13 @@ function make_mob(a)
 	return mob
 end
 
-function spawn_mob(self)
-	return copy(self)
+function spawn_mob(self, x, y)
+	local c = copy(self)
+	x = x or 0 
+	y = y or 0
+	c.x = x
+	c.y = y
+	return c
 end
 
 function update_mob(self, dt)
@@ -39,5 +44,5 @@ function update_mob(self, dt)
 end
 
 function draw_mob(self)
-	draw_centered(self.spr, self.x, self.y, 1, 2, 2)
+	draw_centered(spr_fox[1], self.x, self.y)
 end

@@ -10,11 +10,11 @@ function init_player()
 	local player = {
 		x = 500,
 		y = 200,
-		w = 7,
-		h = 7,
+		w = 4,
+		h = 4,
 		dx = 0,
 		dy = 0,
-		speed = 80,
+		speed = 40,
 		friction = 0.8,
 		bounce = 0.6,
 		is_walking = false,
@@ -99,7 +99,7 @@ function draw_player(self)
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
 
-	rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
+	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	circ_color("fill", self.x, self.y, 3, {1,0,0})
 end
 
