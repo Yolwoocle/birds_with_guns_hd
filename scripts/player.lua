@@ -27,7 +27,7 @@ function init_player()
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = guns.revolver
+	player.gun = guns.pistolet
 	return player
 end
 

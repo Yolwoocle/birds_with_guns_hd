@@ -72,5 +72,5 @@ function collide_object(o,bounce)
 		o.dx = -o.dx * bounce
 		o.dy = -o.dy * bounce
 	end
-	return {coll_x = coll_x,coll_y = coll_y,coll_xy = coll_xy}
+	return coll_x or coll_y or coll_xy
 end
