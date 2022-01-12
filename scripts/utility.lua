@@ -7,6 +7,8 @@ floor = math.floor
 ceil = math.ceil
 
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
+	x = floor(x)
+	y = floor(y)
 	r = r or 0
 	sx = sx or pixel_scale
 	sy = sy or sx

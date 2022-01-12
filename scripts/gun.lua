@@ -181,7 +181,7 @@ function update_bullet(self, dt)
 end
 
 function update_laser(self, dt)
-	if self.category == "persistant" and button_down("fire") then
+	if self.category == "persistent" and button_down("fire") then
 		self.life = self.life + dt
 		self.x = self.player.x + math.cos(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
 		self.y = self.player.y + math.sin(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
@@ -194,7 +194,7 @@ function update_laser(self, dt)
 	end
 	self.life = self.life - dt 
 
-	local ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
+	local ray = raycast(self.x, self.y, self.dx/self.spd, self.dy/self.spd, self.laser_length, 0.5)
 	self.length = ray.dist
 	if self.life < 0 then
 		self.delete = true

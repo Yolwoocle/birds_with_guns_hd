@@ -25,7 +25,7 @@ function init_map(w, h)
 	map.get_tile = get_tile
 	map.set_tile = set_tile
 	map.is_solid = is_solid
-	map.load_from_string = load_from_string
+	map.load_from_file = load_from_file
 	return map
 end
 
@@ -70,7 +70,7 @@ function draw_map(self)
 	end
 end
 
-function load_from_string(self, str)
+function load_from_file(self, str)
 	--TODO: implement
 	-- . ground
 	-- # wall

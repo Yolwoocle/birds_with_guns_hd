@@ -1,5 +1,6 @@
 -- 21-09-30 Box collision test
 require "scripts/utility"
+require "scripts/settings"
 require "scripts/player"
 require "scripts/sprites"
 require "scripts/map"
@@ -8,6 +9,7 @@ require "scripts/gun_list"
 require "scripts/mob"
 require "scripts/mob_list"
 require "scripts/camera"
+require "scripts/screenshot"
 
 function love.load()
 	love.window.setMode(0, 0, {fullscreen = false, resizable=false, vsync=true, minwidth=400, minheight=300})	
@@ -27,8 +29,8 @@ function love.load()
 	init_keybinds()
 	camera = init_camera()
 
-	map = init_map(20, 20)
-	map:load_from_string(str)
+	map = init_map(50, 20)
+	map:load_from_file(str)
 
 	player = init_player()
 	bullets = {}
@@ -112,9 +114,15 @@ function love.keypressed(key)
 	
 	elseif key == "f2" then
 		if canvas then
-			local filename = os.date('birds_with_guns_%Y-%m-%d_%H-%M-%S.png') --get the date/time
-			canvas:newImageData():encode("png", filename)
-			notification = "Image saved at: "..love.filesystem.getSaveDirectory().."/"..filename
+			--TODO: option to use love.graphics.captureScreenshot( filename )
+			--TODO: setting to set pixel scale (2 or 3) by default
+			--TODO: paste screenshot into pastebin
+			--TODO: capture GIFs
+			--These features are important as it provides an easy way 
+			--for players to share the game with others (GIF especially)
+			screenshot()
+		else
+			notification = "Could not save screenshot"
 		end
 	end
 end
