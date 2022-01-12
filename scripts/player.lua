@@ -10,19 +10,25 @@ function init_player()
 	local player = {
 		x = 500,
 		y = 200,
-		w = 20,
-		h = 30,
+		w = 4,
+		h = 4,
 		dx = 0,
 		dy = 0,
-		speed = 20,
-		friction = 0.95,
+		speed = 40,
+		friction = 0.8,
 		bounce = 0.6,
+		is_walking = false,
 
-		spr = spr_pigeon[1],
+		spr = spr_pigeon[0],
 		rot = 0,
 		looking_up = false,
 
-		gun_dist = 30,
+		anim_sprs = spr_pigeon,
+		anim_frame = 0,
+		anim_frame_len = 0.1,
+		animate = animate_player,
+
+		gun_dist = 16,
 
 		update = update_player,
 		draw = draw_player,
@@ -41,30 +47,29 @@ function update_player(self, dt, camera)
 	self.y = self.y + self.dy * dt
 
 	-- Aiming
-	local mx, my = love.mouse.getPosition()
+	local mx, my = get_mouse_pos(camera)
 	self.rot = math.atan2(my - self.y, mx - self.x)
 	self.shoot = false
 	if self.gun.cooldown_timer <= 0 then
 		if (not(self.gun.charge) and button_down("fire")) or (prevfire and not(button_down("fire")) and self.gun.charge) then
 			if self.gun.ammo > 0 then
 
-
 				if self.gun.charge then
-				local avancement = self.gun.dt/self.gun.charge_time
+					local avancement = self.gun.dt/self.gun.charge_time
 				if self.gun.save_rafale then
-				load_save_stats(self)
+					load_save_stats(self)
 				end
 
 				save_stats(self)
 
 				self.gun.rafale 	 		= self.gun.rafale 		+ floor( self.gun.charge_nbrafale 		* avancement)
-				self.gun.bullet_spd 		= self.gun.bullet_spd 	+ self.gun.charge_bullet_spd 			* avancement
-				self.gun.laser_length 		= self.gun.laser_length	+ self.gun.charge_laser_length 			* avancement
+				self.gun.bullet_spd   = self.gun.bullet_spd 	+ self.gun.charge_bullet_spd 			* avancement
+				self.gun.laser_length = self.gun.laser_length	+ self.gun.charge_laser_length 			* avancement
 				self.gun.nbshot 		 	= self.gun.nbshot 		+ floor( self.gun.charge_nbshot 		* avancement)
 				self.gun.spread 		 	= self.gun.spread 		+ self.gun.charge_spread 				* avancement	
-				self.gun.scattering	 		= self.gun.scattering	+ self.gun.charge_scattering			* avancement	 		 
-				self.gun.offset_spd 		= self.gun.offset_spd 	+ self.gun.charge_ospd 					* avancement
-				self.gun.life 		 		= self.gun.life 		+ self.gun.charge_life 					* avancement
+				self.gun.scattering	  = self.gun.scattering	+ self.gun.charge_scattering			* avancement	 		 
+				self.gun.offset_spd   = self.gun.offset_spd 	+ self.gun.charge_ospd 					* avancement
+				self.gun.bullet_life  = self.gun.bullet_life  + self.gun.charge_life 					* avancement
 				self.gun.rafaledt	 		= self.gun.rafaledt		+ self.gun.charge_rafaledt				* avancement
 				self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
 				self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement
@@ -85,33 +90,38 @@ function update_player(self, dt, camera)
 	self.looking_up = self.rot > math.pi
 
 	self.gun:update(dt, self)
+
+	self:animate()
 end
 
 function draw_player(self)
 	if     self.looking_up then self.gun:draw(self) end
-	draw_centered(self.spr, self.x, self.y, 0, pixel_scale* self.gun.flip, pixel_scale)
+	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
 
-	love.graphics.print(tostr(self.looking_up), self.x, self.y - 100)
-	
-	--rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
-	--circ_color("fill", self.x, self.y, 3, {1,0,0})
+	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
+	circ_color("fill", self.x, self.y, 3, {1,0,0})
 end
 
 function player_movement(self, dt)
 	local dir_vector = {x = 0, y = 0}
 
+	self.is_walking = false
 	if button_down("left") then
 		dir_vector.x = dir_vector.x - 1
+		self.is_walking = true
 	end
 	if button_down("right") then
 		dir_vector.x = dir_vector.x + 1
+		self.is_walking = true
 	end
 	if button_down("up") then
 		dir_vector.y = dir_vector.y - 1
+		self.is_walking = true
 	end
 	if button_down("down") then
 		dir_vector.y = dir_vector.y + 1
+		self.is_walking = true
 	end
 
 	local norm = math.sqrt(dir_vector.x * dir_vector.x + dir_vector.y * dir_vector.y) + 0.0001
@@ -125,9 +135,14 @@ function player_movement(self, dt)
 	self.dy = self.dy * self.friction
 end
 
-function collide_player(self)
-
-end	
+function animate_player(self)
+	if self.is_walking then
+		self.frame = floor((love.timer.getTime()/self.anim_frame_len) % #self.anim_sprs)
+		self.spr = self.anim_sprs[self.frame + 1]
+	else
+		self.spr = self.anim_sprs[1]
+	end	
+end
 
 function save_stats(self)
 	self.gun.save_rafale 	 	= self.gun.rafale

@@ -1,2 +1,4 @@
-pixel_scale = 2
-block_width = load_pixel_image("dummy_ground"):getWidth() * pixel_scale
+pixel_scale = 1
+block_width = 16
+
+screenshot_scale = 2

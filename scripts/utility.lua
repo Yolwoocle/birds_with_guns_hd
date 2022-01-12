@@ -7,8 +7,10 @@ floor = math.floor
 ceil = math.ceil
 
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
+	x = floor(x)
+	y = floor(y)
 	r = r or 0
-	sx = sx or 1
+	sx = sx or pixel_scale
 	sy = sy or sx
 	ox = ox or 0
 	oy = oy or 0
@@ -50,24 +52,23 @@ function sgn(hex)
 	return -1
 end
 
-
 function dist(x1,y1,x2,y2)
 	return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
 end
 
-function randomFloat(min, max)
+function random_float(min, max)
 	local range = max - min
 	local offset = range * math.random()
 	local num = min + offset
 	return num
 end
 
-function copy(ls)
-	local newls = {}
-	for i,v in ipairs(ls) do
-		table.insert(newls,v) 
+function copy(t)
+	local new_t = {}
+	for k,v in pairs(t) do
+		new_t[k] = v
 	end
-	return newls
+	return new_t
 end
 
 
@@ -103,6 +104,6 @@ function raycast(x,y,dx,dy,distmax,pas)
 end
 
 function debug_print(txt)
-	love.graphics.print(tostr(txt),10,debug_y)
+	love.graphics.print(tostr(txt), camera.x + 10, camera.y + debug_y)
 	debug_y = debug_y + 20
 end
