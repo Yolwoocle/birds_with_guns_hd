@@ -8,7 +8,7 @@ guns = {
         name = "revolver",
         type = "bullet",			--"bullet" "laser"
         category = "instant",	--"persistant" "instant"
-		bounce = false,
+		bounce = true,
 
 		charge = false,
 		charge_time = 1,
