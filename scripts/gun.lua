@@ -150,6 +150,7 @@ function make_bullet(self, p,angle,spread,type)
 		scale = self.scale,
 		damage		= self.damage,
 		bounce   =  self.bounce,
+		length = {},
 
 		w=self.scale*4,
 		h=self.scale*4,
@@ -177,6 +178,19 @@ function update_bullet(self, dt)
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 
 	
+	if self.bounce then
+		local coll = collide_object(self,1)
+		if coll then
+			local x = self.x
+			local y = self.y
+			local h = self.h*1.3
+			local w = self.w*1.3
+			interact_map(self,map,(x-w)/ block_width, (y-h)/ block_width)
+			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
+			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
+			interact_map(self,map,(x+w)/ block_width, (y+h)/ block_width)
+		end
+	end
 	checkdeath(self)
 end
 
@@ -194,11 +208,91 @@ function update_laser(self, dt)
 	end
 	self.life = self.life - dt 
 
-	local ray = raycast(self.x, self.y, self.dx/self.spd, self.dy/self.spd, self.laser_length, 0.5)
-	self.length = ray.dist
+	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
+	table.insert(self.length , {length = ray.dist,x=self.x,y=self.y,rot = self.rot,dx=self.dx,dy=self.dy})
+
+
+	if self.bounce then
+		prevray = ray
+		prevray.dx = self.dx/self.spd
+		prevray.dy = self.dy/self.spd
+		prevray.rot = self.rot
+		_continue = true
+		while self.laser_length-prevray.dist>5 and _continue do
+
+		bobject = {x=prevray.x-prevray.dx*4 ,y=prevray.y-prevray.dy*4 ,dx=(prevray.dx) ,dy=(prevray.dy) ,h=0 ,w=0,life = 10,rot = prevray.rot}
+		--table.insert(debug , bobject)
+		of = bouncedir(bobject)
+		bobject.dx = bobject.dx*of.odx
+		bobject.dy = bobject.dy*of.ody
+		--table.insert(debug , {x=bobject.x+bobject.dx*30,y=bobject.y+bobject.dy*30})
+		ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,self.laser_length-prevray.dist,3)
+		table.insert(self.length , {length = ray.dist,x= bobject.dry or bobject.x+bobject.dx*(ray.dist/2) ,y=bobject.dry or bobject.y+bobject.dy*(ray.dist/2) ,rot =  bobject.rot ,dx=bobject.dx,dy=bobject.dy})
+		table.insert(debug , {x=ray.x,y=ray.y})
+
+		if ray.hit then _continue = false end
+
+		prevray = ray
+		prevray.dx = bobject.dx
+		prevray.dy = bobject.dy
+		prevray.rot = bobject.rot
+		prevray.dist = prevray.dist+ray.dist
+
+		end
+	end
+		----table.insert(debug , bobject)
+		--if collide_object(bobject) then
+		--	table.insert(debug , bobject)
+		--	table.insert(debug , {x=bobject.x+bobject.dx*-30,y=bobject.y+bobject.dy*30})
+		----collide_object(bobject)
+		--qd = szqd
+		--ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,self.laser_length-ray.dist,3)
+
+		--table.insert(self.length , {length = ray.dist,x=bobject.x,y=bobject.y,rot = self.rot,dx=bobject.dx,dy=bobject.dy})---ray.dist*bobject.dx*.5
+		--end
+		--local distravelled = ray.dist
+		--while self.laser_length-distravelled > 1 do
+		--	local endprevlaserx = ray.x
+		--	local endprevlasery = ray.y
+		--	local endprevlaserrot = ray.rot
+		--	local endprevlaserdx = ray.dx
+		--	local endprevlaserdy = ray.dy
+		--	ray = raycast(endprevlaserx-ray.dx*.1,endprevlasery-ray.dy*.1,endprevlaserdx/self.spd,endprevlaserdy/self.spd,self.laser_length-distravelled,3)
+		--	ray.rot = self.rot
+		--	ray.dx = self.dx
+		--	ray.dy = self.dy
+		--	table.insert(self.length , {length = ray.dist,x=endprevlaserx,y=endprevlasery,rot = -endprevlaserrot,dx=-endprevlaserdx,dy=-endprevlaserdy})
+		--	distravelled = distravelled+ray.dist
+		--end
+	--end
+
 	if self.life < 0 then
 		self.delete = true
 	end
+end
+
+function bouncedir(self)
+	for odx = 1,-1,-2 do
+		for ody = 1,-1,-2 do
+			self.x = self.x+(self.dx)*odx*10
+			self.y = self.y+(self.dy)*ody*10
+			--table.insert(debug , {x=self.x,y=self.y})
+			if not(checkdeath(self)) then
+				self.x = self.x-(self.dx)*odx*10
+				self.y = self.y-(self.dy)*ody*10
+
+				if not(odx+ody==-2 or odx+ody==2) then
+					self.rot = -self.rot
+				end
+
+				return {odx=odx,ody=ody}
+			end
+			self.x = self.x-(self.dx)*odx*10
+			self.y = self.y-(self.dy)*ody*10
+			--end
+		end
+	end
+	return false
 end
 
 function draw_bullet(self)
@@ -215,10 +309,12 @@ function draw_laser(self)
 	--end
 	--end
 	self.length = self.length or 0
-	local x = self.x + (self.dx*(self.length/self.spd)*1.1)/2
-	local y = self.y + (self.dy*(self.length/self.spd)*1.1)/2
+	for i,v in ipairs(self.length) do
+		local x = v.x + (v.dx*(v.length/self.spd)*1.1)/2
+		local y = v.y + (v.dy*(v.length/self.spd)*1.1)/2
 
-	draw_centered(self.spr, x, y, self.rot + pi2*0.25, 1, 2*(self.length/1.8186))
+		draw_centered(self.spr, x, y, v.rot + pi2*0.25, 1, 2*(v.length/1.8186))
+	end
 end
 
 function interact_map(self, map, x, y)
@@ -233,10 +329,6 @@ function checkdeath(self)
 	if self.life < 0 then
 		self.delete = true
 		return true
-	end
-
-	if self.bounce then
-		collide_object(self,1)
 	end
 
 	local mapx, mapy = self.x / block_width, self.y / block_width

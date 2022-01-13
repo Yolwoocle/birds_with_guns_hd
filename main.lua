@@ -88,6 +88,10 @@ function love.draw()
 		--draw_mob(m)
 	end
 	
+	for i,m in ipairs(debug) do
+		circ_color("fill", m.x, m.y, 3, {1,0,0})
+	end
+
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 

@@ -97,17 +97,17 @@ function raycast(x,y,dx,dy,distmax,pas)
 	local continue = true
 	while continue do
 		local length = distmax-dist
-		local nextx = x+(dx*dist*1.1)
-		local nexty = y+(dy*dist*1.1)
+		nextx = x+(dx*dist*1.1)
+		nexty = y+(dy*dist*1.1)
 		local newelt = {x=nextx , y=nexty ,life = length}
 		continue = not(checkdeath(newelt))
 		dist=dist+(1*pas)
 	end
-	if dist - 1 > distmax then
+	if dist - (1*pas) > distmax-1 then
 		 local hit = false 
 	else local hit = true 
 	end
-	return {dist = dist - 1,hit = hit}
+	return {dist = dist - (1*pas),hit = hit,y = nexty,x = nextx}
 end
 
 function debug_print(txt)
