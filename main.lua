@@ -29,8 +29,9 @@ function love.load()
 	init_keybinds()
 	camera = init_camera()
 
-	map = init_map(50, 20)
-	map:load_from_file(str)
+	map = init_map(400, 20)
+	map:load_from_file("chunks_wag_1.txt")
+	map:generate_map()
 
 	player = init_player()
 	bullets = {}

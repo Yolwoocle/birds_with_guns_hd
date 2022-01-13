@@ -224,7 +224,7 @@ end
 function interact_map(self, map, x, y)
 	local tile = map:get_tile(x, y)
 	if tile.is_destructible then
-		map:set_tile(x, y, 0)
+		map:set_tile(x, y, 1)
 	end
 end
 

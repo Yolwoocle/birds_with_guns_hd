@@ -39,4 +39,10 @@ sprs_floor_wood = {
 }
 spr_floor_wood_detail = load_pixel_image("floor_wood_detail")
 spr_wall_dum = load_pixel_image("dummy_wall")
+spr_wall_dum = {
+    load_pixel_image("walls_sample1"),
+    load_pixel_image("walls_sample1"),
+    load_pixel_image("walls_sample1"),
+    load_pixel_image("walls_sample1"),
+}
 spr_box = load_pixel_image("box")
