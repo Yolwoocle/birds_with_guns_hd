@@ -125,6 +125,7 @@ function draw_line_spr(x1,y1,x2,y2,spr,scale)
 	local rota = math.atan2(ymidd,xmidd)
 	local dist = dist(x1,y1,x2,y2)
 	love.graphics.draw(spr, x1,y1 , rota-pi/2 , scale , dist , spr:getWidth()/2)
+end
 
 function shuffle(t, rng)
 	--Fisher–Yates shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle

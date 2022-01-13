@@ -224,7 +224,7 @@ function update_laser(self, dt)
 
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
 	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y})
-	--table.insert(debug , {x=ray.x,y=ray.y})
+
 
 	if self.bounce then
 
@@ -232,26 +232,24 @@ function update_laser(self, dt)
 		prevray.dx = self.dx/self.spd
 		prevray.dy = self.dy/self.spd
 		prevray.rot = self.rot
-		_continue = true
+
 
 		nwlength = self.laser_length-ray.dist
 
 		while nwlength>0 do
-		--table.insert(debug , {x=prevray.x,y=prevray.y})
+
 		bobject = {x=prevray.x ,y=prevray.y ,dx=(prevray.dx) ,dy=(prevray.dy) ,h=0 ,w=0,life = 10,rot = prevray.rot}
-		--table.insert(debug , bobject)
+
 		of = bouncedir(bobject)
 		bobject.dx = bobject.dx*of.odx
 		bobject.dy = bobject.dy*of.ody
-		--table.insert(debug , {x=bobject.x+bobject.dx*30,y=bobject.y+bobject.dy*30})
+
 		ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,nwlength,3)
 
 		table.insert(self.length , {length = ray.dist,x= ray.x,
 		y= ray.y , rot =  bobject.rot ,dx=bobject.dx,dy=bobject.dy,x1 = bobject.x ,y1 = bobject.y})
 
 		nwlength = nwlength-ray.dist
-
-		--if not(ray.hit) then _continue = false end
 
 		prevray = ray
 		prevray.dx = bobject.dx
@@ -260,32 +258,6 @@ function update_laser(self, dt)
 
 		end
 	end
-		----table.insert(debug , bobject)
-		--if collide_object(bobject) then
-		--	table.insert(debug , bobject)
-		--	table.insert(debug , {x=bobject.x+bobject.dx*-30,y=bobject.y+bobject.dy*30})
-		----collide_object(bobject)
-		--qd = szqd
-		--ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,self.laser_length-ray.dist,3)
-
-		--table.insert(self.length , {length = ray.dist,x=bobject.x,y=bobject.y,rot = self.rot,dx=bobject.dx,dy=bobject.dy})---ray.dist*bobject.dx*.5
-		--end
-		--local distravelled = ray.dist
-		--while self.laser_length-distravelled > 1 do
-		--	local endprevlaserx = ray.x
-		--	local endprevlasery = ray.y
-		--	local endprevlaserrot = ray.rot
-		--	local endprevlaserdx = ray.dx
-		--	local endprevlaserdy = ray.dy
-		--	ray = raycast(endprevlaserx-ray.dx*.1,endprevlasery-ray.dy*.1,endprevlaserdx/self.spd,endprevlaserdy/self.spd,self.laser_length-distravelled,3)
-		--	ray.rot = self.rot
-		--	ray.dx = self.dx
-		--	ray.dy = self.dy
-		--	table.insert(self.length , {length = ray.dist,x=endprevlaserx,y=endprevlasery,rot = -endprevlaserrot,dx=-endprevlaserdx,dy=-endprevlaserdy})
-		--	distravelled = distravelled+ray.dist
-		--end
-	--end
-
 	if self.life < 0 then
 		self.delete = true
 	end
@@ -294,10 +266,8 @@ end
 function bouncedir(self)
 	for odx = 1,-1,-2 do
 		for ody = 1,-1,-2 do
-			--if not(odx+ody==2) then
 			self.x = self.x+(self.dx)*odx*4
 			self.y = self.y+(self.dy)*ody*4
-			--table.insert(debug , {x=self.x,y=self.y})
 			if not(checkdeath(self)) then
 				self.x = self.x-(self.dx)*odx*3.85
 				self.y = self.y-(self.dy)*ody*3.85
@@ -310,35 +280,18 @@ function bouncedir(self)
 			end
 			self.x = self.x-(self.dx)*odx*4
 			self.y = self.y-(self.dy)*ody*4
-			--end
 		end
 	end
-	return false
+	nwlength = 0
+	return {odx=1,ody=1}
 end
 
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
-	--circ_color("fill", self.x, self.y, 3, {0, 1, 0})
-	--rect_color("line", self.x-self.w, self.y-self.h, 2*self.w, 2*self.h, {1,0,0})
 end
 
 function draw_laser(self)
-	--if not(self.laser_spr==nil) then
-	--for i,v in pairs(self.laser_spr) do
-	--draw_centered(self.spr, v.x, v.y, self.rot+pi/2, 2, 2)
-	----circ_color("fill", self.x, self.y, 3, {0, 1, 0})
-	--end
-	--end
-	--self.length = self.length or 0
-	--for i,v in ipairs(self.length) do
-	--	local x = v.x + (v.dx*(v.length/self.spd))/2
-	--	local y = v.y + (v.dy*(v.length/self.spd))/2
---
-	--	love.graphics.draw(self.spr, x, y, v.rot + pi2*0.25, 1, 2*(v.length/2))
-	--end
 	for i,v in ipairs(self.length) do
-		--love.graphics.draw(self.spr, v.x , v.y, v.rot + pi2*0.25, 1*self.scale, v.length,spr:getWidth()/2.3)
-		--love.graphics.line( v.x1, v.y1, v.x, v.y)
 		draw_line_spr(v.x1,v.y1,v.x,v.y,self.spr,self.scale)
 	end
 end

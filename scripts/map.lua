@@ -181,9 +181,9 @@ function make_tile(n, spr, a)
 	local tile = {
 		n = n,
 		spr 			= spr				or spr_missing,
-		is_solid 		= a.is_solid		or ,
-		is_destructible = a.is_destructible or ,
-		is_transparent  = a.is_transparent  or ,
+		is_solid 		= a.is_solid		,
+		is_destructible = a.is_destructible ,
+		is_transparent  = a.is_transparent  ,
 	}
 	if type(spr) == "table" then
 		if #spr == 4 then      tile.spr_size = 2 

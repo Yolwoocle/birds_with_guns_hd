@@ -8,8 +8,8 @@ guns = {
         name = "revolver",
         type = "laser",			--"bullet" "laser"
 
-        category = "persistent",	--"persistent" "instant"
-		bounce = false,
+        category = "instant",	--"persistent" "instant"
+		bounce = true,
 
 		charge = false,
 		charge_time = 1,
@@ -28,14 +28,14 @@ guns = {
 
         spr = spr_revolver, 
 
-        bullet_spd = 1000,
-        ospd = 1000,
+        bullet_spd = 100,
+        ospd = 0,
         cooldown = .1,
 
-		scale = 1,
+		scale = .5,
 
         max_ammo = inf,
-        scattering = .6,
+        scattering = 0,
 
 		damage = 1,
 
@@ -49,7 +49,7 @@ guns = {
         rafale  = 1,
         rafaledt  = .1,
 
-		nbshot = 1,
+		nbshot = 5,
 		spread  = pi/2,
 
 
