@@ -8,9 +8,11 @@ function init_camera()
 		target_y = 0,
 		sx = 1,
 		sy = 1,
+
+		shake = shake_camera,
 		shk_dir = 0,
 		shk_dist = 0,
-		friction = 0.8,
+		shk_fric = 50,
 		
 		lock_x = false,
 		lock_y = false,
@@ -33,12 +35,15 @@ function update_camera(self, dt)
 	if not self.lock_y then 
 		self.y = self.y + (self.target_y - self.y) * math.min(self.smoothing * dt, 1)
 	end
-	self.shk_dist = self.shk_dist
+	self.shk_dist = self.shk_dist * min(1, self.shk_fric * dt)
+	
+	self.real_x = -(self.x + math.cos(self.shk_dir) * self.shk_dist)
+	self.real_y = -(self.y + math.sin(self.shk_dir) * self.shk_dist)
 end
 
 function draw_camera(self, dt)
 	-- Put this in love.draw, while update_camera should be in update. 
-	love.graphics.translate(floor(-self.x), floor(-self.y))
+	love.graphics.translate(self.real_x, self.real_y)
 	love.graphics.scale(self.sx, self.sy)
 end
 

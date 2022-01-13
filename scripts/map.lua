@@ -15,10 +15,12 @@ function init_map(w, h)
 	
 	map.draw = draw_map
 	map.tiles = {
-		[0] = make_tile(0, spr_ground_dum, {is_solid = false, is_destructible = false, is_transparent = true}),
+		[0] = make_tile(0, spr_ground_dum, {is_solid = true, is_destructible = false, is_transparent = true}),
 		make_tile(1, sprs_floor_wood, {is_solid = false, is_destructible = false, is_transparent = false}),
 		make_tile(2, spr_wall_dum, {is_solid = true, is_destructible = false, is_transparent = false}),
 		make_tile(3, spr_box,      {is_solid = true, is_destructible = true, is_transparent = true}),
+		make_tile(4, spr_chain, {is_solid = false, is_destructible = false, is_transparent = false}),
+		make_tile(5, spr_floor_metal, {is_solid = false, is_destructible = false, is_transparent = false}),
 	}
 	map.tile_size = map.tiles[0].spr:getWidth() * pixel_scale
 	
@@ -70,7 +72,7 @@ function draw_map(self)
 			if tile.is_transparent then
 				draw_tile(self.tiles[1], x, y, w)
 			end
-			draw_tile(tile, x*w, y*w)
+			draw_tile(tile, x, y, w)
 		end
 	end
 end
@@ -81,9 +83,9 @@ function draw_tile(tile, x, y, w)
 		local sprs = tile.spr_size
 		local spr = tile.spr[ (y%sprs)*sprs + x%sprs + 1 ]
 		if spr == nil then spr = spr_wall_dum end
-		love.graphics.draw(spr, x, y)
+		love.graphics.draw(spr, x*w, y*w)
 	else
-		love.graphics.draw(tile.spr, x, y)
+		love.graphics.draw(tile.spr, x*w, y*w)
 	end
 end
 
@@ -117,6 +119,9 @@ function load_from_file(self, file)
 				if     chr == "." then tile = 1
 				elseif chr == "#" then tile = 2
 				elseif chr == "b" then tile = 3
+				elseif chr == "c" then tile = 4
+				elseif chr == "," then tile = 5
+				elseif chr == "`" then tile = 0
 				end
 				
 				self.chunks[chunk][y][x] = tile
@@ -155,7 +160,7 @@ end
 function generate_map(self, wagon, seed)
 	local chunk_ids = {} 
 	for i=1, #self.chunks do
-		table.insert(chunk_ids, i)
+		table.insert(chunk_ids, 8)--i)
 	end
 
 	local rng = seed and love.math.newRandomGenerator(seed) or nil
@@ -175,10 +180,10 @@ end
 function make_tile(n, spr, a)
 	local tile = {
 		n = n,
-		spr = spr,
-		is_solid = a.is_solid,
-		is_destructible = a.is_destructible,
-		is_transparent = a.is_transparent,
+		spr 			= spr				or spr_missing,
+		is_solid 		= a.is_solid		or ,
+		is_destructible = a.is_destructible or ,
+		is_transparent  = a.is_transparent  or ,
 	}
 	if type(spr) == "table" then
 		if #spr == 4 then      tile.spr_size = 2 

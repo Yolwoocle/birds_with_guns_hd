@@ -74,3 +74,16 @@ function collide_object(o,bounce)
 	end
 	return coll_x or coll_y or coll_xy
 end
+
+function raycast_coll(x, y, dx, dy)
+	-- returns if a point moving from (x,y) to (x+dx,y+dy) will hit a wall.
+	-- assumes `map` is the map. Maybe put it as argument instead, idk
+	local nx = x + dx
+	local ny = y + dy
+
+	if abs(dy) > abs(dx) then
+		local slope = dy/dx
+	else
+		local invslope = dx/dy
+	end
+end	
