@@ -4,6 +4,8 @@ function load_pixel_image(name)
     return img 
 end
 
+spr_missing = load_pixel_image("missing")
+
 -- Players
 spr_pigeon = {
     load_pixel_image("pigeon_walk_1"),
@@ -39,4 +41,12 @@ sprs_floor_wood = {
 }
 spr_floor_wood_detail = load_pixel_image("floor_wood_detail")
 spr_wall_dum = load_pixel_image("dummy_wall")
+spr_wall_dum = {
+    load_pixel_image("walls_sample1"),
+    load_pixel_image("walls_sample1"),
+    load_pixel_image("walls_sample1"),
+    load_pixel_image("walls_sample1"),
+}
 spr_box = load_pixel_image("box")
+spr_chain = load_pixel_image("chain")
+spr_floor_metal = load_pixel_image("floor_metal")

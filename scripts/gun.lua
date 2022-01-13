@@ -8,6 +8,10 @@ function make_gun(a)
 	local gun = {
 		name          = a.name          or "null",
 		type          = a.type          or "bullet",
+		x = 0,
+		y = 0,
+		dir = 0,
+
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		bounce 		  = a.bounce		or false,
@@ -22,7 +26,7 @@ function make_gun(a)
 		spawn_y	      = a.spawn_y	    or spr:getHeight()/2,
 		rafale	      = a.rafale	    or 1, --FIXME: burst pas rafale
 		rafaledt      = a.rafaledt	    or .5, --FIXME: burst_spd ou jsp quoi
-		bullet_life	  = a.nullet_life   or 2,	--bullet_life
+		bullet_life	  = a.bullet_life   or 2,	--bullet_life
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
@@ -47,7 +51,9 @@ function make_gun(a)
 		cooldown_timer = 0,
 		dt 			   = 0,
 
-		make_shot = a.make_shot or default_shoot, 
+		make_shot = a.make_shot or default_shoot,
+		
+		screenshake = a.screenshake or 10,
 
 		shoot = shoot_gun,
 		update = update_gun,
@@ -58,6 +64,7 @@ function make_gun(a)
 end
 
 function update_gun(self, dt, p)
+	self.rot = p.rot
 	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
 	self.flip = 1 -- -sgn( (p.rot + pi/2) % (pi*2) - pi)
 	if pi2*0.25 < p.rot and p.rot < pi2*0.75 then
@@ -74,6 +81,7 @@ end
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown
+	camera:shake(self.rot, self.screenshake)
 end
 
 function default_shoot(g,p)
@@ -200,6 +208,7 @@ end
 
 function update_laser(self, dt)
 	if self.category == "persistent" and button_down("fire") then
+		self.length = {}
 		self.life = self.life + dt
 		self.x = self.player.x + math.cos(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
 		self.y = self.player.y + math.sin(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
@@ -210,6 +219,7 @@ function update_laser(self, dt)
 
 		shoot_gun(self.gun)
 	end
+
 	self.life = self.life - dt 
 
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
@@ -336,7 +346,7 @@ end
 function interact_map(self, map, x, y)
 	local tile = map:get_tile(x, y)
 	if tile.is_destructible then
-		map:set_tile(x, y, 0)
+		map:set_tile(x, y, 1)
 	end
 end
 

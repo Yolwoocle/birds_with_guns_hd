@@ -28,12 +28,12 @@ function init_player()
 		anim_frame_len = 0.1,
 		animate = animate_player,
 
-		gun_dist = 16,
+		gun_dist = 14,
 
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = guns.pistolet
+	player.gun = guns.revolver
 	return player
 end
 
@@ -60,6 +60,7 @@ function update_player(self, dt, camera)
 					load_save_stats(self)
 				end
 
+				--TODO: put this in guns this has nothing to do in player.update
 				save_stats(self)
 
 				self.gun.rafale 	 		= self.gun.rafale 		+ floor( self.gun.charge_nbrafale 		* avancement)

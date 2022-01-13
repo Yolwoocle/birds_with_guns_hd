@@ -8,9 +8,8 @@ guns = {
         name = "revolver",
         type = "laser",			--"bullet" "laser"
 
-
         category = "persistent",	--"persistent" "instant"
-		bounce = true,
+		bounce = false,
 
 		charge = false,
 		charge_time = 1,
@@ -33,7 +32,6 @@ guns = {
         ospd = 1000,
         cooldown = .1,
 
-
 		scale = 1,
 
         max_ammo = inf,
@@ -41,10 +39,10 @@ guns = {
 
 		damage = 1,
 
-		spawn_x = 37,
+		spawn_x = nil,
 		spawn_y = 0,
 
-		life	= .5,
+		bullet_life	= .1,
 
         laser_length = 300,
 
@@ -57,23 +55,30 @@ guns = {
 
 		spdslow = 1,
 
+		screenshake = 3,
+
 		make_shot = default_shoot
-		--function (g,p)
-		--	return default_shoot(g,p)
-		--end,
 	}),
 	
 	pistolet = make_gun({
 		name = "pistolet", 
 		type = "laser",
+		category = "persistent",
 		bounce = true,
 		laser_length = 300,
 		scale = 1,
 		scattering = 0,
-		spawn_x = 0,
+		spawn_x = 17,
 		spawn_y = 0,
 
-		spawn_x =  17,
+		cooldown = .1,
+
+		life = 100,
+		nbshot = 1,
+		spread  = pi/2,
+
+		spawn_x =  10,
+
 		spawn_y =  0,
 
 		max_ammo = inf,
