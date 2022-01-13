@@ -32,6 +32,7 @@ function make_gun(a)
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1, --FIXME: slowdown/speed_mult
 		scale 		  = a.scale			or 2,
+		oscale 		  = a.oscale        or 0,
 
 		charge				= a.charge 				or false,
 		charge_time 		= a.charge_time 		or 1,
@@ -42,6 +43,7 @@ function make_gun(a)
 		charge_spread 		= a.charge_spread 		or 0,
 		charge_scattering	= a.charge_scattering 	or 0,
 		charge_scale 		= a.charge_scale 		or 0,
+		charge_oscale		= a.charge_oscale		or 0,
 		charge_ospd 		= a.charge_ospd 		or 0,
 		charge_life 		= a.charge_life 		or 0,
 		charge_rafaledt		= a.charge_rafaledt 	or 0,
@@ -155,7 +157,7 @@ function make_bullet(self, p,angle,spread,type)
 		spd = spd,
 		scatter = scatter,
 		spread = spread,
-		scale = self.scale,
+		scale = self.scale + random_float(-self.oscale/2, self.oscale/2),
 		damage		= self.damage,
 		bounce   =  self.bounce,
 		length = {},

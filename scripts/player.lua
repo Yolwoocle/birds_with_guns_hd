@@ -75,6 +75,7 @@ function update_player(self, dt, camera)
 				self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
 				self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement
 				self.gun.damage				= self.gun.damage		+ self.gun.charge_damage				* avancement
+				self.gun.oscale		  = self.gun.oscale 			+ self.gun.charge_oscale 				* avancement
 				end
 
 				self.shoot = true
@@ -158,6 +159,8 @@ function save_stats(self)
 	self.gun.save_spdslow 	 	= self.gun.spdslow	
 	self.gun.save_scale 		= self.gun.scale
 	self.gun.save_damage 		= self.gun.damage
+	self.gun.save_oscale		= self.gun.oscale
+	
 end
 
 function load_save_stats(self)
@@ -173,4 +176,5 @@ function load_save_stats(self)
 	self.gun.spdslow 	 	= self.gun.save_spdslow	
 	self.gun.scale 			= self.gun.save_scale
 	self.gun.damage 		= self.gun.save_damage
+	self.gun.oscale			= self.gun.save_oscale
 end
