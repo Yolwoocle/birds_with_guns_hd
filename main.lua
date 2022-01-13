@@ -12,6 +12,9 @@ require "scripts/camera"
 require "scripts/screenshot"
 
 function love.load()
+
+	prevray = {}
+
 	love.window.setMode(0, 0, {fullscreen = false, resizable=false, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
@@ -99,6 +102,7 @@ function love.draw()
 
 	debug_y = 10
 	debug_print(notification)
+	if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS: "..tostr(love.timer.getFPS()))
 	
 	love.graphics.setCanvas()

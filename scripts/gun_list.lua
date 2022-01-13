@@ -68,8 +68,12 @@ guns = {
 		type = "laser",
 		bounce = true,
 		laser_length = 300,
+		scale = 1,
+		scattering = 0,
+		spawn_x = 0,
+		spawn_y = 0,
 
-		spawn_x =  70,
+		spawn_x =  17,
 		spawn_y =  0,
 
 		max_ammo = inf,

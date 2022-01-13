@@ -90,20 +90,31 @@ function raycast(x,y,dx,dy,distmax,pas)
 	local continue = true
 	while continue do
 		local length = distmax-dist
-		nextx = x+(dx*dist*1.1)
-		nexty = y+(dy*dist*1.1)
+		nextx = x+(dx*dist)
+		nexty = y+(dy*dist)
 		local newelt = {x=nextx , y=nexty ,life = length}
 		continue = not(checkdeath(newelt))
-		dist=dist+(1*pas)
+		dist=dist+pas
 	end
-	if dist - (1*pas) > distmax-1 then
-		 local hit = false 
-	else local hit = true 
+
+	if distmax-(dist-pas) <= 0 then
+		hit = false
+	else
+		hit = true
 	end
-	return {dist = dist - (1*pas),hit = hit,y = nexty,x = nextx}
+
+	return {dist = dist - pas,hit = hit,y = nexty,x = nextx}
 end
 
 function debug_print(txt)
 	love.graphics.print(tostr(txt), camera.x + 10, camera.y + debug_y)
 	debug_y = debug_y + 20
+end
+
+function draw_line_spr(x1,y1,x2,y2,spr,scale)
+	xmidd = x2-x1
+	ymidd = y2-y1
+	local rota = math.atan2(ymidd,xmidd)
+	local dist = dist(x1,y1,x2,y2)
+	love.graphics.draw(spr, x1,y1 , rota-pi/2 , scale , dist , spr:getWidth()/2)
 end

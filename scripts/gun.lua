@@ -183,12 +183,16 @@ function update_bullet(self, dt)
 		if coll then
 			local x = self.x
 			local y = self.y
-			local h = self.h*1.3
-			local w = self.w*1.3
+			local h = self.h*3.5
+			local w = self.w*3.5
 			interact_map(self,map,(x-w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y+h)/ block_width)
+			interact_map(self,map,(x  )/ block_width, (y-h)/ block_width)
+        	interact_map(self,map,(x-w)/ block_width, (y  )/ block_width)
+       	 	interact_map(self,map,(x+w)/ block_width, (y  )/ block_width)
+        	interact_map(self,map,(x  )/ block_width, (y+h)/ block_width)
 		end
 	end
 	checkdeath(self)
@@ -209,34 +213,40 @@ function update_laser(self, dt)
 	self.life = self.life - dt 
 
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
-	table.insert(self.length , {length = ray.dist,x=self.x,y=self.y,rot = self.rot,dx=self.dx,dy=self.dy})
-
+	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y})
+	--table.insert(debug , {x=ray.x,y=ray.y})
 
 	if self.bounce then
+
 		prevray = ray
 		prevray.dx = self.dx/self.spd
 		prevray.dy = self.dy/self.spd
 		prevray.rot = self.rot
 		_continue = true
-		while self.laser_length-prevray.dist>5 and _continue do
 
-		bobject = {x=prevray.x-prevray.dx*4 ,y=prevray.y-prevray.dy*4 ,dx=(prevray.dx) ,dy=(prevray.dy) ,h=0 ,w=0,life = 10,rot = prevray.rot}
+		nwlength = self.laser_length-ray.dist
+
+		while nwlength>0 do
+		--table.insert(debug , {x=prevray.x,y=prevray.y})
+		bobject = {x=prevray.x ,y=prevray.y ,dx=(prevray.dx) ,dy=(prevray.dy) ,h=0 ,w=0,life = 10,rot = prevray.rot}
 		--table.insert(debug , bobject)
 		of = bouncedir(bobject)
 		bobject.dx = bobject.dx*of.odx
 		bobject.dy = bobject.dy*of.ody
 		--table.insert(debug , {x=bobject.x+bobject.dx*30,y=bobject.y+bobject.dy*30})
-		ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,self.laser_length-prevray.dist,3)
-		table.insert(self.length , {length = ray.dist,x= bobject.dry or bobject.x+bobject.dx*(ray.dist/2) ,y=bobject.dry or bobject.y+bobject.dy*(ray.dist/2) ,rot =  bobject.rot ,dx=bobject.dx,dy=bobject.dy})
-		table.insert(debug , {x=ray.x,y=ray.y})
+		ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,nwlength,3)
 
-		if ray.hit then _continue = false end
+		table.insert(self.length , {length = ray.dist,x= ray.x,
+		y= ray.y , rot =  bobject.rot ,dx=bobject.dx,dy=bobject.dy,x1 = bobject.x ,y1 = bobject.y})
+
+		nwlength = nwlength-ray.dist
+
+		--if not(ray.hit) then _continue = false end
 
 		prevray = ray
 		prevray.dx = bobject.dx
 		prevray.dy = bobject.dy
 		prevray.rot = bobject.rot
-		prevray.dist = prevray.dist+ray.dist
 
 		end
 	end
@@ -274,12 +284,13 @@ end
 function bouncedir(self)
 	for odx = 1,-1,-2 do
 		for ody = 1,-1,-2 do
-			self.x = self.x+(self.dx)*odx*10
-			self.y = self.y+(self.dy)*ody*10
+			--if not(odx+ody==2) then
+			self.x = self.x+(self.dx)*odx*4
+			self.y = self.y+(self.dy)*ody*4
 			--table.insert(debug , {x=self.x,y=self.y})
 			if not(checkdeath(self)) then
-				self.x = self.x-(self.dx)*odx*10
-				self.y = self.y-(self.dy)*ody*10
+				self.x = self.x-(self.dx)*odx*3.85
+				self.y = self.y-(self.dy)*ody*3.85
 
 				if not(odx+ody==-2 or odx+ody==2) then
 					self.rot = -self.rot
@@ -287,8 +298,8 @@ function bouncedir(self)
 
 				return {odx=odx,ody=ody}
 			end
-			self.x = self.x-(self.dx)*odx*10
-			self.y = self.y-(self.dy)*ody*10
+			self.x = self.x-(self.dx)*odx*4
+			self.y = self.y-(self.dy)*ody*4
 			--end
 		end
 	end
@@ -308,12 +319,17 @@ function draw_laser(self)
 	----circ_color("fill", self.x, self.y, 3, {0, 1, 0})
 	--end
 	--end
-	self.length = self.length or 0
+	--self.length = self.length or 0
+	--for i,v in ipairs(self.length) do
+	--	local x = v.x + (v.dx*(v.length/self.spd))/2
+	--	local y = v.y + (v.dy*(v.length/self.spd))/2
+--
+	--	love.graphics.draw(self.spr, x, y, v.rot + pi2*0.25, 1, 2*(v.length/2))
+	--end
 	for i,v in ipairs(self.length) do
-		local x = v.x + (v.dx*(v.length/self.spd)*1.1)/2
-		local y = v.y + (v.dy*(v.length/self.spd)*1.1)/2
-
-		draw_centered(self.spr, x, y, v.rot + pi2*0.25, 1, 2*(v.length/1.8186))
+		--love.graphics.draw(self.spr, v.x , v.y, v.rot + pi2*0.25, 1*self.scale, v.length,spr:getWidth()/2.3)
+		--love.graphics.line( v.x1, v.y1, v.x, v.y)
+		draw_line_spr(v.x1,v.y1,v.x,v.y,self.spr,self.scale)
 	end
 end
 
@@ -326,7 +342,7 @@ end
 
 function checkdeath(self)
 	-- bullet
-	if self.life < 0 then
+	if self.life <= 0 then
 		self.delete = true
 		return true
 	end
