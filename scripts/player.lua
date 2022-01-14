@@ -8,8 +8,8 @@ require "scripts/settings"
 
 function init_player()
 	local player = {
-		x = 500,
-		y = 200,
+		x = 40,
+		y = 40,
 		w = 4,
 		h = 4,
 		dx = 0,
@@ -33,7 +33,7 @@ function init_player()
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = guns.revolver
+	player.gun = copy(guns.revolver)
 	return player
 end
 
@@ -63,33 +63,22 @@ function update_player(self, dt, camera)
 				--TODO: put this in guns this has nothing to do in player.update
 				save_stats(self)
 
-				self.gun.rafale 	 		= self.gun.rafale 		+ floor( self.gun.charge_nbrafale 		* avancement)
-				self.gun.bullet_spd   = self.gun.bullet_spd 	+ self.gun.charge_bullet_spd 			* avancement
-				self.gun.laser_length = self.gun.laser_length	+ self.gun.charge_laser_length 			* avancement
-				self.gun.nbshot 		 	= self.gun.nbshot 		+ floor( self.gun.charge_nbshot 		* avancement)
-				self.gun.spread 		 	= self.gun.spread 		+ self.gun.charge_spread 				* avancement	
-				self.gun.scattering	  = self.gun.scattering	+ self.gun.charge_scattering			* avancement	 		 
-				self.gun.offset_spd   = self.gun.offset_spd 	+ self.gun.charge_ospd 					* avancement
-				self.gun.bullet_life  = self.gun.bullet_life  + self.gun.charge_life 					* avancement
-				self.gun.rafaledt	 		= self.gun.rafaledt		+ self.gun.charge_rafaledt				* avancement
-				self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
-				self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement
-				self.gun.damage				= self.gun.damage		+ self.gun.charge_damage				* avancement
-				self.gun.oscale		  = self.gun.oscale 			+ self.gun.charge_oscale 				* avancement
+				advancementtoactive(self,avancement)
 				end
 
 				self.shoot = true
 				self.gun:shoot()
+				camera:shake(self.gun.rot, self.gun.screenshake)
 				self.gun.dt = 0
 				
 			end
 		elseif button_down("fire") and self.gun.charge then
 			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
 		end
-	end --prevfire = button_down("fire")
+	end
 	self.rot = self.rot % pi2
 
-	self.looking_up = self.rot > math.pi
+	self.looking_up = self.rot > pi
 
 	self.gun:update(dt, self)
 
@@ -126,7 +115,7 @@ function player_movement(self, dt)
 		self.is_walking = true
 	end
 
-	local norm = math.sqrt(dir_vector.x * dir_vector.x + dir_vector.y * dir_vector.y) + 0.0001
+	local norm = math.sqrt(dir_vector.x * dir_vector.x + dir_vector.y * dir_vector.y) + 0.0001 -- utiliser la fonction dist()
 
 	dir_vector.x = dir_vector.x / norm
 	dir_vector.y = dir_vector.y / norm
@@ -177,4 +166,20 @@ function load_save_stats(self)
 	self.gun.scale 			= self.gun.save_scale
 	self.gun.damage 		= self.gun.save_damage
 	self.gun.oscale			= self.gun.save_oscale
+end
+
+function advancementtoactive(self,avancement)
+	self.gun.rafale 	 		= self.gun.rafale 		+ floor( self.gun.charge_nbrafale 		* avancement)
+	self.gun.bullet_spd   = self.gun.bullet_spd 	+ self.gun.charge_bullet_spd 			* avancement
+	self.gun.laser_length = self.gun.laser_length	+ self.gun.charge_laser_length 			* avancement
+	self.gun.nbshot 		 	= self.gun.nbshot 		+ floor( self.gun.charge_nbshot 		* avancement)
+	self.gun.spread 		 	= self.gun.spread 		+ self.gun.charge_spread 				* avancement	
+	self.gun.scattering	  = self.gun.scattering	+ self.gun.charge_scattering			* avancement	 		 
+	self.gun.offset_spd   = self.gun.offset_spd 	+ self.gun.charge_ospd 					* avancement
+	self.gun.bullet_life  = self.gun.bullet_life  + self.gun.charge_life 					* avancement
+	self.gun.rafaledt	 		= self.gun.rafaledt		+ self.gun.charge_rafaledt				* avancement
+	self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
+	self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement
+	self.gun.damage				= self.gun.damage		+ self.gun.charge_damage				* avancement
+	self.gun.oscale		  = self.gun.oscale 			+ self.gun.charge_oscale 				* avancement
 end

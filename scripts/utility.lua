@@ -105,9 +105,9 @@ function raycast(x,y,dx,dy,distmax,pas)
 	end
 
 	if distmax-(dist-pas) <= 0 then
-		hit = false
-	else
 		hit = true
+	else
+		hit = false
 	end
 
 	return {dist = dist - pas,hit = hit,y = nexty,x = nextx}

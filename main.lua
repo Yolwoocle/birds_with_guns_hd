@@ -40,7 +40,7 @@ function love.load()
 	bullets = {}
 	_shot = {}
 	mobs = {}
-	table.insert(mobs, mob_list.Leo_renome:spawn())
+	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	
 	prevfire = button_down("fire")
 end
@@ -50,14 +50,14 @@ function love.update(dt)
 	camera:update(dt)
 
 	player:update(dt, camera)
+
 	if player.shoot then
 		--_shot = player.gun:make_bullet(player,player.rot)
-		append_list(_shot, player.gun:make_shot(player,player.rot))
+		append_list(_shot, player.gun:make_shot(player))
 	end
 
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
-			v.angle = player.rot
 			table.insert(bullets,make_bullet(v.gun,v.player,v.angle,v.offset))
 			table.remove(_shot, i)
 		else
@@ -73,7 +73,7 @@ function love.update(dt)
 	end
 
 	for i,m in ipairs(mobs) do
-		--m:update(dt)
+		m:update(dt)
 	end
 	prevfire = button_down("fire")
 end
@@ -102,6 +102,7 @@ function love.draw()
 	player:draw()
 
 	debug_y = 10
+	debug_print(1)
 	debug_print(notification)
 	if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS: "..tostr(love.timer.getFPS()))

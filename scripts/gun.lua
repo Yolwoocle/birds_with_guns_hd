@@ -31,7 +31,7 @@ function make_gun(a)
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1, --FIXME: slowdown/speed_mult
-		scale 		  = a.scale			or 2,
+		scale 		  = a.scale			or 1,
 		oscale 		  = a.oscale        or 0,
 
 		charge				= a.charge 				or false,
@@ -68,10 +68,10 @@ end
 function update_gun(self, dt, p)
 	self.rot = p.rot
 	self.cooldown_timer = math.max(0, self.cooldown_timer - dt) 
-	self.flip = 1 -- -sgn( (p.rot + pi/2) % (pi*2) - pi)
-	if pi2*0.25 < p.rot and p.rot < pi2*0.75 then
-		self.flip = -1
-	end
+	self.flip = -sgn( (p.rot + pi/2) % (pi*2) - pi)
+	--if pi2*0.25 < p.rot and p.rot < pi2*0.75 then
+	--	self.flip = -1
+	--end
 end
 
 function draw_gun(self, p)
@@ -83,7 +83,6 @@ end
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown
-	camera:shake(self.rot, self.screenshake)
 end
 
 function default_shoot(g,p)
@@ -137,6 +136,7 @@ function make_bullet(self, p,angle,spread,type)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
 	local scatter = random_float(-self.scattering/2,self.scattering/2)
 	local spd = (self.bullet_spd + random_pos_neg(self.offset_spd/2))
+	local oscale = random_pos_neg(self.oscale)
 
 	local bullet = {
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
@@ -157,13 +157,13 @@ function make_bullet(self, p,angle,spread,type)
 		spd = spd,
 		scatter = scatter,
 		spread = spread,
-		scale = self.scale + random_float(-self.oscale/2, self.oscale/2),
+		scale = self.scale + oscale,
 		damage		= self.damage,
 		bounce   =  self.bounce,
 		length = {},
 
-		w=self.scale*4,
-		h=self.scale*4,
+		w=(self.scale + oscale )*4,
+		h=(self.scale + oscale )*4,
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
