@@ -6,7 +6,7 @@ guns = {
 
     revolver = make_gun({
         name = "revolver",
-        type = "laser",			--"bullet" "laser"
+        type = "bullet",			--"bullet" "laser"
 
         category = "instant",	--"persistent" "instant"
 		bounce = true,
@@ -33,7 +33,7 @@ guns = {
         ospd = 0,
         cooldown = 1,
 
-		scale = .5,
+		scale = .25,
 		oscale = 0,
 
         max_ammo = inf,
@@ -63,11 +63,11 @@ guns = {
 	
 	pistolet = make_gun({
 		name = "pistolet", 
-		type = "laser",
+		type = "bullet",
 		category = "persistent",
 		bounce = true,
 		laser_length = 300,
-		scale = 1,
+		scale = .1,
 		scattering = 0,
 		spawn_x = 17,
 		spawn_y = 0,
@@ -88,6 +88,7 @@ guns = {
 	jsp = make_gun({
 		name = "jsp", 
 		type = "bullet",
+		bounce = true,
 		scale = .1,
 	}),
 }

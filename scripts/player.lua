@@ -33,7 +33,7 @@ function init_player()
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = copy(guns.revolver)
+	player.gun = copy(guns.pistolet)
 	return player
 end
 

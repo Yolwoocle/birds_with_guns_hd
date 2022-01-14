@@ -83,6 +83,7 @@ end
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown
+
 end
 
 function default_shoot(g,p)
@@ -193,19 +194,26 @@ function update_bullet(self, dt)
 		if coll then
 			local x = self.x
 			local y = self.y
-			local h = self.h*3.5
-			local w = self.w*3.5
+			local h = self.h*1.1
+			local w = self.w*1.1
 			interact_map(self,map,(x-w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y+h)/ block_width)
+
 			interact_map(self,map,(x  )/ block_width, (y-h)/ block_width)
         	interact_map(self,map,(x-w)/ block_width, (y  )/ block_width)
        	 	interact_map(self,map,(x+w)/ block_width, (y  )/ block_width)
         	interact_map(self,map,(x  )/ block_width, (y+h)/ block_width)
 		end
 	end
-	checkdeath(self)
+	
+	if checkdeath(self) then 
+		local mapx, mapy = self.x / block_width, self.y / block_width
+		if map:is_solid(mapx, mapy) then
+		interact_map(self, map, mapx, mapy)
+		end
+	end
 end
 
 function update_laser(self, dt)
@@ -227,6 +235,12 @@ function update_laser(self, dt)
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
 	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y})
 
+	--if checkdeath({x=ray.x ,y=ray.y}) then 
+	--	local mapx, mapy = ray.x / block_width, ray.y / block_width
+	--	if map:is_solid(mapx, mapy) then
+	--	interact_map(self, map, mapx, mapy)
+	--	end
+	--end
 
 	if self.bounce then
 
@@ -290,6 +304,7 @@ end
 
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
+	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 end
 
 function draw_laser(self)
@@ -315,7 +330,6 @@ function checkdeath(self)
 	local mapx, mapy = self.x / block_width, self.y / block_width
 	if map:is_solid(mapx, mapy) then
 		self.delete = true
-		interact_map(self, map, mapx, mapy)
 		return true
 	end
 
