@@ -165,9 +165,10 @@ function make_bullet(self, p,angle,spread,type)
 end
 
 function init_laser(self)
+
+	self.active = true
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
 	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y})
-	self.active = true
 
 	if self.bounce then
 
@@ -355,9 +356,11 @@ function damage_everyone(self,k)
 			for i,v in ipairs(self.length) do
 				if self.active then
 					m.print = m.life
-					if minimum_distance( v.x1,v.y1,v.x,v.y,m.x,m.y)<self.scale*50 then
+					m.print = minimum_distance( v.x1,v.y1,v.x,v.y,m.x,m.y)
 
-						m.life = m.life-self.damage
+					if minimum_distance( v.x1,v.y1,v.x,v.y,m.x,m.y)<self.scale*70 then
+
+						--m.life = m.life-self.damage
 						--table.remove(bullets, k)
 						
 					end
