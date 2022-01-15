@@ -86,7 +86,11 @@ function update_mob(self, dt)
 			self.y = self.y + self.dy  * dt
 		end
 
-		collide_object(self,.2)
+		if collide_object(self,.2) then
+			self.x = self.x - self.dx  * dt
+			self.y = self.y - self.dy  * dt
+		end
+
 	else
 		self.dtmouvement = max(self.dtmouvement-dt,0)
 

@@ -63,7 +63,7 @@ guns = {
 	
 	pistolet = make_gun({
 		name = "pistolet", 
-		type = "bullet",
+		type = "laser",
 		category = "persistent",
 		bounce = true,
 		laser_length = 300,
@@ -74,7 +74,7 @@ guns = {
 
 		cooldown = .1,
 
-		life = 100,
+		bullet_life = 10,
 		nbshot = 1,
 		spread  = pi/2,
 
@@ -90,6 +90,8 @@ guns = {
 		type = "bullet",
 		bounce = true,
 		scale = .1,
+		cooldown = 1,
+		bullet_spd = 100,
 	}),
 }
 
