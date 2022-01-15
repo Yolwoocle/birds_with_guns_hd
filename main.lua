@@ -12,10 +12,9 @@ require "scripts/camera"
 require "scripts/screenshot"
 
 function love.load()
-
 	prevray = {}
 
-	love.window.setMode(0, 0, {fullscreen = false, resizable=false, vsync=true, minwidth=400, minheight=300})	
+	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -43,6 +42,8 @@ function love.load()
 	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	
 	prevfire = button_down("fire")
+
+	perf = {}
 end
 
 function love.update(dt)
@@ -76,6 +77,8 @@ function love.update(dt)
 		m:update(dt)
 	end
 	prevfire = button_down("fire")
+	
+	table.insert(perf, dt)
 end
 
 function love.draw()
@@ -111,8 +114,13 @@ function love.draw()
 	love.graphics.origin()
 	love.graphics.scale(1, 1)
 	love.graphics.draw(canvas, 0, 0, 0, ratio_w, ratio_h)
-end
 
+	love.graphics.setColor({1,0,0})
+	for i=2,#perf do
+		--love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
+	end
+	love.graphics.setColor({1,1,1})
+end
 
 function love.keypressed(key)
 	if key == "f5" then
@@ -124,15 +132,9 @@ function love.keypressed(key)
 	
 	elseif key == "f2" then
 		if canvas then
-			--TODO: option to use love.graphics.captureScreenshot( filename )
-			--TODO: setting to set pixel scale (2 or 3) by default
-			--TODO: paste screenshot into pastebin
-			--TODO: capture GIFs
-			--These features are important as it provides an easy way 
-			--for players to share the game with others (GIF especially)
 			screenshot()
 		else
-			notification = "Could not save screenshot"
+			notification = "Could not save screenshot: no canvas"
 		end
 	end
 end
