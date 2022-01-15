@@ -21,7 +21,12 @@ function make_mob(a)
 		mv_pause			= a.mv_pause		or .25,
 		mv_mouvement		= a.mv_mouvement	or .5,
 		closest_p 			= a.closest_p 		or 50,
+		far_p				= a.far_p			or 60,
+		shoot_dist			= a.shoot_dist		or 60,
+		see_dist 			= a.see_dist 		or 80,
+		
 		gun_dist 			= a.gun_dist 		or 14,
+		close_mv			= a.close_mv		or false,
 
 		spawn = spawn_mob,
 		shoot = shoot_gun,
@@ -56,16 +61,22 @@ function update_mob(self, dt)
 	self.dyplayer = math.sin(self.rot)
 	self.distplayer = dist(player.x,player.y,self.x,self.y)
 
-	local rayc = raycast(self.x, self.y,
-self.dxplayer, self.dyplayer, self.distplayer, 3)
+	local rayc = {}
+
+	if self.see_dist >= self.distplayer then
+		rayc = raycast(self.x,self.y,
+		self.dxplayer, self.dyplayer, self.distplayer,3)
+	else
+		rayc.hit = false
+	end
 
 	if rayc.hit then
-		-- If hit player
-		if self.distplayer > self.closest_p then
+
+		if self.distplayer> self.far_p then
 			self.dx =  self.dxplayer * self.spd
 			self.dy =  self.dyplayer * self.spd
 			mv = true
-		elseif self.distplayer < self.closest_p - 3 then
+		elseif self.distplayer< self.closest_p then
 			self.dx =  -self.dxplayer * self.spd
 			self.dy =  -self.dyplayer * self.spd
 			mv = true
@@ -73,7 +84,7 @@ self.dxplayer, self.dyplayer, self.distplayer, 3)
 			mv = false
 		end
 
-		if self.gun.cooldown_timer <= 0 then
+		if self.gun.cooldown_timer <= 0 and self.shoot_dist >= self.distplayer then
 			self.gun:shoot()
 			self.gun.dt = 0
 			append_list(_shot, self.gun:make_shot(self))
@@ -92,8 +103,8 @@ self.dxplayer, self.dyplayer, self.distplayer, 3)
 		end
 	end
 	collide_object(self,.2)
-	self.x = self.x + self.dx  * dt
-	self.y = self.y + self.dy  * dt
+	self.x = self.x + self.dx * dt
+	self.y = self.y + self.dy * dt
 end
 
 function draw_mob(self)

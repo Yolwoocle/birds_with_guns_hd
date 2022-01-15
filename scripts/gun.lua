@@ -83,6 +83,7 @@ end
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown
+
 end
 
 function default_shoot(g,p)
@@ -162,8 +163,8 @@ function make_bullet(self, p,angle,spread,type)
 		bounce   =  self.bounce,
 		length = {},
 
-		w=(self.scale + oscale )*4,
-		h=(self.scale + oscale )*4,
+		w=(self.scale + oscale ),
+		h=(self.scale + oscale ),
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
@@ -174,6 +175,7 @@ function make_bullet(self, p,angle,spread,type)
 		bullet.update = update_laser
 		bullet.laser_length = self.laser_length
 		bullet.spr = spr_laser
+		bullet.init = true
 	end
 
 	bullet.interact_map = interact_map
@@ -181,49 +183,7 @@ function make_bullet(self, p,angle,spread,type)
 	return bullet
 end
 
-function update_bullet(self, dt)
-	self.dx = self.dx * self.spdslow
-	self.dy = self.dy * self.spdslow
-	self.life = self.life - dt
-	self.x = self.x + self.dx * dt
-	self.y = self.y + self.dy * dt 
-	
-	if self.bounce then
-		local coll = collide_object(self,1)
-		if coll then
-			local x = self.x
-			local y = self.y
-			local h = self.h*3.5
-			local w = self.w*3.5
-			interact_map(self,map,(x-w)/ block_width, (y-h)/ block_width)
-			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
-			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
-			interact_map(self,map,(x+w)/ block_width, (y+h)/ block_width)
-			interact_map(self,map,(x  )/ block_width, (y-h)/ block_width)
-        	interact_map(self,map,(x-w)/ block_width, (y  )/ block_width)
-       	 	interact_map(self,map,(x+w)/ block_width, (y  )/ block_width)
-        	interact_map(self,map,(x  )/ block_width, (y+h)/ block_width)
-		end
-	end
-	checkdeath(self)
-end
-
-function update_laser(self, dt)
-	if self.category == "persistent" and button_down("fire") then
-		self.length = {}
-		self.life = self.life + dt
-		self.x = self.player.x + math.cos(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
-		self.y = self.player.y + math.sin(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
-		
-		self.dx = math.cos(self.player.rot + self.scatter + self.spread) * self.spd
-		self.dy = math.sin(self.player.rot + self.scatter + self.spread) * self.spd
-		self.rot = self.player.rot + self.scatter + self.spread
-
-		shoot_gun(self.gun)
-	end
-
-	self.life = self.life - dt 
-
+function init_laser(self)
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
 	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y})
 
@@ -260,6 +220,65 @@ function update_laser(self, dt)
 
 		end
 	end
+end
+
+function update_bullet(self, dt)
+	self.dx = self.dx * self.spdslow
+	self.dy = self.dy * self.spdslow
+	self.life = self.life - dt
+	self.x = self.x + self.dx * dt
+	self.y = self.y + self.dy * dt 
+	
+	if self.bounce then
+		local coll = collide_object(self,1)
+		if coll then
+			local x = self.x
+			local y = self.y
+			local h = self.h*7
+			local w = self.w*7
+			interact_map(self,map,(x-w)/ block_width, (y-h)/ block_width)
+			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
+			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
+			interact_map(self,map,(x+w)/ block_width, (y+h)/ block_width)
+
+			interact_map(self,map,(x  )/ block_width, (y-h)/ block_width)
+        	interact_map(self,map,(x-w)/ block_width, (y  )/ block_width)
+       	 	interact_map(self,map,(x+w)/ block_width, (y  )/ block_width)
+        	interact_map(self,map,(x  )/ block_width, (y+h)/ block_width)
+		end
+	end
+	
+	if checkdeath(self) then 
+		local mapx, mapy = self.x / block_width, self.y / block_width
+		if map:is_solid(mapx, mapy) then
+		interact_map(self, map, mapx, mapy)
+		end
+	end
+end
+
+function update_laser(self, dt)
+	if self.init then
+		self.init = false
+		init_laser(self)
+	end
+
+	if self.category == "persistent" and button_down("fire") then
+		self.length = {}
+		self.life = self.life + dt
+		self.x = self.player.x + math.cos(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
+		self.y = self.player.y + math.sin(self.player.rot + self.offsetangle * self.gun.flip) * self.dist
+		
+		self.dx = math.cos(self.player.rot + self.scatter + self.spread) * self.spd
+		self.dy = math.sin(self.player.rot + self.scatter + self.spread) * self.spd
+		self.rot = self.player.rot + self.scatter + self.spread
+
+		init_laser(self)
+
+		shoot_gun(self.gun)
+	end
+
+	self.life = self.life - dt 
+
 	if self.life < 0 then
 		self.delete = true
 	end
@@ -268,6 +287,7 @@ end
 function bouncedir(self)
 	for odx = 1,-1,-2 do
 		for ody = 1,-1,-2 do
+			--if (odx+ody==2) then
 			self.x = self.x+(self.dx)*odx*4
 			self.y = self.y+(self.dy)*ody*4
 			if not(checkdeath(self)) then
@@ -282,6 +302,7 @@ function bouncedir(self)
 			end
 			self.x = self.x-(self.dx)*odx*4
 			self.y = self.y-(self.dy)*ody*4
+			--end
 		end
 	end
 	nwlength = 0
@@ -290,10 +311,19 @@ end
 
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
+	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 end
 
 function draw_laser(self)
 	for i,v in ipairs(self.length) do
+
+		if checkdeath({x=v.x ,y=v.y,life = 10}) then 
+			local mapx, mapy = v.x / block_width, v.y / block_width
+			if map:is_solid(mapx, mapy) then
+			interact_map(self, map, mapx, mapy)
+			end
+		end
+
 		draw_line_spr(v.x1,v.y1,v.x,v.y,self.spr,self.scale)
 	end
 end
@@ -315,7 +345,6 @@ function checkdeath(self)
 	local mapx, mapy = self.x / block_width, self.y / block_width
 	if map:is_solid(mapx, mapy) then
 		self.delete = true
-		interact_map(self, map, mapx, mapy)
 		return true
 	end
 
