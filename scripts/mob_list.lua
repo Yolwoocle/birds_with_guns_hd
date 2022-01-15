@@ -7,6 +7,9 @@ mob_list = {
 		spd = 50,
 		w = 4,
 		h = 4,
+		hit_x = 8,
+		hit_y = 8,
+
 		dx = 0,
 		dy = 0,
 		speed = 20,

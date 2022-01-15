@@ -35,6 +35,7 @@ function circ_color(mode,x,y,radius,col)
 end
 
 function rect_color(mode, x, y, w, h, col)
+	--[[mode, x, y, w, h, col]]
 	love.graphics.setColor(col)
 	love.graphics.rectangle(mode, x, y, w, h)
 	love.graphics.setColor(1,1,1)
@@ -145,27 +146,3 @@ function ternary ( cond , T , F )
 	if cond then return T else return F end
 end
 
-function minimum_distance( x1,y1,x2,y2,x0,y0 )
-
-	A = {x=x1 , y=y1}--; %1ere extrimité de segment ; 
-	B = {x=x2 , y=y2}--; % deuxièlme extrmité de segment;
-	C={x=x0, y=y0}
-	t= (((C.x-A.x)*(B.x-A.x))+((C.y-A.y)*(B.y-A.y))) / dist(B.x,B.y,A.x,A.y) --(math.sqrt((B.x-A.x)^2 + (B.y-A.y))^2) --; % paramètre de postion de point C
-	comp={x= (B.x-A.x),y=(B.y-A.y)} --; %progection de AB sur les Axes Ox et Oy
-	P = {x= A.x + t* comp.x, y= A.y + t* comp.y} --;  % coordonnées de progection (P) du point C sur toute la droite AB
-	if   t<0 then
-		distance = math.sqrt((A.x-C.x)^2 +  (A.y-C.y)^2)--;% si le projeté est à gauche de segment [AB]---> 0=<t
-	 
-	elseif t>1 then
-	 
-	distance = math.sqrt((B.x-C.x)^2 +  (B.y-C.y)^2)--;% si le projeté est à droite de segment [AB]---> t>1
-
-	else
-		distance = math.sqrt((P.x-C.x)^2 +  (P.y-C.y)^2)--; % si le projeté est dans le segment [AB]---> 0=<t=<1
-	end
-	 
-	return distance
-
-	--https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
-	--return math.abs((x2-x1)*(y1-y0)-(x1-x0)*(y2-y1))/dist(x1,y1,x2,y2)
-end

@@ -7,24 +7,28 @@ function make_mob(a)
 		spr 	       		= a.spr        		or spr_revolver,
 		life	       		= a.life			or 2,	
 		cooldown_timer 		= 0,		
+		is_enemy = true,
 
-		spd 				= a.spd				or 10,
-		x        			= a.x		   		or 30,
-		y        			= a.y          		or 30,
-		w        			= a.w          		or 6,
-		h        			= a.h          		or 6,
-		dx       			= a.dx         		or 0,
-		dy       			= a.dy         		or 0,
-		speed    			= a.speed      		or 20,
-		friction 			= a.friction   		or 0.95,
-		bounce   			= a.bounce     		or 0.6,
-		mv_pause			= a.mv_pause		or .25,
-		mv_mouvement		= a.mv_mouvement	or .5,
-		closest_p 			= a.closest_p 		or 50,
-		far_p				= a.far_p			or 60,
-		shoot_dist			= a.shoot_dist		or 60,
-		see_dist 			= a.see_dist 		or 80,
+		spd 	= a.spd	or 10,
+		x       = a.x	or 30,
+		y       = a.y   or 30,
+		w       = a.w   or 6,
+		h       = a.h   or 6,
+		dx      = a.dx  or 0,
+		dy      = a.dy  or 0,
+		speed   = a.speed or 20,
+		friction 	 = a.friction   	or 0.95,
+		bounce   	 = a.bounce     	or 0.6,
+		mv_pause	 = a.mv_pause		or .25,
+		mv_mouvement = a.mv_mouvement	or .5,
+		closest_p 	 = a.closest_p 		or 50,
+		far_p		 = a.far_p			or 60,
+		shoot_dist	 = a.shoot_dist		or 60,
+		see_dist 	 = a.see_dist 		or 80,
 		
+		hit_w = a.hit_w or 12,
+		hit_h = a.hit_h or 12,
+
 		gun_dist 			= a.gun_dist 		or 14,
 		close_mv			= a.close_mv		or false,
 
@@ -73,7 +77,6 @@ function update_mob(self, dt)
 	end
 
 	if rayc.hit then
-
 		if self.distplayer> self.far_p then
 			self.dx =  self.dxplayer * self.spd
 			self.dy =  self.dyplayer * self.spd
@@ -100,7 +103,6 @@ function update_mob(self, dt)
 			append_list(_shot, self.gun:make_shot(self))
 		end
 
-
 		if not(mv or self.close_mv) then
 			self.dx  = 0
 			self.dy  = 0
@@ -110,15 +112,12 @@ function update_mob(self, dt)
 		self.dtmouvement = max(self.dtmouvement-dt,0)
 
 		if self.dtmouvement > 0 and self.dtmouvement <self.mv_mouvement then
-
 			self.dx = self.dxidel
 			self.dy = self.dyidel
-			
 		elseif self.dtmouvement == 0 then
 
 			self.dtmouvement = self.mv_mouvement + self.mv_pause
 			rndmouvement(self,self.spd)
-
 		elseif self.dtmouvement >self.mv_mouvement then
 			self.dx = 0
 			self.dy	= 0
@@ -135,7 +134,6 @@ function update_mob(self, dt)
 	end
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt
- 
 end
 
 function draw_mob(self)

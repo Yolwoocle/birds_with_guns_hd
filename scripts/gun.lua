@@ -55,12 +55,11 @@ function make_gun(a)
 
 		make_shot = a.make_shot or default_shoot,
 		
-		screenshake = a.screenshake or 10,
+		screenshake = a.screenshake or 3,
 
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
-		--new = new_of_self, TODO: not have to rely on copy() function 
 	}
 	return gun
 end
@@ -83,7 +82,6 @@ end
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown
-
 end
 
 function default_shoot(g,p)
@@ -112,7 +110,8 @@ end
 --- BULLET ---
 --------------
 
-function make_bullet(self, p,angle,spread,type)
+function make_bullet(self, p, angle,spread,type)
+	--`p`: player or entity shooting
 	local spread = spread or 0
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
@@ -140,9 +139,11 @@ function make_bullet(self, p,angle,spread,type)
 		scatter = scatter,
 		spread = spread,
 		scale = self.scale + oscale,
-		damage		= self.damage,
-		bounce   =  self.bounce,
+		damage = self.damage,
+		bounce =  self.bounce,
 		length = {},
+
+		is_enemy = p.is_enemy,
 
 		w=0,--(self.scale + oscale ),
 		h=0,--(self.scale + oscale ),
@@ -335,34 +336,27 @@ function checkdeath(self)
 	return false
 end
 
-function damage_everyone(self,k)
-	if self.type ==  "bullet" then
-		for i,m in pairs(mobs) do
-
-			--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
-			
-			if coll_rect(m.x-m.w*3, m.y-m.h*3, m.h*6, m.w*6, self.x-self.scale*3, self.y-self.scale*3, self.scale*6, self.scale*6) then
-				m.life = m.life-self.damage
-				table.remove(bullets, k)
+function damage_everyone(self, k)
+	-- Collisions between enemies and bullets
+	for i,m in pairs(mobs) do
+		--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
+		if self.type ==  "bullet" then
+			local coll = coll_rect(m.x, m.y, m.w*3, m.h*3, self.x, self.y, self.scale*3, self.scale*3)
+			if not self.is_enemy and coll then
+				m.life = m.life - self.damage
+				self.remove = true
+				if m.life<1 then
+					table.remove(mobs , i)
+				end
 			end
-
-			if m.life<1 then
-				table.remove(mobs , i)
-			end
-
-		end
-	elseif self.type ==  "laser" then
-		for i,m in pairs(mobs) do
+		elseif self.type == "laser" then
 			for i,v in ipairs(self.length) do
 				if self.active then
 					m.print = m.life
-					m.print = minimum_distance( v.x1,v.y1,v.x,v.y,m.x,m.y)
-
-					if minimum_distance( v.x1,v.y1,v.x,v.y,m.x,m.y)<self.scale*70 then
-
-						--m.life = m.life-self.damage
+					local dist = dist_to_segment({x=m.x, y=m.y}, {x=v.x1, y=v.y1}, {x=v.x, y=v.y})
+					if dist < self.scale*50 then
+						m.life = m.life - self.damage
 						--table.remove(bullets, k)
-						
 					end
 
 					if m.life<1 then
@@ -372,4 +366,14 @@ function damage_everyone(self,k)
 			end
 		end
 	end
+
+	-- Players --TODO: support multiple players
+	--for i,m in pairs(player) do
+	local p = player
+	local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)
+	if self.is_enemy and coll then
+		p.life = p.life - self.damage
+		self.remove = true
+	end
+	--end
 end
