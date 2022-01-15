@@ -56,7 +56,7 @@ guns = {
 
 		spdslow = 1,
 
-		screenshake = 3,
+		screenshake = 30,
 
 		make_shot = default_shoot
 	}),

@@ -1,4 +1,4 @@
-function init_keybinds() --TODO: use scancodes instead
+function init_keybinds() 
 	keybinds = {
 		left  = {"left",  "a"}, 
 		right = {"right", "d"}, 

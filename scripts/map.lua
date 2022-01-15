@@ -15,7 +15,7 @@ function init_map(w, h)
 	
 	map.draw = draw_map
 	map.tiles = {
-		[0] = make_tile(0, spr_ground_dum, {is_solid = true, is_destructible = false, is_transparent = true}),
+		[0] = make_tile(0, spr_ground_dum, {is_solid = true, is_destructible = false, is_transparent = false}),
 		make_tile(1, sprs_floor_wood, {is_solid = false, is_destructible = false, is_transparent = false}),
 		make_tile(2, spr_wall_dum, {is_solid = true, is_destructible = false, is_transparent = false}),
 		make_tile(3, spr_box,      {is_solid = true, is_destructible = true, is_transparent = true}),
@@ -78,8 +78,9 @@ function draw_map(self)
 end
 
 function draw_tile(tile, x, y, w)
+	if tile.n == 0 then return end
 	if type(tile.spr) == "table" then
-		--print(type(tile))
+		--fprint(type(tile))
 		local sprs = tile.spr_size
 		local spr = tile.spr[ (y%sprs)*sprs + x%sprs + 1 ]
 		if spr == nil then spr = spr_wall_dum end

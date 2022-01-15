@@ -2,6 +2,8 @@ require "scripts/utility"
 
 function init_camera()
 	local camera = {
+		fake_x = 0,
+		fake_y = 0,
 		x = 0,
 		y = 0,
 		target_x = 0,
@@ -13,6 +15,8 @@ function init_camera()
 		shk_dir = 0,
 		shk_dist = 0,
 		shk_fric = 50,
+		shk_x = 0,
+		shk_y = 0,
 		
 		lock_x = false,
 		lock_y = false,
@@ -29,21 +33,25 @@ function init_camera()
 end
 
 function update_camera(self, dt)
+	local smoothing = math.min(self.smoothing * dt, 1)
 	if not self.lock_x then 
-		self.x = self.x + (self.target_x - self.x) * math.min(self.smoothing * dt, 1)  
+		self.fake_x = self.fake_x + (self.target_x - self.fake_x) * smoothing  
 	end
 	if not self.lock_y then 
-		self.y = self.y + (self.target_y - self.y) * math.min(self.smoothing * dt, 1)
+		self.fake_y = self.fake_y + (self.target_y - self.fake_y) * smoothing
 	end
-	self.shk_dist = self.shk_dist * min(1, self.shk_fric * dt)
+
+	self.shk_x = self.shk_x * min(1, self.shk_fric * dt)
+	self.shk_y = self.shk_y * min(1, self.shk_fric * dt)
 	
-	self.real_x = -(self.x + math.cos(self.shk_dir) * self.shk_dist)
-	self.real_y = -(self.y + math.sin(self.shk_dir) * self.shk_dist)
+	-- Apply shake
+	self.x = self.fake_x + self.shk_x
+	self.y = self.fake_y + self.shk_y
 end
 
 function draw_camera(self, dt)
 	-- Put this in love.draw, while update_camera should be in update. 
-	love.graphics.translate(self.real_x, self.real_y)
+	love.graphics.translate(-self.x, -self.y)
 	love.graphics.scale(self.sx, self.sy)
 end
 
@@ -65,4 +73,7 @@ end
 function shake_camera(self, dir, dist)
 	self.shk_dir = dir
 	self.shk_dist = dist
+
+	self.shk_x = self.shk_x + math.cos(self.shk_dir) * self.shk_dist
+	self.shk_y = self.shk_y + math.sin(self.shk_dir) * self.shk_dist
 end

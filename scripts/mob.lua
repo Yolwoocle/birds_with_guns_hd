@@ -33,8 +33,6 @@ function make_mob(a)
 
 		update = update_mob,
 		draw = draw_mob,
-		
-
 	}
 
 	mob.gun = guns.jsp
@@ -43,6 +41,7 @@ function make_mob(a)
 end
 
 function spawn_mob(self, x, y)
+
 	local c = copy(self)
 	c.gun = copy(c.gun)
 	x = x or 0 
@@ -54,8 +53,7 @@ function spawn_mob(self, x, y)
 end
 
 function update_mob(self, dt)
-
-	self.rot = math.atan2(player.y-self.y,player.x-self.x)
+	self.rot = math.atan2(player.y-self.y, player.x-self.x)
 
 	self.gun:update(dt, self)
 
@@ -94,15 +92,16 @@ function update_mob(self, dt)
 			append_list(_shot, self.gun:make_shot(self))
 		end
 
-		if mv or self.close_mv then
-			self.x = self.x + self.dx  * dt
-			self.y = self.y + self.dy  * dt
-		end
 
-		if collide_object(self,.2) then
-			--self.x = self.x - self.dx  * dt
-			--self.y = self.y - self.dy  * dt
-		end
+		--if mv or self.close_mv then
+		--	self.x = self.x + self.dx  * dt
+		--	self.y = self.y + self.dy  * dt
+		--end
+
+		--if collide_object(self,.2) then
+		--	--self.x = self.x - self.dx  * dt
+		--	--self.y = self.y - self.dy  * dt
+		--end
 
 	else
 		self.dtmouvement = max(self.dtmouvement-dt,0)
@@ -111,7 +110,7 @@ function update_mob(self, dt)
 
 			self.x = self.x + self.dx  * dt
 			self.y = self.y + self.dy  * dt
-			collide_object(self,1)
+			--collide_object(self,1)
 
 		elseif self.dtmouvement == 0 then
 
@@ -120,12 +119,12 @@ function update_mob(self, dt)
 
 		end
 	end
-
-
+	collide_object(self,.2)
+	self.x = self.x + self.dx * dt
+	self.y = self.y + self.dy * dt
 end
 
 function draw_mob(self)
-
 	if     self.looking_up then self.gun:draw(self) end
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
@@ -133,10 +132,8 @@ function draw_mob(self)
 	love.graphics.print(self.gun.cooldown_timer,self.x,self.y)
 end
 
-function rndmouvement(self,spd)
-
-	local angel = random_pos_neg(pi2)
-	self.dx = math.cos(angel)*spd
-	self.dy = math.sin(angel)*spd
-
+function rndmovement(self,spd)
+	local angle = random_pos_neg(pi2)
+	self.dx = math.cos(angle)*spd
+	self.dy = math.sin(angle)*spd
 end
