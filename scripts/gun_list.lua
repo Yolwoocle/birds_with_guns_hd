@@ -64,17 +64,20 @@ guns = {
 	pistolet = make_gun({
 		name = "pistolet", 
 		type = "laser",
-		category = "persistent",
+		category = "instent",
+		charge = true,
+		charge_time = 10,
 		bounce = true,
 		laser_length = 300,
 		scale = .1,
 		scattering = 0,
 		spawn_x = 17,
 		spawn_y = 0,
+		charge_scale = 10,
 
 		cooldown = .1,
 
-		bullet_life = 10,
+		bullet_life = .1,
 		nbshot = 1,
 		spread  = pi/2,
 
