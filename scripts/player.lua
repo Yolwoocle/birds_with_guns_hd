@@ -74,8 +74,8 @@ function draw_player(self)
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
 
-	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
-	circ_color("fill", self.x, self.y, 3, {1,0,0})
+	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
+	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 end
 
 function player_movement(self, dt)
@@ -115,7 +115,9 @@ function aim_player(self, dt)
 	self.rot = math.atan2(my - self.y, mx - self.x)
 	self.shoot = false
 	if self.gun.cooldown_timer <= 0 then
-		if (not(self.gun.charge) and button_down("fire")) or (prevfire and not(button_down("fire")) and self.gun.charge) then
+		if (not(self.gun.charge) and button_down("fire")) 
+		or (prevfire and not(button_down("fire")) 
+		and self.gun.charge) then
 			if self.gun.ammo > 0 then
 
 				if self.gun.charge then

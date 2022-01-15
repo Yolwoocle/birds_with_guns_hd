@@ -105,12 +105,15 @@ guns = {
 		type = "laser",
 		category = "instent",
 		bounce = true,
+		ammo = math.huge,
 		scale = .75,
 		oscale = 0,
+
 		bullet_life = .1,
 
-		cooldown = .25,
-		bullet_spd = 100,
+
+		cooldown = .05,
+		bullet_spd = 1000,
 	}),
 }
 

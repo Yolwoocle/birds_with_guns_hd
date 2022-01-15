@@ -30,7 +30,7 @@ function make_gun(a)
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
-		spdslow	      = a.spdslow	    or 1, --FIXME: slowdown/speed_mult
+		spdslow	      = a.spdslow	    or 1,
 		scale 		  = a.scale			or 1,
 		oscale 		  = a.oscale        or 0,
 
@@ -191,8 +191,16 @@ function init_laser(self)
 
 		ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,nwlength,3)
 
-		table.insert(self.length , {length = ray.dist,x= ray.x,
-		y= ray.y , rot =  bobject.rot ,dx=bobject.dx,dy=bobject.dy,x1 = bobject.x ,y1 = bobject.y})
+		table.insert(self.length , {
+			length = ray.dist,
+			x = ray.x,
+			y = ray.y, 
+			rot = bobject.rot,
+			dx=bobject.dx,
+			dy=bobject.dy,
+			x1 = bobject.x ,
+			y1 = bobject.y
+		})
 
 		nwlength = nwlength-ray.dist
 
