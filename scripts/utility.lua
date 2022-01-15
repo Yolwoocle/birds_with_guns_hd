@@ -35,6 +35,7 @@ function circ_color(mode,x,y,radius,col)
 end
 
 function rect_color(mode, x, y, w, h, col)
+	--[[mode, x, y, w, h, col]]
 	love.graphics.setColor(col)
 	love.graphics.rectangle(mode, x, y, w, h)
 	love.graphics.setColor(1,1,1)

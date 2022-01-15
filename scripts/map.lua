@@ -161,7 +161,7 @@ end
 function generate_map(self, wagon, seed)
 	local chunk_ids = {} 
 	for i=1, #self.chunks do
-		table.insert(chunk_ids, 8)--i)
+		table.insert(chunk_ids, i)
 	end
 
 	local rng = seed and love.math.newRandomGenerator(seed) or nil

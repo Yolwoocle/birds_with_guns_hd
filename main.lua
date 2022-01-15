@@ -10,6 +10,7 @@ require "scripts/mob"
 require "scripts/mob_list"
 require "scripts/camera"
 require "scripts/screenshot"
+require "scripts/ui"
 
 function love.load()
 	prevray = {}
@@ -26,6 +27,9 @@ function love.load()
 	font_def = love.graphics.getFont()
 	font_def = love.graphics.setNewFont(10)
 	
+	gui = make_gui()
+	gui:make_bar("life_bar", 2,2,50,20, {1,0,0},10,10)
+
 	notification = ""
 	
 	init_keybinds()
@@ -82,6 +86,8 @@ function love.update(dt)
 	end
 	prevfire = button_down("fire")
 	
+	gui:update()
+
 	table.insert(perf, dt)
 end
 
@@ -108,6 +114,9 @@ function love.draw()
 	
 	player:draw()
 
+	gui:draw()
+
+	-- Debug
 	debug_y = 10
 	debug_print(notification)
 	if prevray.dist then debug_print(prevray.dist,1,1) end

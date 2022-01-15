@@ -18,6 +18,12 @@ function init_player()
 		friction = 0.8,
 		bounce = 0.6,
 		is_walking = false,
+		is_enemy = false,
+
+		life = 10,
+		iframes = 0,
+		hit_w = 12,
+		hit_h = 12,
 
 		spr = spr_pigeon[0],
 		rot = 0,
@@ -37,7 +43,7 @@ function init_player()
 	return player
 end
 
-function update_player(self, dt, camera)
+function update_player(self, dt)
 	-- Movement
 	player_movement(self,dt)
 	-- Collisions
@@ -47,40 +53,18 @@ function update_player(self, dt, camera)
 	self.y = self.y + self.dy * dt
 
 	-- Aiming
-	local mx, my = get_mouse_pos(camera)
-	self.rot = math.atan2(my - self.y, mx - self.x)
-	self.shoot = false
-	if self.gun.cooldown_timer <= 0 then
-		if (not(self.gun.charge) and button_down("fire")) or (prevfire and not(button_down("fire")) and self.gun.charge) then
-			if self.gun.ammo > 0 then
-
-				if self.gun.charge then
-					local avancement = self.gun.dt/self.gun.charge_time
-				if self.gun.save_rafale then
-					load_save_stats(self)
-				end
-
-				--TODO: put this in guns this has nothing to do in player.update
-				save_stats(self)
-
-				advancementtoactive(self,avancement)
-				end
-
-				self.shoot = true
-				self.gun:shoot()
-				camera:shake(self.gun.rot, self.gun.screenshake)
-				self.gun.dt = 0
-				
-			end
-		elseif button_down("fire") and self.gun.charge then
-			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
-		end
-	end
+	aim_player(self, dt)
 	self.rot = self.rot % pi2
-
 	self.looking_up = self.rot > pi
 
+	-- Update gun
 	self.gun:update(dt, self)
+
+	-- Life, damage
+	for i,v in ipairs(bullets) do
+		
+	end
+	gui.elements.life_bar.val = self.life
 
 	self:animate()
 end
@@ -126,6 +110,37 @@ function player_movement(self, dt)
 	self.dy = self.dy * self.friction
 end
 
+function aim_player(self, dt)
+	local mx, my = get_mouse_pos(camera)
+	self.rot = math.atan2(my - self.y, mx - self.x)
+	self.shoot = false
+	if self.gun.cooldown_timer <= 0 then
+		if (not(self.gun.charge) and button_down("fire")) or (prevfire and not(button_down("fire")) and self.gun.charge) then
+			if self.gun.ammo > 0 then
+
+				if self.gun.charge then
+					local avancement = self.gun.dt/self.gun.charge_time
+				if self.gun.save_rafale then
+					load_save_gun_stats(self)
+				end
+
+				save_gun_stats(self)
+
+				advancementtoactive(self,avancement)
+				end
+
+				self.shoot = true
+				self.gun:shoot()
+				camera:shake(self.gun.rot, self.gun.screenshake)
+				self.gun.dt = 0
+				
+			end
+		elseif button_down("fire") and self.gun.charge then
+			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
+		end
+	end
+end
+
 function animate_player(self)
 	if self.is_walking then
 		self.frame = floor((love.timer.getTime()/self.anim_frame_len) % #self.anim_sprs)
@@ -135,7 +150,7 @@ function animate_player(self)
 	end	
 end
 
-function save_stats(self)
+function save_gun_stats(self)
 	self.gun.save_rafale 	 	= self.gun.rafale
 	self.gun.save_bullet_spd  	= self.gun.bullet_spd
 	self.gun.save_laser_length 	= self.gun.laser_length
@@ -149,10 +164,9 @@ function save_stats(self)
 	self.gun.save_scale 		= self.gun.scale
 	self.gun.save_damage 		= self.gun.damage
 	self.gun.save_oscale		= self.gun.oscale
-	
 end
 
-function load_save_stats(self)
+function load_save_gun_stats(self)
 	self.gun.rafale 	 	= self.gun.save_rafale
 	self.gun.bullet_spd  	= self.gun.save_bullet_spd
 	self.gun.laser_length 	= self.gun.save_laser_length
