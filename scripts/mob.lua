@@ -113,8 +113,9 @@ function update_mob(self, dt)
 
 		if self.dtmouvement > 0 and self.dtmouvement <self.mv_mouvement then
 			self.dx = self.dxidel
-			self.dy = self.dyidel	
+			self.dy = self.dyidel
 		elseif self.dtmouvement == 0 then
+
 			self.dtmouvement = self.mv_mouvement + self.mv_pause
 			rndmouvement(self,self.spd)
 		elseif self.dtmouvement >self.mv_mouvement then
@@ -140,10 +141,12 @@ function draw_mob(self)
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
-	love.graphics.print(self.life,self.x,self.y)
+	--love.graphics.print(self.life,self.x,self.y)
 	--love.graphics.print(self.gun.scale,self.x+10,self.y+10)
 	rect_color("line", floor(self.x-self.w*3), floor(self.y-self.h*3), floor(2*self.w*3), floor(2*self.h*3), {1,0,0})
 	--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
+
+	if self.print then love.graphics.print(self.print,self.x,self.y) end
 	
 end
 

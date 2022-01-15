@@ -168,7 +168,7 @@ end
 function init_laser(self)
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
 	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y})
-
+	self.active = true
 
 	if self.bounce then
 
@@ -239,6 +239,7 @@ function update_bullet(self, dt)
 end
 
 function update_laser(self, dt)
+	self.active = false
 	if self.init then
 		self.init = false
 		init_laser(self)
@@ -357,11 +358,24 @@ function damage_everyone(self, k)
 			self.remove = true
 		end
 		--end
-	end
-
-	if self.type ==  "laser" then
+	
+	elseif self.type ==  "laser" then
 		for i,m in pairs(mobs) do
+			for i,v in ipairs(self.length) do
+				if self.active then
+					m.print = m.life
+					if minimum_distance( v.x1,v.y1,v.x,v.y,m.x,m.y)<self.scale*50 then
 
+						m.life = m.life-self.damage
+						--table.remove(bullets, k)
+						
+					end
+
+					if m.life<1 then
+						table.remove(mobs , i)
+					end
+				end
+			end
 		end
 	end
 end

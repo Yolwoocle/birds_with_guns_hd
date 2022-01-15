@@ -39,7 +39,7 @@ function init_player()
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = copy(guns.pistolet)
+	player.gun = copy(guns.jspp)
 	return player
 end
 

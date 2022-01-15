@@ -146,15 +146,27 @@ function ternary ( cond , T , F )
 	if cond then return T else return F end
 end
 
---function minimum_distance( v , w , p )
---	-- Return minimum distance between line segment vw and point p
---	local l2 = math.abs(w-v)^2  -- i.e. |w-v|^2 -  avoid a sqrt
---	if (l2 == 0.0) then return dist(p, v) end -- v == w case
---	-- Consider the line extending the segment, parameterized as v + t (w - v).
---	-- We find projection of point p onto the line. 
---	-- It falls where t = [(p-v) . (w-v)] / |w-v|^2
---	-- We clamp t from [0,1] to handle points outside the segment vw.
---	local t = max(0, min(1, (p-v) . (w-v) / l2))
---	local vec2 projection = v + t * (w - v)  -- Projection falls on the segment
---	return dist(p, projection)
---end
+function minimum_distance( x1,y1,x2,y2,x0,y0 )
+
+	A = {x=x1 , y=y1}--; %1ere extrimité de segment ; 
+	B = {x=x2 , y=y2}--; % deuxièlme extrmité de segment;
+	C={x=x0, y=y0}
+	t= (((C.x-A.x)*(B.x-A.x))+((C.y-A.y)*(B.y-A.y))) / dist(B.x,B.y,A.x,A.y) --(math.sqrt((B.x-A.x)^2 + (B.y-A.y))^2) --; % paramètre de postion de point C
+	comp={x= (B.x-A.x),y=(B.y-A.y)} --; %progection de AB sur les Axes Ox et Oy
+	P = {x= A.x + t* comp.x, y= A.y + t* comp.y} --;  % coordonnées de progection (P) du point C sur toute la droite AB
+	if   t<0 then
+		distance = math.sqrt((A.x-C.x)^2 +  (A.y-C.y)^2)--;% si le projeté est à gauche de segment [AB]---> 0=<t
+	 
+	elseif t>1 then
+	 
+	distance = math.sqrt((B.x-C.x)^2 +  (B.y-C.y)^2)--;% si le projeté est à droite de segment [AB]---> t>1
+
+	else
+		distance = math.sqrt((P.x-C.x)^2 +  (P.y-C.y)^2)--; % si le projeté est dans le segment [AB]---> 0=<t=<1
+	end
+	 
+	return distance
+
+	--https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
+	--return math.abs((x2-x1)*(y1-y0)-(x1-x0)*(y2-y1))/dist(x1,y1,x2,y2)
+end
