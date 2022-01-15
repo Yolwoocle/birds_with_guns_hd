@@ -66,7 +66,7 @@ guns = {
 		type = "bullet",
 		category = "instent",
 		charge = true,
-		charge_time = 10,
+		charge_time = .1,
 		bounce = true,
 		laser_length = 300,
 		scale = .1,
@@ -97,6 +97,17 @@ guns = {
 		oscale = 0,
 
 		cooldown = 1,
+		bullet_spd = 100,
+	}),
+
+	jspp = make_gun({
+		name = "jsp", 
+		type = "laser",
+		bounce = true,
+		scale = .75,
+		oscale = 0,
+
+		cooldown = .25,
 		bullet_spd = 100,
 	}),
 }
