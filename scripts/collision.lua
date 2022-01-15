@@ -49,7 +49,6 @@ function collide_object(o,bounce)
 	local nextx = o.x + o.dx * dt
 	local nexty = o.y + o.dy * dt
 	local bounce = bounce or 0.2
-	bounce = 0.2
 
 	if nextx < 0 then
 		o.dx = 0

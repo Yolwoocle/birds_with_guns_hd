@@ -23,7 +23,7 @@ function make_gun(a)
 		maxammo	      = a.max_ammo      or 100,
 		scattering    = a.scattering    or .1,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
-		spawn_y	      = a.spawn_y	    or spr:getHeight()/2,
+		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
 		rafale	      = a.rafale	    or 1, --FIXME: burst pas rafale
 		rafaledt      = a.rafaledt	    or .5, --FIXME: burst_spd ou jsp quoi
 		bullet_life	  = a.bullet_life   or 2,	--bullet_life
@@ -108,25 +108,6 @@ function default_shoot(g,p)
 	return shot
 end
 
---default_shoot_laser
---[[
-function default_laser(g,p)
-	local shot = {}
-	  nbshot = g.nbshot-1
-	  for k=0,g.rafale-1 do
-		if nbshot==0 then
-			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
-		else
-			for i=0,nbshot do
-				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot))*g.spread
-				table.insert(shot,{gun=g,player=p,angle=p.rot,offset=o,time=k*g.rafaledt})
-			end
-		end
-	end
-	return shot
-end
---]]
-
 --------------
 --- BULLET ---
 --------------
@@ -137,7 +118,7 @@ function make_bullet(self, p,angle,spread,type)
 	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
 	local scatter = random_float(-self.scattering/2,self.scattering/2)
 	local spd = (self.bullet_spd + random_pos_neg(self.offset_spd/2))
-	local oscale = random_pos_neg(self.oscale)
+	local oscale = random_float(0, self.oscale)
 
 	local bullet = {
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
@@ -311,7 +292,8 @@ end
 
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
-	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
+	rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
+	--love.graphics.print(self.scale,self.x+10,self.y+10)
 end
 
 function draw_laser(self)
@@ -349,4 +331,27 @@ function checkdeath(self)
 	end
 
 	return false
+end
+
+function damage_everyone(self,k)
+	if self.type ==  "bullet" then
+		for i,m in pairs(mobs) do
+
+			--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
+			
+			if coll_rect(m.x-m.w*3, m.y-m.h*3, m.h*6, m.w*6, self.x-self.scale*3, self.y-self.scale*3, self.scale*6, self.scale*6) then
+				m.life = m.life-self.damage
+				table.remove(bullets, k)
+				if m.life<1 then
+					table.remove(mobs , i)
+				end
+			end
+		end
+	end
+
+	if self.type ==  "laser" then
+		for i,m in pairs(mobs) do
+
+		end
+	end
 end

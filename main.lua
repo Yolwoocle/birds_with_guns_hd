@@ -71,6 +71,7 @@ function love.update(dt)
 
 	for i,b in ipairs(bullets) do
 		b:update(dt)
+		damage_everyone(b,i)
 		if b.delete then
 			table.remove(bullets, i)
 		end

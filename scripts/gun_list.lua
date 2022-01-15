@@ -29,7 +29,7 @@ guns = {
 
         spr = spr_revolver, 
 
-        bullet_spd = 100,
+        bullet_spd = 10,
         ospd = 0,
         cooldown = 1,
 
@@ -44,7 +44,7 @@ guns = {
 		spawn_x = nil,
 		spawn_y = 0,
 
-		bullet_life	= .1,
+		bullet_life	= 3,
 
         laser_length = 300,
 
@@ -63,7 +63,7 @@ guns = {
 	
 	pistolet = make_gun({
 		name = "pistolet", 
-		type = "laser",
+		type = "bullet",
 		category = "instent",
 		charge = true,
 		charge_time = 10,
@@ -74,10 +74,11 @@ guns = {
 		spawn_x = 17,
 		spawn_y = 0,
 		charge_scale = 10,
-
+		bullet_spd = 100,
 		cooldown = .1,
+		charge_damage = 10,
 
-		bullet_life = .1,
+		bullet_life = 3,
 		nbshot = 1,
 		spread  = pi/2,
 
@@ -92,7 +93,9 @@ guns = {
 		name = "jsp", 
 		type = "bullet",
 		bounce = true,
-		scale = .1,
+		scale = .5,
+		oscale = 0,
+
 		cooldown = 1,
 		bullet_spd = 100,
 	}),

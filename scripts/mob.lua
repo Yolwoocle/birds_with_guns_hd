@@ -77,10 +77,18 @@ function update_mob(self, dt)
 		if self.distplayer> self.far_p then
 			self.dx =  self.dxplayer * self.spd
 			self.dy =  self.dyplayer * self.spd
+
+			self.dxidel = self.dx
+			self.dyidel = self.dy
+
 			mv = true
 		elseif self.distplayer< self.closest_p then
 			self.dx =  -self.dxplayer * self.spd
 			self.dy =  -self.dyplayer * self.spd
+
+			self.dxidel = self.dx
+			self.dyidel = self.dy
+
 			mv = true
 		else
 			mv = false
@@ -93,47 +101,57 @@ function update_mob(self, dt)
 		end
 
 
-		--if mv or self.close_mv then
-		--	self.x = self.x + self.dx  * dt
-		--	self.y = self.y + self.dy  * dt
-		--end
-
-		--if collide_object(self,.2) then
-		--	--self.x = self.x - self.dx  * dt
-		--	--self.y = self.y - self.dy  * dt
-		--end
+		if not(mv or self.close_mv) then
+			self.dx  = 0
+			self.dy  = 0
+		end
 
 	else
 		self.dtmouvement = max(self.dtmouvement-dt,0)
 
 		if self.dtmouvement > 0 and self.dtmouvement <self.mv_mouvement then
 
-			self.x = self.x + self.dx  * dt
-			self.y = self.y + self.dy  * dt
-			--collide_object(self,1)
-
-		elseif self.dtmouvement == 0 then
+			self.dx = self.dxidel
+			self.dy = self.dyidel
+			
+	elseif self.dtmouvement == 0 then
 
 			self.dtmouvement = self.mv_mouvement + self.mv_pause
 			rndmouvement(self,self.spd)
 
+		elseif self.dtmouvement >self.mv_mouvement then
+			self.dx = 0
+			self.dy	= 0
 		end
 	end
-	collide_object(self,.2)
+
+	if collide_object(self,1) then
+		if not( sgn(self.dx) == sgn(self.dxidel)) then
+			self.dxidel = -self.dxidel
+		end
+		if not( sgn(self.dy) == sgn(self.dyidel)) then
+			self.dyidel = -self.dyidel
+		end
+	end
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt
+ 
 end
 
 function draw_mob(self)
 	if     self.looking_up then self.gun:draw(self) end
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
-	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
-	love.graphics.print(self.gun.cooldown_timer,self.x,self.y)
+	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
+	love.graphics.print(self.life,self.x,self.y)
+	--love.graphics.print(self.gun.scale,self.x+10,self.y+10)
+	rect_color("line", floor(self.x-self.w*3), floor(self.y-self.h*3), floor(2*self.w*3), floor(2*self.h*3), {1,0,0})
+	--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
+	
 end
 
-function rndmovement(self,spd)
+function rndmouvement(self,spd)
 	local angle = random_pos_neg(pi2)
-	self.dx = math.cos(angle)*spd
-	self.dy = math.sin(angle)*spd
+	self.dxidel = math.cos(angle)*spd
+	self.dyidel = math.sin(angle)*spd
 end

@@ -144,3 +144,16 @@ function ternary ( cond , T , F )
 	--opti: T and F are always evaluated, unlike `cond and T or F` 
 	if cond then return T else return F end
 end
+
+--function minimum_distance( v , w , p )
+--	-- Return minimum distance between line segment vw and point p
+--	local l2 = math.abs(w-v)^2  -- i.e. |w-v|^2 -  avoid a sqrt
+--	if (l2 == 0.0) then return dist(p, v) end -- v == w case
+--	-- Consider the line extending the segment, parameterized as v + t (w - v).
+--	-- We find projection of point p onto the line. 
+--	-- It falls where t = [(p-v) . (w-v)] / |w-v|^2
+--	-- We clamp t from [0,1] to handle points outside the segment vw.
+--	local t = max(0, min(1, (p-v) . (w-v) / l2))
+--	local vec2 projection = v + t * (w - v)  -- Projection falls on the segment
+--	return dist(p, projection)
+--end
