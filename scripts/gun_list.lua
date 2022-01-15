@@ -107,6 +107,7 @@ guns = {
 		bounce = true,
 		scale = .75,
 		oscale = 0,
+		bullet_life = .1,
 
 		cooldown = .25,
 		bullet_spd = 100,
