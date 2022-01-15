@@ -143,7 +143,7 @@ function draw_mob(self)
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	--love.graphics.print(self.life,self.x,self.y)
 	--love.graphics.print(self.gun.scale,self.x+10,self.y+10)
-	rect_color("line", floor(self.x-self.w*3), floor(self.y-self.h*3), floor(2*self.w*3), floor(2*self.h*3), {1,0,0})
+	--rect_color("line", floor(self.x-self.w*3), floor(self.y-self.h*3), floor(2*self.w*3), floor(2*self.h*3), {1,0,0})
 	--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
 
 	if self.print then love.graphics.print(self.print,self.x,self.y) end
