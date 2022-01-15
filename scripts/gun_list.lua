@@ -103,6 +103,7 @@ guns = {
 	jspp = make_gun({
 		name = "jsp", 
 		type = "laser",
+		category = "instent",
 		bounce = true,
 		ammo = math.huge,
 		scale = .75,
