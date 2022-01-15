@@ -41,6 +41,9 @@ function love.load()
 	_shot = {}
 	mobs = {}
 	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
+	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
+	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
+	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	
 	prevfire = button_down("fire")
 end
@@ -102,7 +105,6 @@ function love.draw()
 	player:draw()
 
 	debug_y = 10
-	debug_print(1)
 	debug_print(notification)
 	if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS: "..tostr(love.timer.getFPS()))

@@ -37,16 +37,17 @@ function make_mob(a)
 
 	}
 
-	mob.gun = copy(guns.jsp)
+	mob.gun = guns.jsp
 
 	return mob
 end
 
 function spawn_mob(self, x, y)
-	self.dtmouvement = 0
 	local c = copy(self)
+	c.gun = copy(c.gun)
 	x = x or 0 
 	y = y or 0
+	c.dtmouvement = 0
 	c.x = x
 	c.y = y
 	return c
@@ -99,20 +100,24 @@ function update_mob(self, dt)
 		end
 
 		if collide_object(self,.2) then
-			self.x = self.x - self.dx  * dt
-			self.y = self.y - self.dy  * dt
+			--self.x = self.x - self.dx  * dt
+			--self.y = self.y - self.dy  * dt
 		end
 
 	else
 		self.dtmouvement = max(self.dtmouvement-dt,0)
 
 		if self.dtmouvement > 0 and self.dtmouvement <self.mv_mouvement then
+
 			self.x = self.x + self.dx  * dt
 			self.y = self.y + self.dy  * dt
 			collide_object(self,1)
+
 		elseif self.dtmouvement == 0 then
+
 			self.dtmouvement = self.mv_mouvement + self.mv_pause
 			rndmouvement(self,self.spd)
+
 		end
 	end
 
@@ -125,6 +130,7 @@ function draw_mob(self)
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
 	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
+	love.graphics.print(self.gun.cooldown_timer,self.x,self.y)
 end
 
 function rndmouvement(self,spd)

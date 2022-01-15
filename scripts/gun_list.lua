@@ -11,7 +11,7 @@ guns = {
         category = "instant",	--"persistent" "instant"
 		bounce = true,
 
-		charge = false,
+		charge = true,
 		charge_time = 1,
 		charge_nbrafale = 10,
 		charge_bullet_spd = 1,

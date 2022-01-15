@@ -163,8 +163,8 @@ function make_bullet(self, p,angle,spread,type)
 		bounce   =  self.bounce,
 		length = {},
 
-		w=(self.scale + oscale ),
-		h=(self.scale + oscale ),
+		w=0,--(self.scale + oscale ),
+		h=0,--(self.scale + oscale ),
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
@@ -234,8 +234,8 @@ function update_bullet(self, dt)
 		if coll then
 			local x = self.x
 			local y = self.y
-			local h = self.h*7
-			local w = self.w*7
+			local h = 2
+			local w = 2
 			interact_map(self,map,(x-w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
