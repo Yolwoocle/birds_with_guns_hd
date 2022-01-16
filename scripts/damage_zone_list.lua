@@ -1,11 +1,18 @@
+require "scripts/damage_zone"
+
 zone = {
 
-    revolver = make_zone({
+    fire = make_zone({
         
-        name           		= "null"
-        spr 	       		= spr_revolver
-        life	       		= 2
-        cooldown_timer 		= 0,		
-        is_enemy            = true,
+        name           		= "fire",
+        spr 	       		= spr_revolver,
+        life	       		= 10,
+        rayon               = 100 ,    	
+        damge_tick          = .1,
+        damage              = .1,
+        --ondamage            = function(m)
+        --    m.dx = m.dx/2
+        --    m.dy = m.dx/2
+        --end
      }),
 }

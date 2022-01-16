@@ -11,6 +11,8 @@ require "scripts/mob_list"
 require "scripts/camera"
 require "scripts/screenshot"
 require "scripts/ui"
+require "scripts/damage_zone_list"
+require "scripts/damage_zone"
 
 function love.load()
 	prevray = {}
@@ -43,6 +45,7 @@ function love.load()
 	bullets = {}
 	_shot = {}
 	mobs = {}
+	zones = {}
 	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
@@ -77,10 +80,18 @@ function love.update(dt)
 		b:update(dt,i)
 		damage_everyone(b,i)
 	end
+	
 
 	for i,m in ipairs(mobs) do
 		m:update(dt)
 	end
+
+	for i,z in ipairs(zones) do
+		z:update(dt,i)
+		damageinzone(z,i) 
+
+	end
+
 	prevfire = button_down("fire")
 	
 	gui:update()
@@ -95,6 +106,10 @@ function love.draw()
 	camera:draw()
 	-- TODO: y-sorting
 	map:draw()
+
+	for i,z in ipairs(zones) do
+		z:draw()
+	end
 	
 	for _,m in pairs(mobs) do
 		m:draw()

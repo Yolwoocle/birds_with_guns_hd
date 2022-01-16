@@ -3,7 +3,7 @@ require "scripts/utility"
 function make_mob(a)
 	spr 	   = a.spr or spr_revolver
 	local mob = {
-		name           		= a.name       		or "null",
+		name           		= a.name       		or "enemy",
 		spr 	       		= a.spr        		or spr_revolver,
 		life	       		= a.life			or 2,	
 		cooldown_timer 		= 0,		
@@ -147,7 +147,7 @@ function draw_mob(self)
 	--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
 
 	if self.print then love.graphics.print(self.print,self.x,self.y) end
-	
+	love.graphics.print(self.life,self.x,self.y)
 end
 
 function rndmouvement(self,spd)
