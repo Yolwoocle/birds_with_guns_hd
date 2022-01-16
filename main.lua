@@ -42,7 +42,7 @@ function love.load()
 	map:load_from_file("chunks_wag_1.txt")
 	map:generate_map()
 
-	nb_joueurs = 10000
+	nb_joueurs = 1
 	player_list = {}
 	for i =1,nb_joueurs do
 
@@ -54,20 +54,22 @@ function love.load()
 	_shot = {}
 	mobs = {}
 	zones = {}
-	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
-	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
-	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
-	table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
+	for i = 1,1000 do
+		table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
+	end
 	
 	prevfire = button_down("fire")
 
 	perf = {}
+
+	g = 0
 end
 
 function love.update(dt)
 	camera:set_target(player_list[1].x-window_w/2, 0)--player.y-window_h/2)
 	camera:update(dt)
-	camera.aim_offset = player.gun.camera_offset
+
+	camera.aim_offset = player_list[1].gun.camera_offset
 
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
@@ -145,6 +147,7 @@ function love.draw()
 	-- Debug
 	debug_y = 10
 	debug_print(notification)
+	debug_print(#bullets)
 	if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS: "..tostr(love.timer.getFPS()))
 	

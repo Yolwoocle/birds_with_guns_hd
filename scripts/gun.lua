@@ -381,7 +381,7 @@ function damage_everyone(self, k)
 			for i,v in ipairs(self.length) do
 				if self.active then
 					local dist = dist_to_segment({x=m.x, y=m.y}, {x=v.x1, y=v.y1}, {x=v.x, y=v.y})
-					if dist < self.scale*20 then
+					if dist < self.scale*30 then
 						m.life = m.life - self.damage
 						--table.remove(bullets, k)
 					end
@@ -397,7 +397,7 @@ function damage_everyone(self, k)
 
 	-- Players --TODO: support multiple players
 	--for i,m in pairs(player) do
-	
+
 	for _,p in ipairs(player_list) do
 		local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)
 		if self.is_enemy and coll then
