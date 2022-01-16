@@ -1,12 +1,14 @@
 
 require "scripts/utility"
 require "scripts/settings"
+require "scripts/damage_zone_list"
+require "scripts/damage_zone"
 
 function make_gun(a)
 	spr = a.spr or spr_revolver
 	
 	local gun = {
-		name          = a.name          or "null",
+		name          = a.name          or "gun",
 		type          = a.type          or "bullet",
 		x = 0,
 		y = 0,
@@ -250,12 +252,12 @@ function update_bullet(self, dt , i)
 	
 	if checkdeath(self) then 
 		if self.life <= 0 then
-			self.on_death(i)
+			self:on_death(i)
 		end
 		local mapx, mapy = self.x / block_width, self.y / block_width
 		if map:is_solid(mapx, mapy) then
 		interact_map(self, map, mapx, mapy)
-		self.on_death(i)
+		self:on_death(i)
 		end
 	end
 end
@@ -285,7 +287,7 @@ function update_laser(self, dt , i)
 	self.life = self.life - dt 
 
 	if self.life < 0 then
-		self.on_death(i)
+		self:on_death(i)
 	end
 end
 
@@ -367,9 +369,9 @@ function damage_everyone(self, k)
 			if not self.is_enemy and coll then
 				m.life = m.life - self.damage
 
-				self.on_death(k)
+				self:on_death(k)
 
-				if m.life<1 then
+				if m.life<=0 then
 					table.remove(mobs , l)
 				end
 			end
@@ -383,14 +385,14 @@ function damage_everyone(self, k)
 						m.life = m.life - self.damage
 						--table.remove(bullets, k)
 					end
-					m.print = m.life
-					if m.life<1 then
+					if m.life<=0 then
 						table.remove(mobs , l)
 					end
 				end
 			end
 
 		end
+
 	end
 
 	-- Players --TODO: support multiple players
@@ -398,13 +400,15 @@ function damage_everyone(self, k)
 	local p = player
 	local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)
 	if self.is_enemy and coll then
+
 		p:damage(self.damage)
-		self.remove = true
 		self.on_death(k)
+
 	end
 	--end
 end
 
-function kill(k)
+function kill(self , k)
+	table.insert(zones, zone.fire:spawn_zone( self.x, self.y))
 	table.remove(bullets, k)
 end
