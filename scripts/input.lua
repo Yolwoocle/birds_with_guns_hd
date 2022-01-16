@@ -26,6 +26,15 @@ function button_down(command)
 	return false
 end
 
+function get_cursor_pos(camera)
+	--TODO: support controllers 
+	if camera then
+		return get_mouse_pos(camera)  
+	else
+		return love.mouse.getPosition()
+	end 
+end
+
 function get_mouse_pos(camera)
 	local mx, my = love.mouse.getPosition()
 	return mx/ratio_w + camera.x, my/ratio_h + camera.y

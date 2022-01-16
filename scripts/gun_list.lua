@@ -110,11 +110,10 @@ guns = {
 		scale = .75,
 		oscale = 0,
 
-		bullet_life = 1,
-
+		bullet_life = 10,
 
 		cooldown = .1,
-		bullet_spd = 100,
+		bullet_spd = 1000,
 	}),
 }
 
