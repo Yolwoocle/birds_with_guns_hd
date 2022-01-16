@@ -33,6 +33,7 @@ function make_gun(a)
 		spdslow	      = a.spdslow	    or 1,
 		scale 		  = a.scale			or 1,
 		oscale 		  = a.oscale        or 0,
+		on_death 	  = a.on_death		or kill,
 
 		charge				= a.charge 				or false,
 		charge_time 		= a.charge_time 		or 1,
@@ -142,6 +143,7 @@ function make_bullet(self, p, angle,spread,type)
 		damage = self.damage,
 		bounce =  self.bounce,
 		length = {},
+		on_death = self.on_death,
 
 		is_enemy = p.is_enemy,
 
@@ -213,7 +215,7 @@ function init_laser(self)
 	end
 end
 
-function update_bullet(self, dt)
+function update_bullet(self, dt , i)
 	self.dx = self.dx * self.spdslow
 	self.dy = self.dy * self.spdslow
 	self.life = self.life - dt
@@ -225,13 +227,19 @@ function update_bullet(self, dt)
 		if coll then
 			local x = self.x
 			local y = self.y
-			local h = 2
-			local w = 2
+			local h = 3
+			local w = 3
+
+			local mapx, mapy = self.x / block_width, self.y / block_width
+			if map:is_solid(mapx, mapy) then
+			interact_map(self, map, mapx, mapy)
+			end
+
 			interact_map(self,map,(x-w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y+h)/ block_width)
-
+--
 			interact_map(self,map,(x  )/ block_width, (y-h)/ block_width)
         	interact_map(self,map,(x-w)/ block_width, (y  )/ block_width)
        	 	interact_map(self,map,(x+w)/ block_width, (y  )/ block_width)
@@ -240,14 +248,18 @@ function update_bullet(self, dt)
 	end
 	
 	if checkdeath(self) then 
+		if self.life <= 0 then
+			self.on_death(i)
+		end
 		local mapx, mapy = self.x / block_width, self.y / block_width
 		if map:is_solid(mapx, mapy) then
 		interact_map(self, map, mapx, mapy)
+		self.on_death(i)
 		end
 	end
 end
 
-function update_laser(self, dt)
+function update_laser(self, dt , i)
 	self.active = false
 	if self.init then
 		self.init = false
@@ -272,7 +284,7 @@ function update_laser(self, dt)
 	self.life = self.life - dt 
 
 	if self.life < 0 then
-		self.delete = true
+		self.on_death(i)
 	end
 end
 
@@ -310,7 +322,7 @@ end
 function draw_laser(self)
 	for i,v in ipairs(self.length) do
 
-		if checkdeath({x=v.x ,y=v.y,life = 10}) then 
+		if checkdeath({x=v.x ,y=v.y,life = 10}) then
 			local mapx, mapy = v.x / block_width, v.y / block_width
 			if map:is_solid(mapx, mapy) then
 			interact_map(self, map, mapx, mapy)
@@ -331,13 +343,13 @@ end
 function checkdeath(self)
 	-- bullet
 	if self.life <= 0 then
-		self.delete = true
+		self.remove = true
 		return true
 	end
 
 	local mapx, mapy = self.x / block_width, self.y / block_width
 	if map:is_solid(mapx, mapy) then
-		self.delete = true
+		self.remove = true
 		return true
 	end
 
@@ -353,7 +365,9 @@ function damage_everyone(self, k)
 			local coll = coll_rect(m.x, m.y, m.w*3, m.h*3, self.x, self.y, self.scale*3, self.scale*3)
 			if not self.is_enemy and coll then
 				m.life = m.life - self.damage
-				self.remove = true
+
+				self.on_death(k)
+
 				if m.life<1 then
 					table.remove(mobs , l)
 				end
@@ -385,6 +399,11 @@ function damage_everyone(self, k)
 	if self.is_enemy and coll then
 		p:damage(self.damage)
 		self.remove = true
+		self.on_death(k)
 	end
 	--end
+end
+
+function kill(k)
+	table.remove(bullets, k)
 end
