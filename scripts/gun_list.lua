@@ -106,11 +106,19 @@ guns = {
 		category = "instent",
 		bounce = true,
 		max_ammo = math.huge,
+		charge = true,
+		charge_curve = 2,			
+		charge_time = 1,
+		charge_nbrafale = 10,
+		scattering = 0,
+
+		spread  = pi/2,
 
 		scale = .75,
 		oscale = 0,
+		nbshot = 10,
 
-		bullet_life = .1,
+		bullet_life = 1,
 
 		cooldown = .1,
 

@@ -38,6 +38,7 @@ function make_gun(a)
 		on_death 	  = a.on_death		or kill,
 
 		charge				= a.charge 				or false,
+		charge_curve		= a.charge_curve		or 2,
 		charge_time 		= a.charge_time 		or 1,
 		charge_nbrafale 	= a.charge_nbrafale 	or 0,
 		charge_bullet_spd 	= a.charge_bullet_spd 	or 0,

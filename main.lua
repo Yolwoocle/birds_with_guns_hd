@@ -83,7 +83,7 @@ function love.update(dt)
 
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
-			table.insert(bullets,make_bullet(v.gun,v.player,v.angle,v.offset))
+			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset))
 			table.remove(_shot, i)
 		else
 			v.time=v.time-dt

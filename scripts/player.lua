@@ -136,7 +136,7 @@ function aim_player(self, dt)
 			if self.gun.ammo > 0 then
 
 				if self.gun.charge then
-					local avancement = self.gun.dt/self.gun.charge_time
+					local avancement = (self.gun.dt/self.gun.charge_time)^self.gun.charge_curve
 				if self.gun.save_rafale then
 					load_save_gun_stats(self)
 				end

@@ -45,7 +45,7 @@ function make_mob(a)
 end
 
 function spawn_mob(self, x, y)
-
+	-- add randome pause et mouvement avec un offset 
 	local c = copy(self)
 	c.gun = copy(c.gun)
 	x = x or 0 
