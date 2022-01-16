@@ -80,9 +80,10 @@ end
 function draw_tile(tile, x, y, w)
 	if tile.n == 0 then return end
 	if type(tile.spr) == "table" then
-		--fprint(type(tile))
-		local sprs = tile.spr_size
-		local spr = tile.spr[ (y%sprs)*sprs + x%sprs + 1 ]
+		-- Multi-tiles
+		local sprw = tile.spr.w
+		local sprh = tile.spr.h
+		local spr = tile.spr[ (y%sprh)*sprw + x%sprw + 1 ]
 		if spr == nil then spr = spr_wall_dum end
 		love.graphics.draw(spr, x*w, y*w)
 	else

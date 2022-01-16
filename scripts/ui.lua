@@ -22,13 +22,15 @@ end
 
 -------------
 
-function make_bar(self, name, x, y, w, h, col, maxval, val)
+function make_bar(self, name, x, y, maxval, val, spr, spr_empty)
+	spr = spr or spr_hp_bar
 	local bar = {
 		x = x, 
 		y = y, 
-		w = w, 
-		h = h, 
-		col = col,
+		w = spr:getWidth(), 
+		h = spr:getHeight(), 
+		spr = spr,
+		spr_empty = spr_empty or spr_hp_bar_empty,
 		val = 10,--val or maxval,
 		maxval = maxval or 10,
 
@@ -44,8 +46,12 @@ end
 function update_bar(self)
 end
 function draw_bar(self)
+	local x = camera.x+self.x
+	local y = camera.y+self.y
 	local w = floor(self.w*(self.val/self.maxval))
-	rect_color("fill", camera.x+self.x, camera.y+self.y, w, self.h, self.col)
+	love.graphics.draw(self.spr_empty, camera.x+self.x, camera.y+self.y)
+	local buffer_quad = love.graphics.newQuad(0, 0, w, self.h, self.spr:getDimensions())
+	love.graphics.draw(self.spr, buffer_quad, x, y)
 end
 function get_val(self)
 	return self.val

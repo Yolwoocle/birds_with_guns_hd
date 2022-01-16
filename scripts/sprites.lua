@@ -6,6 +6,10 @@ end
 
 spr_missing = load_pixel_image("missing")
 
+-- UI
+spr_hp_bar = load_pixel_image("hp_bar")
+spr_hp_bar_empty = load_pixel_image("hp_bar_empty")
+
 -- Players
 spr_pigeon = {
     load_pixel_image("pigeon_walk_1"),
@@ -38,14 +42,22 @@ sprs_floor_wood = {
     load_pixel_image("floor_wood_2"),
     load_pixel_image("floor_wood_3"),
     load_pixel_image("floor_wood_4"),
+    w = 2, h = 2,
 }
-spr_floor_wood_detail = load_pixel_image("floor_wood_detail")
+sprs_floor_wood_detail = {
+    load_pixel_image("floor_wood_detail1"),
+    load_pixel_image("floor_wood_detail2"),
+    load_pixel_image("floor_wood_detail3"),
+    load_pixel_image("floor_wood_detail4"),
+    w = 2, h = 2,
+}
 spr_wall_dum = load_pixel_image("dummy_wall")
 spr_wall_dum = {
     load_pixel_image("walls_sample1"),
     load_pixel_image("walls_sample1"),
     load_pixel_image("walls_sample1"),
     load_pixel_image("walls_sample1"),
+    w = 2, h = 2,
 }
 spr_box = load_pixel_image("box")
 spr_chain = load_pixel_image("chain")
