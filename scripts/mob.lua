@@ -57,7 +57,16 @@ function spawn_mob(self, x, y)
 end
 
 function update_mob(self, dt)
-	self.rot = math.atan2(player.y-self.y, player.x-self.x)
+	self.distplayer = inf
+	for _,p in ipairs(player_list) do
+		nwd =  dist(p.x,p.y,self.x,self.y)
+		if nwd < self.distplayer then
+			self.distplayer = nwd
+			self.player = p
+		end
+	end
+
+	self.rot = math.atan2(self.player.y-self.y, self.player.x-self.x)
 
 	self.gun:update(dt, self)
 
@@ -65,7 +74,6 @@ function update_mob(self, dt)
 
 	self.dxplayer = math.cos(self.rot)
 	self.dyplayer = math.sin(self.rot)
-	self.distplayer = dist(player.x,player.y,self.x,self.y)
 
 	local rayc = {}
 

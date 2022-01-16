@@ -41,7 +41,14 @@ function love.load()
 	map:load_from_file("chunks_wag_1.txt")
 	map:generate_map()
 
-	player = init_player()
+	nb_joueurs = 10000
+	player_list = {}
+	for i =1,nb_joueurs do
+
+		table.insert(player_list , init_player(100+random_float(0, 100),100+random_float(0, 100)))
+
+	end
+
 	bullets = {}
 	_shot = {}
 	mobs = {}
@@ -57,14 +64,17 @@ function love.load()
 end
 
 function love.update(dt)
-	camera:set_target(player.x-window_w/2, 0)--player.y-window_h/2)
+	camera:set_target(player_list[1].x-window_w/2, 0)--player.y-window_h/2)
 	camera:update(dt)
 
-	player:update(dt, camera)
+	for _,p in ipairs(player_list) do
+		p:update(dt, camera)
 
-	if player.shoot then
-		--_shot = player.gun:make_bullet(player,player.rot)
-		append_list(_shot, player.gun:make_shot(player))
+		if p.shoot then
+			--_shot = player.gun:make_bullet(player,player.rot)
+			append_list(_shot, p.gun:make_shot(p))
+		end
+
 	end
 
 	for i,v in ipairs(_shot) do
@@ -124,7 +134,9 @@ function love.draw()
 		b:draw()
 	end 
 	
-	player:draw()
+	for _,p in ipairs(player_list) do
+		p:draw()
+	end
 
 	gui:draw()
 

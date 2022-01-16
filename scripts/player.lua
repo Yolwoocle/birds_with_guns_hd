@@ -6,10 +6,10 @@ require "scripts/gun_list"
 require "scripts/collision"
 require "scripts/settings"
 
-function init_player()
+function init_player(x,y)
 	local player = {
-		x = 10,
-		y = 80,
+		x = x or 100,
+		y = y or 100,
 		w = 4,
 		h = 4,
 		dx = 0,

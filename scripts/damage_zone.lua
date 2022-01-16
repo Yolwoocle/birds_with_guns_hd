@@ -57,33 +57,36 @@ end
 
 function damageinzone(self,l) 
     if self.active then
-    for i,m in pairs(mobs) do
+        for i,m in pairs(mobs) do
 
-        if dist(self.x,self.y,m.x,m.y) < self.rayon then
+            if dist(self.x,self.y,m.x,m.y) < self.rayon then
 
-            m.life = m.life - self.damage
+                m.life = m.life - self.damage
 
-            if self.ondamage then
-                self.ondamage(m)
+                if self.ondamage then
+                    self.ondamage(m)
+                end
+
+                if m.life<=0 then
+                    table.remove(mobs , i)
+                end
             end
 
-            if m.life<=0 then
-                table.remove(mobs , i)
-            end
         end
 
-    end
+        for _,p in ipairs(player_list) do
+	        local coll = dist(self.x,self.y,p.x,p.y) < self.rayon
+	        if coll then
+	        	p.life = p.life - self.damage
+                --p:damage(self.damage)
 
-    local p = player
-	local coll = dist(self.x,self.y,p.x,p.y) < self.rayon
-	if coll then
-		p.life = p.life - self.damage
+                if self.ondamage then
+                    self.ondamage(p)
+                end
 
-        if self.ondamage then
-            self.ondamage(p)
+	        end
+
         end
-
-	end
-
     end
+    
 end
