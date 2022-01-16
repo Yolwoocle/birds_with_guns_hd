@@ -4,10 +4,12 @@ function init_camera()
 	local camera = {
 		fake_x = 0,
 		fake_y = 0,
-		x = 0,
-		y = 0,
 		target_x = 0,
 		target_y = 0,
+		offset_x = 0,
+		offset_y = 0,
+		x = 0,
+		y = 0,
 		sx = 1,
 		sy = 1,
 
@@ -22,6 +24,7 @@ function init_camera()
 		lock_y = false,
 
 		smoothing = 20,
+		aim_offset = 0.2,
 
 		update = update_camera,
 		draw = draw_camera,
@@ -43,10 +46,18 @@ function update_camera(self, dt)
 
 	self.shk_x = self.shk_x * min(1, self.shk_fric * dt)
 	self.shk_y = self.shk_y * min(1, self.shk_fric * dt)
-	
+	-- Offset
+	local mx, my = get_cursor_pos()
+	if not self.lock_x then
+		self.offset_x = (mx - window_w) * self.aim_offset
+	end
+	if not self.lock_y then
+		self.offset_y = (my - window_h) * self.aim_offset
+	end
+
 	-- Apply shake
-	self.x = self.fake_x + self.shk_x
-	self.y = self.fake_y + self.shk_y
+	self.x = self.fake_x + self.shk_x + self.offset_x
+	self.y = self.fake_y + self.shk_y + self.offset_y
 end
 
 function draw_camera(self, dt)

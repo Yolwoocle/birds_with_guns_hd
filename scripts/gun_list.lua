@@ -110,15 +110,16 @@ guns = {
 		scale = .75,
 		oscale = 0,
 
-		bullet_life = 1,
-
+		bullet_life = 10,
 
 		cooldown = .1,
+
 		bullet_spd = 100,
 		on_death = function(self , k)
 			 table.insert(zones, zone.fire:spawn_zone( self.x, self.y))
 			 table.remove(bullets, k)
 		end
+
 	}),
 }
 

@@ -36,6 +36,7 @@ function love.load()
 	
 	init_keybinds()
 	camera = init_camera()
+	camera.lock_y = true
 
 	map = init_map(400, 20)
 	map:load_from_file("chunks_wag_1.txt")
@@ -66,6 +67,7 @@ end
 function love.update(dt)
 	camera:set_target(player_list[1].x-window_w/2, 0)--player.y-window_h/2)
 	camera:update(dt)
+	camera.aim_offset = player.gun.camera_offset
 
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)

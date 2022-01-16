@@ -126,7 +126,7 @@ function player_movement(self, dt)
 end
 
 function aim_player(self, dt)
-	local mx, my = get_mouse_pos(camera)
+	local mx, my = get_cursor_pos(camera)
 	self.rot = math.atan2(my - self.y, mx - self.x)
 	self.shoot = false
 	if self.gun.cooldown_timer <= 0 then
