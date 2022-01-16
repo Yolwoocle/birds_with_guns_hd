@@ -30,7 +30,7 @@ function love.load()
 	font_def = love.graphics.setNewFont(10)
 	
 	gui = make_gui()
-	gui:make_bar("life_bar", 2,2,50,20, {1,0,0},10,10)
+	gui:make_bar("life_bar", 2,2,10,10, spr_hp_bar, spr_hp_bar_empty)
 
 	notification = ""
 	

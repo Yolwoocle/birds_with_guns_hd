@@ -109,9 +109,9 @@ function default_shoot(g,p)
 	return shot
 end
 
---------------
---- BULLET ---
---------------
+----------------------------------------------------------------------
+------------------------------- BULLET -------------------------------
+----------------------------------------------------------------------
 
 function make_bullet(self, p, angle,spread,type)
 	--`p`: player or entity shooting
@@ -363,6 +363,7 @@ function damage_everyone(self, k)
 	for l,m in pairs(mobs) do
 		--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
 		if self.type ==  "bullet" then
+			-- Bullet
 			local coll = coll_rect(m.x, m.y, m.w*3, m.h*3, self.x, self.y, self.scale*3, self.scale*3)
 			if not self.is_enemy and coll then
 				m.life = m.life - self.damage
@@ -373,13 +374,13 @@ function damage_everyone(self, k)
 					table.remove(mobs , l)
 				end
 			end
+
 		elseif self.type == "laser" then
+			-- Laser
 			for i,v in ipairs(self.length) do
 				if self.active then
-
 					local dist = dist_to_segment({x=m.x, y=m.y}, {x=v.x1, y=v.y1}, {x=v.x, y=v.y})
 					if dist < self.scale*20 then
-
 						m.life = m.life - self.damage
 						--table.remove(bullets, k)
 					end
@@ -388,6 +389,7 @@ function damage_everyone(self, k)
 					end
 				end
 			end
+
 		end
 
 	end
@@ -397,8 +399,10 @@ function damage_everyone(self, k)
 	local p = player
 	local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)
 	if self.is_enemy and coll then
-		p.life = p.life - self.damage
-		self:on_death(k)
+
+		p:damage(self.damage)
+		self.on_death(k)
+
 	end
 	--end
 end

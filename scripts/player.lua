@@ -8,8 +8,8 @@ require "scripts/settings"
 
 function init_player()
 	local player = {
-		x = 40,
-		y = 40,
+		x = 10,
+		y = 80,
 		w = 4,
 		h = 4,
 		dx = 0,
@@ -21,7 +21,9 @@ function init_player()
 		is_enemy = false,
 
 		life = 10,
-		iframes = 0,
+		iframes = 2,
+		iframes_timer = 0,
+		iframes_flashing_time = 0.1,
 		hit_w = 12,
 		hit_h = 12,
 
@@ -35,6 +37,8 @@ function init_player()
 		animate = animate_player,
 
 		gun_dist = 14,
+
+		damage = damage_player,
 
 		update = update_player,
 		draw = draw_player,
@@ -61,19 +65,30 @@ function update_player(self, dt)
 	self.gun:update(dt, self)
 
 	-- Life, damage
-	for i,v in ipairs(bullets) do
-		
-	end
+	self.iframes_timer = self.iframes_timer - dt
+	self.invincible = self.iframes_timer > 0 
 	gui.elements.life_bar.val = self.life
 
 	self:animate()
 end
 
 function draw_player(self)
+	local ft = self.iframes_flashing_time
+	-- Flashing
+	local is_drawn = true
+	if self.invincible then
+		is_drawn = self.iframes_timer % (2*ft) <= ft
+	end
+
+	-- Gun pseudo-3D
 	if     self.looking_up then self.gun:draw(self) end
-	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
+	if is_drawn then
+		draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
+	end
 	if not self.looking_up then self.gun:draw(self) end
 
+	love.graphics.print(tostr(self.life), self.x, self.y-30)
+	love.graphics.print(tostr(self.iframes_timer), self.x, self.y-50)
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 end
@@ -152,7 +167,16 @@ function animate_player(self)
 	end	
 end
 
+function damage_player(self, dmg)
+	if self.iframes_timer <= 0 then
+		self.life = self.life - dmg
+		self.iframes_timer = self.iframes
+	end
+end
+
 function save_gun_stats(self)
+	-- WHY IS THIS A METHOD OF PLAYER
+	-- TODO: move it to gun ?????????? 
 	self.gun.save_rafale 	 	= self.gun.rafale
 	self.gun.save_bullet_spd  	= self.gun.bullet_spd
 	self.gun.save_laser_length 	= self.gun.laser_length

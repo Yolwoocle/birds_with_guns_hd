@@ -4,7 +4,6 @@ function swept_aabb(o1, o2)
 	-- https://www.gamedev.net/tutorials/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
 end
 
---https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
 function sqr(x) 
 	return x * x
 end
@@ -12,8 +11,10 @@ function dist_sq(u, v)
 	return sqr(u.x - v.x) + sqr(u.y - v.y)
 end
 function dist_to_segment_squared(p, u, v) 
+--https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
 	local l2 = dist_sq(u, v)
   	if l2 == 0 then 
+	  	-- if len is 0 then just return the distance to u
   		return dist_sq(p, u) 
 	end
 	--[[
