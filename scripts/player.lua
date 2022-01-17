@@ -43,7 +43,7 @@ function init_player(x,y)
 		update = update_player,
 		draw = draw_player,
 	}
-	player.gun = copy(guns.jspp)
+	player.gun = copy(guns.boum)
 	return player
 end
 

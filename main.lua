@@ -46,7 +46,7 @@ function love.load()
 	player_list = {}
 	for i =1,nb_joueurs do
 
-		table.insert(player_list , init_player(100+random_float(0, 100),100+random_float(0, 100)))
+		table.insert(player_list , copy(init_player(100+random_float(0, 100),100+random_float(0, 100))))
 
 	end
 
@@ -54,7 +54,7 @@ function love.load()
 	_shot = {}
 	mobs = {}
 	zones = {}
-	for i = 1,1000 do
+	for i = 1,10 do
 		table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	end
 	

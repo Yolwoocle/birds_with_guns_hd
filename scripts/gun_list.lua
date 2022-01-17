@@ -129,6 +129,40 @@ guns = {
 		end
 
 	}),
+
+	boum = make_gun({
+		name = "jsp", 
+		type = "bullet",
+		category = "instent",
+		bounce = false,
+		max_ammo = math.huge,
+		charge = false,
+		charge_curve = 2,			
+		charge_time = 1,
+		charge_nbrafale = 10,
+		scattering = .1,
+
+		spread  = pi/2,
+
+		scale = 1,
+		oscale = 0,
+		nbshot = 1,
+
+		bullet_life = 10,
+
+
+		cooldown = .5,
+
+		spdslow = 1.1,
+
+		bullet_spd = 100,
+		on_death = function(self , k)
+			
+			 table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
+			 table.remove(bullets, k)
+		end
+
+	}),
 }
 
 

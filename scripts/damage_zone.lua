@@ -35,7 +35,7 @@ function update_zone(self, dt , i)
     self.damageloop = max(self.damageloop-dt,0)
 
 
-    if self.life < 1 then
+    if self.life <= 0 then
         self:on_death(i)
     end
 
