@@ -399,9 +399,6 @@ function damage_everyone(self, k)
 
 	end
 
-	-- Players --TODO: support multiple players
-	--for i,m in pairs(player) do
-
 	for _,p in ipairs(player_list) do
 		local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)
 		if self.is_enemy and coll then

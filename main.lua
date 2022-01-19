@@ -4,6 +4,7 @@ require "scripts/settings"
 require "scripts/player"
 require "scripts/sprites"
 require "scripts/map"
+require "scripts/map_generation"
 require "scripts/gun"
 require "scripts/gun_list"
 require "scripts/mob"
@@ -21,14 +22,17 @@ function love.load()
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
-	window_w, window_h = 512, 18*16
+	window_w, window_h = 480, 270
 	ratio_w = screen_w/window_w or screen_w
-	ratio_h = screen_h/window_h or screen_h
+	ratio_h = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
 	canvas = love.graphics.newCanvas(window_w, window_h)
 
-	font_def = love.graphics.getFont()
-	font_def = love.graphics.setNewFont(10)
-	
+--	font_def = love.graphics.getFont()
+	font_small = love.graphics.newFont("assets/fonts/Kenney Mini.ttf", 8)
+	font_normal = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
+	font_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
+	love.graphics.setFont(font_thick)
+
 	gui = make_gui()
 	gui:make_bar("life_bar", 2,2,10,10, spr_hp_bar, spr_hp_bar_empty)
 
@@ -36,19 +40,17 @@ function love.load()
 	
 	init_keybinds()
 	camera = init_camera()
-	camera.lock_y = true
+	camera.lock_y = false
 
-	map = init_map(400, 20)
-	map:load_from_file("chunks_wag_1.txt")
+	map = init_map(600, 100)
 	map:generate_map()
 	map:update_sprite_map()
 
 	nb_joueurs = 1
 	player_list = {}
 	for i =1,nb_joueurs do
-
-		table.insert(player_list , copy(init_player(100+random_float(0, 100),100+random_float(0, 100))))
-
+		local ply = init_player(20+random_float(0, 0), 16*20+random_float(0, 100))
+		table.insert(player_list, ply)
 	end
 
 	bullets = {}
@@ -67,7 +69,8 @@ function love.load()
 end
 
 function love.update(dt)
-	camera:set_target(player_list[1].x-window_w/2, 0)--player.y-window_h/2)
+	--TODO: camera for all players
+	camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
 	camera:update(dt)
 	camera.aim_offset = player_list[1].gun.camera_offset
 
@@ -75,23 +78,12 @@ function love.update(dt)
 
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
-
 		if p.shoot then
 			--_shot = player.gun:make_bullet(player,player.rot)
 			append_list(_shot, p.gun:make_shot(p))
 		end
 	end
 	camera.aim_offset = player_list[1].gun.camera_offset
-
-	for _,p in ipairs(player_list) do
-		p:update(dt, camera)
-
-		if p.shoot then
-			--_shot = player.gun:make_bullet(player,player.rot)
-			append_list(_shot, p.gun:make_shot(p))
-		end
-
-	end
 
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
@@ -161,7 +153,8 @@ function love.draw()
 	debug_print(notification)
 	debug_print(#bullets)
 	if prevray.dist then debug_print(prevray.dist,1,1) end
-	debug_print("FPS: "..tostr(love.timer.getFPS()))
+	debug_print("FPS:",tostr(love.timer.getFPS()))
+	circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
 	
 	love.graphics.setCanvas()
 	love.graphics.origin()
@@ -173,6 +166,7 @@ function love.draw()
 		--love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
 	end
 	love.graphics.setColor({1,1,1})
+
 end
 
 function love.keypressed(key)

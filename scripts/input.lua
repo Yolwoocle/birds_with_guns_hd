@@ -16,7 +16,6 @@ function button_down(command)
 	if command == "alt" and love.mouse.isDown(2) then
 		return true
 	end
-	-- TODO: use scancode for compatibility with all keyboards
 	local keys = keybinds[command]
 	for _,k in pairs(keys) do
 		if love.keyboard.isScancodeDown(k) then
