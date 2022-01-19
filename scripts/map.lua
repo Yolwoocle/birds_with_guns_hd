@@ -19,6 +19,7 @@ function init_map(w, h)
 	
 	map.update = update_map
 	map.draw = draw_map
+	map.debug_draw = debug_draw_map
 	map.palette = {
 		[0] = make_tile(0, spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
@@ -150,9 +151,38 @@ function draw_map(self)
 				spr = self.palette[tile].spr[var]
 			end
 			if spr == nil then  spr = spr_missing  end
+			
 			love.graphics.draw(spr, x*block_width, y*block_width)
 		end
 	end
+end
+
+function set_debug_canvas(self)
+	self.debug_canvas = love.graphics.newCanvas(self.width, self.height)
+	love.graphics.setCanvas(self.debug_canvas)
+	love.graphics.clear()
+
+	for y = 0, self.height-1 do
+		for x = 0, self.width-1 do
+			local tile = self:get_tile(x,y).n
+			local col = {1,0,0} 
+			if     tile == 0 then  col = {0,0,0,0} 
+			elseif tile == 1 then  col = {.5, .2, 0}
+			elseif tile == 2 then  col = {1, 1, 1}
+			elseif tile == 3 then  col = {0, 1, 1}
+			elseif tile == 4 then  col = {.5, .5, .5}
+			elseif tile == 5 then  col = {.7, .7, .7}
+			end
+			rect_color("fill", x, y, 1, 1, col)
+		end
+	end
+	love.graphics.setCanvas()
+end
+
+function debug_draw_map(self, px, py)
+	px = px or 0
+	py = py or 0
+	love.graphics.draw(self.debug_canvas, px, py)
 end
 
 

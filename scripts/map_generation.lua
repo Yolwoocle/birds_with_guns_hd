@@ -1,7 +1,7 @@
 require "scripts/utility"
 
 ----------- Map Generation ------------
-function generate_map(self, rooms, seed)
+function generate_map(self, seed)
 	-- The default seed in LÖVE 11.x is the following low/high pair: 0xCBBF7A44, 0x0139408D
 	local rng
 	if seed then
@@ -10,10 +10,23 @@ function generate_map(self, rooms, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	self:generate_path(rng, self.lvl1_main_rooms, 0, 16)
+	self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 20, 30)
+	local ix = 0 
+	for i=1,rng:random(3,10) do
+		ix = ix + rng:random(4,32)
+		local res = self:generate_path(rng, self.lvl1_branch_rooms, ix,0, 1,5)
+		ix = res.x
+	end
+
+	local ix = 0 
+	for i=1,rng:random(3,10) do
+		ix = ix + rng:random(4,32)
+		local res = self:generate_path(rng, self.lvl1_branch_rooms, ix,32, 1,5)
+		ix = res.x
+	end
 end
 
-function generate_path(self, rng, rooms, x, y)
+function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
 	-- Start by generating a random layout for the main path
 	-- We get all possible rooms and shuffle them 
 	local room_ids = {} 
@@ -22,15 +35,17 @@ function generate_path(self, rng, rooms, x, y)
 	end
 	shuffle(room_ids, rng)
 	
-	local len_wagon = rng:random(5, 8)
-	len_wagon = min(len_wagon, #rooms)
+	local len_path = rng:random(n_room_min, n_room_max)
+	len_path = min(len_path, #rooms)
 
-	local ix = 0
-	for i=1, len_wagon do
+	local ix = x
+	for i=1, len_path do
 		local room = rooms[room_ids[i]]
-		self:write_room(room, x+ix, y)
+		self:write_room(room, ix, y)
 		ix = ix + self:get_room_width(room)
 	end
+
+	return {x=ix}
 end
 
 function load_from_file(self, file)

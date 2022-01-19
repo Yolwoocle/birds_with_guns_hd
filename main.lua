@@ -43,7 +43,7 @@ function love.load()
 	camera.lock_y = false
 
 	map = init_map(600, 100)
-	map:generate_map()
+	map:generate_map(love.math.random()*40000)
 	map:update_sprite_map()
 
 	nb_joueurs = 1
@@ -66,6 +66,8 @@ function love.load()
 	perf = {}
 
 	g = 0
+
+	set_debug_canvas(map)
 end
 
 function love.update(dt)
@@ -73,9 +75,7 @@ function love.update(dt)
 	camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
 	camera:update(dt)
 	camera.aim_offset = player_list[1].gun.camera_offset
-
 	map:update()
-
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
 		if p.shoot then
@@ -84,7 +84,6 @@ function love.update(dt)
 		end
 	end
 	camera.aim_offset = player_list[1].gun.camera_offset
-
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
 			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset))
@@ -93,27 +92,19 @@ function love.update(dt)
 			v.time=v.time-dt
 		end
 	end
-
 	for i,b in ipairs(bullets) do
 		b:update(dt,i)
 		damage_everyone(b,i)
 	end
-	
-
 	for i,m in ipairs(mobs) do
 		m:update(dt)
 	end
-
 	for i,z in ipairs(zones) do
 		z:update(dt,i)
 		damageinzone(z,i) 
-
 	end
-
 	prevfire = button_down("fire")
-	
 	gui:update()
-
 	table.insert(perf, dt)
 end
 
@@ -149,13 +140,15 @@ function love.draw()
 	gui:draw()
 
 	-- Debug
-	debug_y = 10
+	debug_y = 30
 	debug_print(notification)
 	debug_print(#bullets)
-	if prevray.dist then debug_print(prevray.dist,1,1) end
-	debug_print("FPS:",tostr(love.timer.getFPS()))
+	--if prevray.dist then debug_print(prevray.dist,1,1) end
+	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
+	map:debug_draw(camera.x+5, camera.y+30)
 	
+	-- Canvas for that sweet pixel art
 	love.graphics.setCanvas()
 	love.graphics.origin()
 	love.graphics.scale(1, 1)
@@ -166,7 +159,6 @@ function love.draw()
 		--love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
 	end
 	love.graphics.setColor({1,1,1})
-
 end
 
 function love.keypressed(key)
