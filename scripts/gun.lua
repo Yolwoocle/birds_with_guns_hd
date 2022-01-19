@@ -321,7 +321,7 @@ function bouncedir(self)
 end
 
 function draw_bullet(self)
-	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
+	draw_centered(self.spr, self.x, self.y, self.rot, self.scale, self.scale)
 	rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
 	--love.graphics.print(self.scale,self.x+10,self.y+10)
 end

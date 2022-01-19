@@ -14,8 +14,8 @@ function init_player(x,y)
 		h = 4,
 		dx = 0,
 		dy = 0,
-		speed = 40,
-		friction = 0.8,
+		speed = 60,
+		friction = 0.6, --FIXME player glides more when FPS low
 		bounce = 0.6,
 		is_walking = false,
 		is_enemy = false,
