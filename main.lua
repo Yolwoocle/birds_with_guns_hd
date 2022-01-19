@@ -80,7 +80,7 @@ function love.update(dt)
 			--_shot = player.gun:make_bullet(player,player.rot)
 			append_list(_shot, p.gun:make_shot(p))
 		end
-
+	end
 	camera.aim_offset = player_list[1].gun.camera_offset
 
 	for _,p in ipairs(player_list) do
