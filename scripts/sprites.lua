@@ -19,6 +19,12 @@ spr_missing = load_pixel_image("missing")
 spr_hp_bar = load_pixel_image("hp_bar")
 spr_hp_bar_empty = load_pixel_image("hp_bar_empty")
 
+spr_missing = load_pixel_image("missing")
+
+-- UI
+spr_hp_bar = load_pixel_image("hp_bar")
+spr_hp_bar_empty = load_pixel_image("hp_bar_empty")
+
 -- Players
 anim_pigeon_idle = {
     load_pixel_image("pigeon/pigeon_idle_1"),

@@ -6,8 +6,8 @@ guns = {
 	revolver = make_gun({
 		name = "revolver",
 		type = "bullet",			--"bullet" "laser"
-
-		category = "instant",	--"persistent" "instant"
+		
+        category = "instant",	--"persistent" "instant"
 		bounce = true,
 
 		charge = true,
@@ -28,15 +28,15 @@ guns = {
 
 		spr = spr_revolver, 
 
-		bullet_spd = 10,
-		ospd = 0,
-		cooldown = 1,
+        bullet_spd = 10,
+        ospd = 0,
+        cooldown = 1,
 
 		scale = .25,
 		oscale = 0,
 
-		max_ammo = inf,
-		scattering = 1,
+        max_ammo = inf,
+        scattering = 1,
 
 		damage = 1,
 
@@ -55,7 +55,7 @@ guns = {
 
 		spdslow = 1,
 
-		screenshake = 30,
+		screenshake = 3,
 
 		make_shot = default_shoot
 	}),
@@ -92,7 +92,7 @@ guns = {
 		name = "jsp", 
 		type = "bullet",
 		bounce = true,
-		scale = 1,
+		scale = .5,
 		oscale = 0,
 
 		cooldown = 1,
@@ -101,9 +101,9 @@ guns = {
 
 	jspp = make_gun({
 		name = "jsp", 
-		type = "bullet",
+		type = "laser",
 		category = "instent",
-		bounce = false,
+		bounce = true,
 		max_ammo = math.huge,
 		charge = true,
 		charge_curve = 2,			
@@ -113,17 +113,15 @@ guns = {
 
 		spread  = pi/2,
 
-		scale = 1,
+		scale = .75,
 		oscale = 0,
-		nbshot = 40,
-
-		screenshake = 8,
+		nbshot = 10,
 
 		bullet_life = 1,
 
 		cooldown = .1,
 
-		bullet_spd = 500,
+		bullet_spd = 100,
 		on_death = function(self , k)
 			 --table.insert(zones, zone.fire:spawn_zone( self.x, self.y))
 			 table.remove(bullets, k)

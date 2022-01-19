@@ -27,6 +27,7 @@ function init_player(x,y)
 		hit_w = 12,
 		hit_h = 12,
 
+
 		spr = nil,
 		rot = 0,
 		looking_up = false,

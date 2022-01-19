@@ -48,7 +48,7 @@ end
 
 function draw_zone(self)
     --circ_color(mode,x,y,radius,col)
-    --circ_color("fill", self.x, self.y, self.rayon , {1,0,0,0.05})
+    circ_color("fill", self.x, self.y, self.rayon , {1,0,0})
 end
 
 function killzone(self,i)
