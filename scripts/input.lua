@@ -1,4 +1,4 @@
-function init_keybinds() --TODO: use scancodes instead
+function init_keybinds() 
 	keybinds = {
 		left  = {"left",  "a"}, 
 		right = {"right", "d"}, 
@@ -24,6 +24,15 @@ function button_down(command)
 		end
 	end
 	return false
+end
+
+function get_cursor_pos(camera)
+	--TODO: support controllers 
+	if camera then
+		return get_mouse_pos(camera)  
+	else
+		return love.mouse.getPosition()
+	end 
 end
 
 function get_mouse_pos(camera)

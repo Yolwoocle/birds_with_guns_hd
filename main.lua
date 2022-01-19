@@ -10,9 +10,14 @@ require "scripts/mob"
 require "scripts/mob_list"
 require "scripts/camera"
 require "scripts/screenshot"
+require "scripts/ui"
+require "scripts/damage_zone_list"
+require "scripts/damage_zone"
 
 function love.load()
-	love.window.setMode(0, 0, {fullscreen = false, resizable=false, vsync=true, minwidth=400, minheight=300})	
+	prevray = {}
+
+	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
@@ -24,37 +29,63 @@ function love.load()
 	font_def = love.graphics.getFont()
 	font_def = love.graphics.setNewFont(10)
 	
+	gui = make_gui()
+	gui:make_bar("life_bar", 2,2,10,10, spr_hp_bar, spr_hp_bar_empty)
+
 	notification = ""
 	
 	init_keybinds()
 	camera = init_camera()
+	camera.lock_y = true
 
-	map = init_map(50, 20)
-	map:load_from_file(str)
+	map = init_map(400, 20)
+	map:load_from_file("chunks_wag_1.txt")
+	map:generate_map()
+	map:update_sprite_map()
 
-	player = init_player()
+	nb_joueurs = 1
+	player_list = {}
+	for i =1,nb_joueurs do
+
+		table.insert(player_list , copy(init_player(100+random_float(0, 100),100+random_float(0, 100))))
+
+	end
+
 	bullets = {}
 	_shot = {}
 	mobs = {}
-	table.insert(mobs, mob_list.Leo_renome:spawn())
+	zones = {}
+	for i = 1,10 do
+		table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
+	end
 	
 	prevfire = button_down("fire")
+
+	perf = {}
+
+	g = 0
 end
 
 function love.update(dt)
-	camera:set_target(player.x-window_w/2, 0)--player.y-window_h/2)
+	camera:set_target(player_list[1].x-window_w/2, 0)--player.y-window_h/2)
 	camera:update(dt)
+	camera.aim_offset = player_list[1].gun.camera_offset
 
-	player:update(dt, camera)
-	if player.shoot then
-		--_shot = player.gun:make_bullet(player,player.rot)
-		append_list(_shot, player.gun:make_shot(player,player.rot))
+	map:update()
+
+	for _,p in ipairs(player_list) do
+		p:update(dt, camera)
+
+		if p.shoot then
+			--_shot = player.gun:make_bullet(player,player.rot)
+			append_list(_shot, p.gun:make_shot(p))
+		end
+
 	end
 
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
-			v.angle = player.rot
-			table.insert(bullets,make_bullet(v.gun,v.player,v.angle,v.offset))
+			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset))
 			table.remove(_shot, i)
 		else
 			v.time=v.time-dt
@@ -62,16 +93,26 @@ function love.update(dt)
 	end
 
 	for i,b in ipairs(bullets) do
-		b:update(dt)
-		if b.delete then
-			table.remove(bullets, i)
-		end
+		b:update(dt,i)
+		damage_everyone(b,i)
 	end
+	
 
 	for i,m in ipairs(mobs) do
-		--m:update(dt)
+		m:update(dt)
 	end
+
+	for i,z in ipairs(zones) do
+		z:update(dt,i)
+		damageinzone(z,i) 
+
+	end
+
 	prevfire = button_down("fire")
+	
+	gui:update()
+
+	table.insert(perf, dt)
 end
 
 function love.draw()
@@ -81,6 +122,10 @@ function love.draw()
 	camera:draw()
 	-- TODO: y-sorting
 	map:draw()
+
+	for i,z in ipairs(zones) do
+		z:draw()
+	end
 	
 	for _,m in pairs(mobs) do
 		m:draw()
@@ -95,18 +140,30 @@ function love.draw()
 		b:draw()
 	end 
 	
-	player:draw()
+	for _,p in ipairs(player_list) do
+		p:draw()
+	end
 
+	gui:draw()
+
+	-- Debug
 	debug_y = 10
 	debug_print(notification)
+	debug_print(#bullets)
+	if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS: "..tostr(love.timer.getFPS()))
 	
 	love.graphics.setCanvas()
 	love.graphics.origin()
 	love.graphics.scale(1, 1)
 	love.graphics.draw(canvas, 0, 0, 0, ratio_w, ratio_h)
-end
 
+	love.graphics.setColor({1,0,0})
+	for i=2,#perf do
+		--love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
+	end
+	love.graphics.setColor({1,1,1})
+end
 
 function love.keypressed(key)
 	if key == "f5" then
@@ -118,15 +175,9 @@ function love.keypressed(key)
 	
 	elseif key == "f2" then
 		if canvas then
-			--TODO: option to use love.graphics.captureScreenshot( filename )
-			--TODO: setting to set pixel scale (2 or 3) by default
-			--TODO: paste screenshot into pastebin
-			--TODO: capture GIFs
-			--These features are important as it provides an easy way 
-			--for players to share the game with others (GIF especially)
 			screenshot()
 		else
-			notification = "Could not save screenshot"
+			notification = "Could not save screenshot: no canvas"
 		end
 	end
 end

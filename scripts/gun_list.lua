@@ -3,16 +3,14 @@ require "scripts/gun"
 require "scripts/utility"
 
 guns = {
+	revolver = make_gun({
+		name = "revolver",
+		type = "bullet",			--"bullet" "laser"
 
-    revolver = make_gun({
-        name = "revolver",
-        type = "laser",			--"bullet" "laser"
-
-
-        category = "persistent",	--"persistent" "instant"
+		category = "instant",	--"persistent" "instant"
 		bounce = true,
 
-		charge = false,
+		charge = true,
 		charge_time = 1,
 		charge_nbrafale = 10,
 		charge_bullet_spd = 1,
@@ -26,53 +24,145 @@ guns = {
 		charge_rafaledt = 0,
 		charge_spdslow = .002,
 		charge_damage = 10,
+		charge_oscale = 10,
 
-        spr = spr_revolver, 
+		spr = spr_revolver, 
 
-        bullet_spd = 1000,
-        ospd = 1000,
-        cooldown = .1,
+		bullet_spd = 10,
+		ospd = 0,
+		cooldown = 1,
 
+		scale = .25,
+		oscale = 0,
 
-		scale = 1,
-
-        max_ammo = inf,
-        scattering = .6,
+		max_ammo = inf,
+		scattering = 1,
 
 		damage = 1,
 
-		spawn_x = 37,
+		spawn_x = nil,
 		spawn_y = 0,
 
-		life	= .5,
+		bullet_life	= 3,
 
-        laser_length = 300,
+		laser_length = 300,
 
-        rafale  = 1,
-        rafaledt  = .1,
+		rafale  = 1,
+		rafaledt  = .1,
 
-		nbshot = 1,
+		nbshot = 5,
 		spread  = pi/2,
-
 
 		spdslow = 1,
 
+		screenshake = 30,
+
 		make_shot = default_shoot
-		--function (g,p)
-		--	return default_shoot(g,p)
-		--end,
 	}),
 	
 	pistolet = make_gun({
 		name = "pistolet", 
-		type = "laser",
+		type = "bullet",
+		category = "instent",
+		charge = true,
+		charge_time = .1,
 		bounce = true,
 		laser_length = 300,
+		scale = .1,
+		scattering = 0,
+		spawn_x = 17,
+		spawn_y = 0,
+		charge_scale = 10,
+		bullet_spd = 100,
+		cooldown = .1,
+		charge_damage = 10,
 
-		spawn_x =  70,
+		bullet_life = 3,
+		nbshot = 1,
+		spread  = pi/2,
+
+		spawn_x =  10,
+
 		spawn_y =  0,
 
 		max_ammo = inf,
+	}),
+
+	jsp = make_gun({
+		name = "jsp", 
+		type = "bullet",
+		bounce = true,
+		scale = 1,
+		oscale = 0,
+
+		cooldown = 1,
+		bullet_spd = 100,
+	}),
+
+	jspp = make_gun({
+		name = "jsp", 
+		type = "bullet",
+		category = "instent",
+		bounce = false,
+		max_ammo = math.huge,
+		charge = true,
+		charge_curve = 2,			
+		charge_time = 1,
+		charge_nbrafale = 10,
+		scattering = 0,
+
+		spread  = pi/2,
+
+		scale = 1,
+		oscale = 0,
+		nbshot = 40,
+
+		screenshake = 8,
+
+		bullet_life = 1,
+
+		cooldown = .1,
+
+		bullet_spd = 500,
+		on_death = function(self , k)
+			 --table.insert(zones, zone.fire:spawn_zone( self.x, self.y))
+			 table.remove(bullets, k)
+		end
+
+	}),
+
+	boum = make_gun({
+		name = "jsp", 
+		type = "bullet",
+		category = "instent",
+		bounce = false,
+		max_ammo = math.huge,
+		charge = false,
+		charge_curve = 2,			
+		charge_time = 1,
+		charge_nbrafale = 10,
+		scattering = .1,
+
+		spread  = pi/2,
+
+		scale = 1,
+		oscale = 0,
+		nbshot = 1,
+
+		bullet_life = 10,
+
+
+		cooldown = .5,
+
+		spdslow = 1.1,
+
+		bullet_spd = 100,
+		on_death = function(self , k)
+			
+			 table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
+			 table.remove(bullets, k)
+		end
+
 	}),
 }
 

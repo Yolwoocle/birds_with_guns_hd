@@ -5,20 +5,27 @@ inf = math.huge
 tostr = tostring
 floor = math.floor
 ceil = math.ceil
+max = math.max
+min = math.min
 
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
-	x = floor(x)
-	y = floor(y)
-	r = r or 0
-	sx = sx or pixel_scale
-	sy = sy or sx
-	ox = ox or 0
-	oy = oy or 0
+	local w = spr:getWidth() or 0
+	local h = spr:getHeight() or 0
+	if (camera.x-w < x) and (x < camera.x+window_w+w) 
+	and (camera.y-h < y) and (y < camera.y+window_h+h) then
+		x = floor(x)
+		y = floor(y)
+		r = r or 0
+		sx = sx or pixel_scale
+		sy = sy or sx
+		ox = ox or 0
+		oy = oy or 0
 
-	ox = ox + spr:getWidth()/2
-	oy = oy + spr:getHeight()/2
+		ox = ox + spr:getWidth()/2
+		oy = oy + spr:getHeight()/2
 
-	love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
+		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
+	end
 end
 
 function circ_color(mode,x,y,radius,col)
@@ -28,6 +35,7 @@ function circ_color(mode,x,y,radius,col)
 end
 
 function rect_color(mode, x, y, w, h, col)
+	--[[mode, x, y, w, h, col]]
 	love.graphics.setColor(col)
 	love.graphics.rectangle(mode, x, y, w, h)
 	love.graphics.setColor(1,1,1)
@@ -45,12 +53,13 @@ function color(hex)
 	return {r/255, g/255, b/255}
 end
 
-function sgn(hex)
-	if hex >= 0 then
+function sgn(n)
+	if n >= 0 then
 		return 1
 	end
 	return -1
 end
+sign = sgn
 
 function dist(x1,y1,x2,y2)
 	return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
@@ -90,20 +99,55 @@ function raycast(x,y,dx,dy,distmax,pas)
 	local continue = true
 	while continue do
 		local length = distmax-dist
-		nextx = x+(dx*dist*1.1)
-		nexty = y+(dy*dist*1.1)
+		nextx = x+(dx*dist)
+		nexty = y+(dy*dist)
 		local newelt = {x=nextx , y=nexty ,life = length}
 		continue = not(checkdeath(newelt))
-		dist=dist+(1*pas)
+		dist=dist+pas
 	end
-	if dist - (1*pas) > distmax-1 then
-		 local hit = false 
-	else local hit = true 
+
+	if distmax-(dist-pas) <= 0 then
+		hit = true
+	else
+		hit = false
 	end
-	return {dist = dist - (1*pas),hit = hit,y = nexty,x = nextx}
+
+	return {dist = dist - pas,hit = hit,y = nexty,x = nextx}
 end
 
 function debug_print(txt)
 	love.graphics.print(tostr(txt), camera.x + 10, camera.y + debug_y)
 	debug_y = debug_y + 20
 end
+
+
+function draw_line_spr(x1,y1,x2,y2,spr,scale)
+	xmidd = x2-x1
+	ymidd = y2-y1
+	local rota = math.atan2(ymidd,xmidd)
+	local dist = dist(x1,y1,x2,y2)
+	love.graphics.draw(spr, x1,y1 , rota-pi/2 , scale , dist , spr:getWidth()/2)
+end
+
+function shuffle(t, rng)
+	--Fisher–Yates shuffle: https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle
+	for i=#t, 1, -1 do
+		local j 
+		if rng then
+			j = rng:random(i)
+		else
+			j = love.math.random(i)
+		end
+		t[j], t[i] = t[i], t[j]
+	end
+end
+
+function ternary ( cond , T , F )
+	--opti: T and F are always evaluated, unlike `cond and T or F` 
+	if cond then return T else return F end
+end
+
+function clamp(a, b, c)
+	return min(max(a, b), c)
+end
+
