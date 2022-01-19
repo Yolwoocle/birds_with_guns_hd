@@ -56,6 +56,7 @@ function make_gun(a)
 
 		cooldown_timer = 0,
 		dt 			   = 0,
+		vitesse_max	   = a.vitesse_max				or 600,
 
 		make_shot = a.make_shot or default_shoot,
 		
@@ -151,6 +152,8 @@ function make_bullet(self, p, angle,spread,type)
 
 		is_enemy = p.is_enemy,
 
+		vitesse_max = self.vitesse_max,
+
 		w=0,--(self.scale + oscale ),
 		h=0,--(self.scale + oscale ),
 	}
@@ -220,8 +223,11 @@ function init_laser(self)
 end
 
 function update_bullet(self, dt , i)
-	self.dx = self.dx * self.spdslow
-	self.dy = self.dy * self.spdslow
+	if math.sqrt((self.dx * self.spdslow)^2+(self.dy * self.spdslow)^2)<self.vitesse_max then
+		self.dx = self.dx * self.spdslow
+		self.dy = self.dy * self.spdslow
+	end
+
 	self.life = self.life - dt
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 

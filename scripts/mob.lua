@@ -51,6 +51,7 @@ function spawn_mob(self, x, y)
 	x = x or 0 
 	y = y or 0
 	c.dtmouvement = 0
+	c.mv_pause = c.mv_pause+random_float(0,c.mv_pause)
 	c.x = x
 	c.y = y
 	return c
@@ -159,7 +160,7 @@ function draw_mob(self)
 end
 
 function rndmouvement(self,spd)
-	local angle = random_pos_neg(pi2)
+	local angle = random_float(0,pi2)
 	self.dxidel = math.cos(angle)*spd
 	self.dyidel = math.sin(angle)*spd
 end

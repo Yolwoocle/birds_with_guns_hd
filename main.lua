@@ -54,7 +54,7 @@ function love.load()
 	_shot = {}
 	mobs = {}
 	zones = {}
-	for i = 1,10 do
+	for i = 1,100 do
 		table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	end
 	
@@ -90,14 +90,13 @@ function love.update(dt)
 		end
 	end
 
+	for i,m in ipairs(mobs) do
+		m:update(dt)
+	end
+
 	for i,b in ipairs(bullets) do
 		b:update(dt,i)
 		damage_everyone(b,i)
-	end
-	
-
-	for i,m in ipairs(mobs) do
-		m:update(dt)
 	end
 
 	for i,z in ipairs(zones) do

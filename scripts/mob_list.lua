@@ -20,7 +20,7 @@ mob_list = {
 		gun_dist = 14,
 		close_mv = false,
 		shoot_dist = 80,
-		see_dist = 110,
+		see_dist = 310,
 
 		closest_p = 0,
 		far_p	  = 80,
