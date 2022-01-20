@@ -2,7 +2,6 @@ require "scripts/sprites"
 require "scripts/settings"
 require "scripts/files"
 require "scripts/utility"
-require "scripts/map_generation"
 
 function init_map(w, h)
 	local map = {grid = {}, sprite_map = {}}

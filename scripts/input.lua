@@ -1,22 +1,23 @@
 function init_keybinds() 
 	keybinds = {
-		left  = {"left",  "a"}, 
-		right = {"right", "d"}, 
-		up    = {"up",    "w"},
-		down  = {"down",  "s"},
-		fire  = {"c"},
-		alt   = {"x"},
+		left  = {{"left",  "a"}}, 
+		right = {{"right", "d"}}, 
+		up    = {{"up",    "w"}},
+		down  = {{"down",  "s"}},
+		fire  = {{"c"}},
+		alt   = {{"x"}},
 	}
 end
 
-function button_down(command)
+function button_down(command, player_n)
+	player_n = player_n or 1
 	if command == "fire" and love.mouse.isDown(1) then
 		return true
 	end
 	if command == "alt" and love.mouse.isDown(2) then
 		return true
 	end
-	local keys = keybinds[command]
+	local keys = keybinds[command][player_n]
 	for _,k in pairs(keys) do
 		if love.keyboard.isScancodeDown(k) then
 			return true

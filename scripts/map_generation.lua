@@ -1,4 +1,5 @@
 require "scripts/utility"
+require "scripts/map"
 
 ----------- Map Generation ------------
 function generate_map(self, seed)
@@ -10,19 +11,18 @@ function generate_map(self, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 20, 30)
-	local ix = 0 
-	for i=1,rng:random(3,10) do
-		ix = ix + rng:random(4,32)
-		local res = self:generate_path(rng, self.lvl1_branch_rooms, ix,0, 1,5)
-		ix = res.x
-	end
-
-	local ix = 0 
-	for i=1,rng:random(3,10) do
-		ix = ix + rng:random(4,32)
-		local res = self:generate_path(rng, self.lvl1_branch_rooms, ix,32, 1,5)
-		ix = res.x
+	self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 10, 15)
+	local ix = 0
+	local params = {
+		{y=0, room=self.lvl1_branch_rooms}, 
+		{y=32, room=self.lvl1_branch_rooms}
+	}
+	for _,p in ipairs(params) do 
+		for j=1,rng:random(3,10) do
+			ix = ix + rng:random(4,32)
+			local res = self:generate_path(rng, p.room, ix, p.y, 1,5)
+			ix = res.x
+		end
 	end
 end
 

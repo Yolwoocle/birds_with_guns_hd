@@ -1,4 +1,5 @@
 require "scripts/utility"
+require "scripts/collision"
 
 function make_gui()
 	return {
@@ -7,6 +8,7 @@ function make_gui()
 		draw = draw_gui,
 
 		make_bar = make_bar,
+		make_button = make_button,
 	}
 end
 function update_gui(self)
@@ -20,7 +22,38 @@ function draw_gui(self)
 	end
 end
 
--------------
+------------- BUTTON -------------
+function make_button(self, x, y, spr, spr_hover, spr_click, on_click, on_hover)
+	local btn = {
+		x = x,
+		y = y,
+		w = spr:getWidth(),
+		h = spr:getHeight(),
+
+		spr = spr,
+		spr_hover = spr_hover,
+		spr_click = spr_click,
+		
+		hovered = false,
+		clicked = false,
+
+		on_click = on_click,
+		on_hover = on_hover,
+		update = update_button,
+		draw = draw_button,
+	}
+	return btn
+end
+
+function update_button(self, dt)
+	
+end
+
+function draw_button(self)
+
+end
+
+------------- BAR -------------
 
 function make_bar(self, name, x, y, maxval, val, spr, spr_empty)
 	spr = spr or spr_hp_bar
