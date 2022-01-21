@@ -1,7 +1,7 @@
 require "scripts/mob"
 
 mob_list = {
-    Leo_renome = make_mob({
+	fox = make_mob({
 		name = "place_older",
 		spr = spr_fox[1],
 		life = 10,	
@@ -26,5 +26,5 @@ mob_list = {
 
 		closest_p = 0,
 		far_p	  = 80,
-    }),
+	}),
 }

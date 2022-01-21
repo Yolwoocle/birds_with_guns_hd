@@ -17,7 +17,7 @@ function is_picked(self, obj)
 	if self.type == "ammo" then
 		obj.gun.ammo = obj.gun.ammo + self.q
 	elseif self.type == "life" then
-		obj.ammo = obj.ammo + self.q
+		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
 		obj.gun = self.gun
 	end

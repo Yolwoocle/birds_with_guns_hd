@@ -50,10 +50,6 @@ function love.load()
 	camera = init_camera()
 	camera.lock_y = false
 
-	map = init_map(600, 100)
-	map:generate_map(love.math.random()*40000)
-	map:update_sprite_map()
-
 	nb_joueurs = 1
 	player_list = {}
 	for i =1,nb_joueurs do
@@ -61,12 +57,10 @@ function love.load()
 		table.insert(player_list, ply)
 	end
 
-	bullets = {}
-	_shot = {}
 	zones = {}
 	mobs = {}
 	for i = 1,10 do
-		table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
+		table.insert(mobs, mob_list.fox:spawn(100,100))
 	end
 	pickups = make_pickups()
 	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+30)
@@ -76,6 +70,14 @@ function love.load()
 	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+60)
 	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+70)
 	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+80)
+	pickups:spawn("life", 2, player_list[1].x+100, player_list[1].y+80)
+
+	map = init_map(600, 100)
+	map:generate_map(love.math.random()*40000)
+	map:update_sprite_map()
+
+	bullets = {}
+	_shot = {}
 	
 	prevfire = button_down("fire")
 
@@ -124,7 +126,7 @@ function love.keypressed(key)
 		love.event.quit("restart")
 	elseif key == "escape" then
 		--remove for release
-		--love.event.quit()
+		love.event.quit()
 	
 	elseif key == "f2" then
 		if canvas then

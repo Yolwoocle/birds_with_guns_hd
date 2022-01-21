@@ -84,10 +84,12 @@ function draw_bar(self)
 	local x = camera.x+self.x
 	local y = camera.y+self.y
 	local w = floor(self.w*(self.val/self.max_val))
+	local w = floor(self.h)
 	
 	love.graphics.draw(self.spr_empty, camera.x+self.x, camera.y+self.y)
 	local buffer_quad = love.graphics.newQuad(0, 0, w, self.h, self.spr:getDimensions())
 	love.graphics.draw(self.spr, buffer_quad, x, y)
+	love.graphics.print(tostr(self.val).."_"..tostr(self.max_val), x + 5, y)
 end
 function get_val(self)
 	return self.val
