@@ -38,6 +38,7 @@ function udpate_game_main(self, dt)
 	end
 	prevfire = button_down("fire")
 	gui:update()
+
 end
 
 function draw_game_main(self)

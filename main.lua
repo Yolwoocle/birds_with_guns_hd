@@ -111,7 +111,7 @@ function love.keypressed(key)
 		love.event.quit("restart")
 	elseif key == "escape" then
 		--remove for release
-		love.event.quit()
+		--love.event.quit()
 	
 	elseif key == "f2" then
 		if canvas then
