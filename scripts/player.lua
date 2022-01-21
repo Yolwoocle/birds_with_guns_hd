@@ -50,7 +50,7 @@ function init_player(x,y)
 		draw = draw_player,
 	}
 	player.anim_sprs = player.anim_idle
-	player.gun = copy(guns.boum)
+	player.gun = copy(guns.jspp)
 	return player
 end
 
@@ -74,8 +74,14 @@ function update_player(self, dt)
 	-- Life, damage
 	self.iframes_timer = self.iframes_timer - dt
 	self.invincible = self.iframes_timer > 0 
-	gui.elements.life_bar.val = self.life
 	self.life = clamp(0, self.life, self.max_life)
+	gui.elements.life_bar.val = self.life
+	gui.elements.life_bar.max_val = self.max_life
+	gui.elements.ammo_bar.val = self.gun.ammo
+	gui.elements.ammo_bar.max_val = self.gun.max_ammo
+
+	print('max life', self.max_life)
+	print('max ammo', self.max_ammo)
 
 	self:animate()
 end
@@ -95,8 +101,6 @@ function draw_player(self)
 	end
 	if not self.looking_up then self.gun:draw(self) end
 
-	love.graphics.print(tostr(self.life), self.x, self.y-30)
-	love.graphics.print(tostr(self.iframes_timer), self.x, self.y-50)
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 end

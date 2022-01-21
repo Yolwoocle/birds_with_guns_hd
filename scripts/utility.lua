@@ -13,16 +13,16 @@ function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 	local h = spr:getHeight() or 0
 	if (camera.x-w < x) and (x < camera.x+window_w+w) 
 	and (camera.y-h < y) and (y < camera.y+window_h+h) then
-		x = floor(x)
-		y = floor(y)
+		x = x
+		y = y
 		r = r or 0
 		sx = sx or pixel_scale
 		sy = sy or sx
 		ox = ox or 0
 		oy = oy or 0
 
-		ox = ox + spr:getWidth()/2
-		oy = oy + spr:getHeight()/2
+		ox = floor(ox + spr:getWidth()/2)
+		oy = floor(oy + spr:getHeight()/2)
 
 		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
 	end
@@ -92,6 +92,7 @@ function random_pos_neg(n)
 	-- Random number between -n and n
 	return math.random(2*n) - n
 end
+random_neighbor = random_pos_neg 
 
 function raycast(x,y,dx,dy,distmax,pas)
 	local pas = pas or 1
@@ -149,5 +150,9 @@ end
 
 function clamp(a, b, c)
 	return min(max(a, b), c)
+end
+
+function round(n)
+	return math.floor(n + 0.5)
 end
 

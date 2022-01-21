@@ -25,6 +25,7 @@ end
 ------------- BUTTON -------------
 function make_button(self, x, y, spr, spr_hover, spr_click, on_click, on_hover)
 	local btn = {
+		type = "button",
 		x = x,
 		y = y,
 		w = spr:getWidth(),
@@ -55,17 +56,18 @@ end
 
 ------------- BAR -------------
 
-function make_bar(self, name, x, y, maxval, val, spr, spr_empty)
+function make_bar(self, name, x, y, max_val, val, spr, spr_empty)
 	spr = spr or spr_hp_bar
 	local bar = {
+		type = "bar",
 		x = x, 
 		y = y, 
 		w = spr:getWidth(), 
 		h = spr:getHeight(), 
 		spr = spr,
 		spr_empty = spr_empty or spr_hp_bar_empty,
-		val = 10,--val or maxval,
-		maxval = maxval or 10,
+		val = 10,--val or max_val,
+		max_val = max_val or 10,
 
 		update = update_bar,
 		draw = draw_bar,
@@ -81,7 +83,8 @@ end
 function draw_bar(self)
 	local x = camera.x+self.x
 	local y = camera.y+self.y
-	local w = floor(self.w*(self.val/self.maxval))
+	local w = floor(self.w*(self.val/self.max_val))
+	
 	love.graphics.draw(self.spr_empty, camera.x+self.x, camera.y+self.y)
 	local buffer_quad = love.graphics.newQuad(0, 0, w, self.h, self.spr:getDimensions())
 	love.graphics.draw(self.spr, buffer_quad, x, y)

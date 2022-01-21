@@ -22,7 +22,7 @@ function make_gun(a)
 		offset_spd    = a.ospd	        or 0,
 		cooldown      = a.cooldown      or 0.2,
 		ammo	      = a.max_ammo      or 100,
-		maxammo	      = a.max_ammo      or 100,
+		max_ammo      = a.max_ammo      or 100,
 		scattering    = a.scattering    or .1,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
@@ -323,7 +323,7 @@ end
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, self.rot, self.scale, self.scale)
 	rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
-	--love.graphics.print(self.scale,self.x+10,self.y+10)
+	--love.graphics.pr int(self.scale,self.x+10,self.y+10)
 end
 
 function draw_laser(self)
@@ -336,7 +336,7 @@ function draw_laser(self)
 			end
 		end
 
-		draw_line_spr(v.x1,v.y1,v.x,v.y,self.spr,self.scale)
+		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale)
 	end
 end
 

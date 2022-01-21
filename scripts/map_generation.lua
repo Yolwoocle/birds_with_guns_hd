@@ -1,5 +1,6 @@
 require "scripts/utility"
 require "scripts/map"
+require "scripts/mob_list"
 
 ----------- Map Generation ------------
 function generate_map(self, seed)
@@ -12,18 +13,18 @@ function generate_map(self, seed)
 	end
 
 	self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 10, 15)
-	local ix = 0
 	local params = {
 		{y=0, room=self.lvl1_branch_rooms}, 
 		{y=32, room=self.lvl1_branch_rooms}
 	}
 	for _,p in ipairs(params) do 
+		local ix = 0
 		for j=1,rng:random(3,10) do
 			ix = ix + rng:random(4,32)
 			local res = self:generate_path(rng, p.room, ix, p.y, 1,5)
 			ix = res.x
 		end
-	end
+	end 
 end
 
 function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)

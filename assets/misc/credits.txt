@@ -1,0 +1,14 @@
+# Code
+Léo Bernard
+Gaspard Delpiano-Manfrini
+
+# Art, animations
+Léo Bernard
+Guillaume Tran
+
+# Assets
+Kenney assets: https://www.kenney.nl/
+
+# Special thanks
+Joseph White for creating PICO-8
+The LÖVE team
