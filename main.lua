@@ -69,7 +69,13 @@ function love.load()
 		table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	end
 	pickups = make_pickups()
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+30)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y-30)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+40)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+50)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+60)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+70)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+80)
 	
 	prevfire = button_down("fire")
 
