@@ -1,4 +1,3 @@
--- 21-09-30 Box collision test
 require "scripts/utility"
 require "scripts/settings"
 require "scripts/player"
@@ -16,18 +15,23 @@ require "scripts/damage_zone_list"
 require "scripts/damage_zone"
 require "scripts/game_main"
 require "scripts/game_menu_main"
+require "scripts/pickup"
 
 function love.load()
-	game = init_game_main()
+	game = make_game_main()
 	prevray = {}
 
 	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
-	window_w, window_h = 480, 270
-	ratio_w = screen_w/window_w or screen_w
-	ratio_h = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
+	window_w, window_h = 480, 270 --rename to canvas_w, canvas_h
+	screen_sx = screen_w/window_w or screen_w
+	screen_sy = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
+	screen_scale = min(screen_sx, screen_sy)
+	screen_ox = max(0, (screen_w - window_w*screen_scale)/2)
+	screen_oy = max(0, (screen_h - window_h*screen_scale)/2)
+
 	canvas = love.graphics.newCanvas(window_w, window_h)
 
 --	font_def = love.graphics.getFont()
@@ -37,7 +41,8 @@ function love.load()
 	love.graphics.setFont(font_thick)
 
 	gui = make_gui()
-	gui:make_bar("life_bar", 2,2,10,10, spr_hp_bar, spr_hp_bar_empty)
+	gui:make_bar("life_bar", 2,2, 10,10, spr_hp_bar,   spr_hp_bar_empty)
+	gui:make_bar("ammo_bar", 2,24,nil,nil, spr_ammo_bar, spr_hp_bar_empty)
 
 	notification = ""
 	
@@ -58,11 +63,13 @@ function love.load()
 
 	bullets = {}
 	_shot = {}
-	mobs = {}
 	zones = {}
-	for i = 1,100 do
+	mobs = {}
+	for i = 1,10 do
 		table.insert(mobs, mob_list.Leo_renome:spawn(100,100))
 	end
+	pickups = make_pickups()
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y)
 	
 	prevfire = button_down("fire")
 
@@ -96,7 +103,7 @@ function love.draw()
 	love.graphics.setCanvas()
 	love.graphics.origin()
 	love.graphics.scale(1, 1)
-	love.graphics.draw(canvas, 0, 0, 0, ratio_w, ratio_h)
+	love.graphics.draw(canvas, screen_ox, screen_oy, 0, screen_scale, screen_scale)
 
 	love.graphics.setColor({1,0,0})
 	for i=2,#perf do

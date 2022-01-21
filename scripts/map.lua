@@ -23,7 +23,7 @@ function init_map(w, h)
 		[0] = make_tile(0, spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
 		}),
-		make_tile(1, sprs_test, {
+		make_tile(1, sprs_floor_wood, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
 			type="multi_tile", 
 		}),
@@ -141,7 +141,6 @@ function draw_map(self)
 		for x = x1, x2 do
 			local tile = self.sprite_map[y][x][0]
 			local var  = self.sprite_map[y][x][1]
-			print(var)
 			
 			local spr = nil
 			if var == 0 then 

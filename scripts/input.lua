@@ -37,5 +37,5 @@ end
 
 function get_mouse_pos(camera)
 	local mx, my = love.mouse.getPosition()
-	return mx/ratio_w + camera.x, my/ratio_h + camera.y
+	return mx/screen_sx + camera.x, my/screen_sy + camera.y
 end

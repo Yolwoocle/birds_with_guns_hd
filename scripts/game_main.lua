@@ -1,14 +1,21 @@
-function init_game_main()
+function make_game_main()
     local game = {
-        update = udpate_game_main,
+        init = init_game_main,
+		update = udpate_game_main,
         draw = draw_game_main,
     } 
     return game
 end
 
+function init_game_main(self)
+	--todo
+end
+
 function udpate_game_main(self, dt)
     camera.aim_offset = player_list[1].gun.camera_offset
 	map:update()
+	pickups:update()
+
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
 		if p.shoot then
@@ -45,6 +52,7 @@ function draw_game_main(self)
     camera:draw()
 	-- TODO: y-sorting
 	map:draw()
+	pickups:draw()
 
 	for i,z in ipairs(zones) do
 		z:draw()
