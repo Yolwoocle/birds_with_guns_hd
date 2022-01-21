@@ -223,15 +223,20 @@ function init_laser(self)
 end
 
 function update_bullet(self, dt , i)
+
 	if math.sqrt((self.dx * self.spdslow)^2+(self.dy * self.spdslow)^2)<self.vitesse_max then
 		self.dx = self.dx * self.spdslow
 		self.dy = self.dy * self.spdslow
 	end
 
 	self.life = self.life - dt
+	self.life = self.life - dt
+	
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 
 	
+	self.rot = math.atan2(self.dy, self.dx)
+
 	if self.bounce then
 		local coll = collide_object(self,1)
 		if coll then
@@ -324,7 +329,7 @@ function bouncedir(self)
 end
 
 function draw_bullet(self)
-	draw_centered(self.spr, self.x, self.y, 0, self.scale, self.scale)
+	draw_centered(self.spr, self.x, self.y, self.rot, self.scale, self.scale)
 	rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
 	--love.graphics.print(self.scale,self.x+10,self.y+10)
 end
@@ -401,9 +406,6 @@ function damage_everyone(self, k)
 		end
 
 	end
-
-	-- Players --TODO: support multiple players
-	--for i,m in pairs(player) do
 
 	for _,p in ipairs(player_list) do
 		local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)

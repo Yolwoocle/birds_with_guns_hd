@@ -4,6 +4,7 @@ require "scripts/settings"
 require "scripts/player"
 require "scripts/sprites"
 require "scripts/map"
+require "scripts/map_generation"
 require "scripts/gun"
 require "scripts/gun_list"
 require "scripts/mob"
@@ -13,22 +14,28 @@ require "scripts/screenshot"
 require "scripts/ui"
 require "scripts/damage_zone_list"
 require "scripts/damage_zone"
+require "scripts/game_main"
+require "scripts/game_menu_main"
 
 function love.load()
+	game = init_game_main()
 	prevray = {}
 
 	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
-	window_w, window_h = 512, 18*16
+	window_w, window_h = 480, 270
 	ratio_w = screen_w/window_w or screen_w
-	ratio_h = screen_h/window_h or screen_h
+	ratio_h = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
 	canvas = love.graphics.newCanvas(window_w, window_h)
 
-	font_def = love.graphics.getFont()
-	font_def = love.graphics.setNewFont(10)
-	
+--	font_def = love.graphics.getFont()
+	font_small = love.graphics.newFont("assets/fonts/Kenney Mini.ttf", 8)
+	font_normal = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
+	font_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
+	love.graphics.setFont(font_thick)
+
 	gui = make_gui()
 	gui:make_bar("life_bar", 2,2,10,10, spr_hp_bar, spr_hp_bar_empty)
 
@@ -36,18 +43,17 @@ function love.load()
 	
 	init_keybinds()
 	camera = init_camera()
-	camera.lock_y = true
+	camera.lock_y = false
 
-	map = init_map(400, 20)
-	map:load_from_file("chunks_wag_1.txt")
-	map:generate_map()
+	map = init_map(600, 100)
+	map:generate_map(love.math.random()*40000)
+	map:update_sprite_map()
 
 	nb_joueurs = 1
 	player_list = {}
 	for i =1,nb_joueurs do
-
-		table.insert(player_list , copy(init_player(100+random_float(0, 100),100+random_float(0, 100))))
-
+		local ply = init_player(20+random_float(0, 0), 16*20+random_float(0, 100))
+		table.insert(player_list, ply)
 	end
 
 	bullets = {}
@@ -63,51 +69,18 @@ function love.load()
 	perf = {}
 
 	g = 0
+
+	set_debug_canvas(map)
 end
 
 function love.update(dt)
-	camera:set_target(player_list[1].x-window_w/2, 0)--player.y-window_h/2)
+	--TODO: camera for all players
+	camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
 	camera:update(dt)
 
-	camera.aim_offset = player_list[1].gun.camera_offset
-
-	for _,p in ipairs(player_list) do
-		p:update(dt, camera)
-
-		if p.shoot then
-			--_shot = player.gun:make_bullet(player,player.rot)
-			append_list(_shot, p.gun:make_shot(p))
-		end
-
-	end
-
-	for i,v in ipairs(_shot) do
-		if v.time <= 0 then
-			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset))
-			table.remove(_shot, i)
-		else
-			v.time=v.time-dt
-		end
-	end
-
-	for i,m in ipairs(mobs) do
-		m:update(dt)
-	end
-
-	for i,b in ipairs(bullets) do
-		b:update(dt,i)
-		damage_everyone(b,i)
-	end
-
-	for i,z in ipairs(zones) do
-		z:update(dt,i)
-		damageinzone(z,i) 
-
-	end
-
-	prevfire = button_down("fire")
 	
-	gui:update()
+	game:update(dt)
+
 
 	table.insert(perf, dt)
 end
@@ -116,40 +89,10 @@ function love.draw()
 	love.graphics.setCanvas(canvas)
 	love.graphics.clear()
 	love.graphics.translate(0, 0)
-	camera:draw()
-	-- TODO: y-sorting
-	map:draw()
-
-	for i,z in ipairs(zones) do
-		z:draw()
-	end
 	
-	for _,m in pairs(mobs) do
-		m:draw()
-		--draw_mob(m)
-	end
+	game:draw()
 	
-	for i,m in ipairs(debug) do
-		circ_color("fill", m.x, m.y, 3, {1,0,0})
-	end
-
-	for _,b in pairs(bullets) do
-		b:draw()
-	end 
-	
-	for _,p in ipairs(player_list) do
-		p:draw()
-	end
-
-	gui:draw()
-
-	-- Debug
-	debug_y = 10
-	debug_print(notification)
-	debug_print(#bullets)
-	if prevray.dist then debug_print(prevray.dist,1,1) end
-	debug_print("FPS: "..tostr(love.timer.getFPS()))
-	
+	-- Canvas for that sweet pixel art
 	love.graphics.setCanvas()
 	love.graphics.origin()
 	love.graphics.scale(1, 1)

@@ -3,11 +3,10 @@ require "scripts/gun"
 require "scripts/utility"
 
 guns = {
-
-    revolver = make_gun({
-        name = "revolver",
-        type = "bullet",			--"bullet" "laser"
-
+	revolver = make_gun({
+		name = "revolver",
+		type = "bullet",			--"bullet" "laser"
+		
         category = "instant",	--"persistent" "instant"
 		bounce = true,
 
@@ -27,7 +26,7 @@ guns = {
 		charge_damage = 10,
 		charge_oscale = 10,
 
-        spr = spr_revolver, 
+		spr = spr_revolver, 
 
         bullet_spd = 10,
         ospd = 0,
@@ -46,10 +45,10 @@ guns = {
 
 		bullet_life	= 3,
 
-        laser_length = 300,
+		laser_length = 300,
 
-        rafale  = 1,
-        rafaledt  = .1,
+		rafale  = 1,
+		rafaledt  = .1,
 
 		nbshot = 5,
 		spread  = pi/2,

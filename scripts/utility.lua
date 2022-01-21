@@ -53,12 +53,13 @@ function color(hex)
 	return {r/255, g/255, b/255}
 end
 
-function sgn(hex)
-	if hex >= 0 then
+function sgn(n)
+	if n >= 0 then
 		return 1
 	end
 	return -1
 end
+sign = sgn
 
 function dist(x1,y1,x2,y2)
 	return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
@@ -144,5 +145,9 @@ end
 function ternary ( cond , T , F )
 	--opti: T and F are always evaluated, unlike `cond and T or F` 
 	if cond then return T else return F end
+end
+
+function clamp(a, b, c)
+	return min(max(a, b), c)
 end
 

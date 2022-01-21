@@ -14,26 +14,32 @@ function init_player(x,y)
 		h = 4,
 		dx = 0,
 		dy = 0,
-		speed = 40,
-		friction = 0.8,
+		walk_dir = {x=0, y=0},
+
+		speed = 120,
+		friction = 0.6, --FIXME player glides more when FPS low
 		bounce = 0.6,
 		is_walking = false,
 		is_enemy = false,
 
 		life = 10,
+		max_life = 10,
 		iframes = 2,
 		iframes_timer = 0,
 		iframes_flashing_time = 0.1,
 		hit_w = 12,
 		hit_h = 12,
 
-		spr = spr_pigeon[0],
+		spr = nil,
 		rot = 0,
 		looking_up = false,
+		flip = -1,
 
-		anim_sprs = spr_pigeon,
+		anim_sprs = nil,
+		anim_walk = anim_pigeon_walk,
+		anim_idle = anim_pigeon_idle,
 		anim_frame = 0,
-		anim_frame_len = 0.1,
+		anim_frame_len = .07, --70 ms
 		animate = animate_player,
 
 		gun_dist = 14,
@@ -43,6 +49,7 @@ function init_player(x,y)
 		update = update_player,
 		draw = draw_player,
 	}
+	player.anim_sprs = player.anim_idle
 	player.gun = copy(guns.boum)
 	return player
 end
@@ -68,6 +75,7 @@ function update_player(self, dt)
 	self.iframes_timer = self.iframes_timer - dt
 	self.invincible = self.iframes_timer > 0 
 	gui.elements.life_bar.val = self.life
+	self.life = clamp(0, self.life, self.max_life)
 
 	self:animate()
 end
@@ -96,14 +104,17 @@ end
 function player_movement(self, dt)
 	local dir_vector = {x = 0, y = 0}
 
+	self.walk_dir = {x=0, y=0}
 	self.is_walking = false
 	if button_down("left") then
 		dir_vector.x = dir_vector.x - 1
 		self.is_walking = true
+		self.walk_dir.x = self.walk_dir.x - 1
 	end
 	if button_down("right") then
 		dir_vector.x = dir_vector.x + 1
 		self.is_walking = true
+		self.walk_dir.x = self.walk_dir.x + 1
 	end
 	if button_down("up") then
 		dir_vector.y = dir_vector.y - 1
@@ -114,6 +125,11 @@ function player_movement(self, dt)
 		self.is_walking = true
 	end
 
+	self.walk_dir = dir_vector
+	if dir_vector.x == 0 and dir_vector.y == 0 then
+		self.is_walking = false
+	end
+	-- We normalise the direction vector to avoid faster speed in diagonals
 	local norm = math.sqrt(dir_vector.x * dir_vector.x + dir_vector.y * dir_vector.y) + 0.0001 -- utiliser la fonction dist()
 
 	dir_vector.x = dir_vector.x / norm
@@ -159,11 +175,24 @@ function aim_player(self, dt)
 end
 
 function animate_player(self)
+	-- Flip player if looking left (why is this in player.gun but whatever)
+	self.flip = self.gun.flip
+	self.anim_sprs = self.anim_idle
+	self.spr = self.anim_idle[1]
+	
 	if self.is_walking then
+		self.anim_sprs = self.anim_walk
+		-- Walk anim
 		self.frame = floor((love.timer.getTime()/self.anim_frame_len) % #self.anim_sprs)
+		
+		--Walk backwards
+		if sign(self.flip) ~= sign(self.walk_dir.x) then
+			self.frame = -self.frame % #self.anim_sprs
+		end
+		
 		self.spr = self.anim_sprs[self.frame + 1]
 	else
-		self.spr = self.anim_sprs[1]
+		self.anim_sprs = self.anim_idle
 	end	
 end
 

@@ -1,3 +1,5 @@
+require "scripts/mob"
+
 mob_list = {
     Leo_renome = make_mob({
 		name = "place_older",
