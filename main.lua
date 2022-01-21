@@ -84,8 +84,10 @@ function love.update(dt)
 	--TODO: camera for all players
 	camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
 	camera:update(dt)
+
 	
 	game:update(dt)
+
 
 	table.insert(perf, dt)
 end

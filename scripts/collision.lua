@@ -87,7 +87,7 @@ end
 
 function collide_object(o,bounce)
 	--TODO: Swept AABB or Raycast to all tiles in the path
-	local dt = love.timer.getDelta() 
+	local dt = love.timer.getDelta()
 	local nextx = o.x + o.dx * dt
 	local nexty = o.y + o.dy * dt
 	local bounce = bounce or 0.2
