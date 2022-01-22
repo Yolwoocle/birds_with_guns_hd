@@ -143,14 +143,20 @@ function draw_map(self)
 			local tile = self.sprite_map[y][x][0]
 			local var  = self.sprite_map[y][x][1]
 			
-			local spr = nil
-			if var == 0 then 
-				spr = self.palette[tile].spr
-			else
-				spr = self.palette[tile].spr[var]
+			tile = self.palette[tile]
+			local spr
+			if tile then
+				if var == 0 then 
+					spr = tile.spr
+				else
+					spr = tile.spr[var]
+				end
+			else 
+				tile = spr_missing
 			end
 			if spr == nil then  spr = spr_missing  end
 			
+			-- TODO: optimise map by baking into canvas & update on change
 			love.graphics.draw(spr, x*block_width, y*block_width)
 		end
 	end
@@ -159,8 +165,6 @@ end
 function set_debug_canvas(self)
 	self.debug_canvas = love.graphics.newCanvas(self.width, self.height)
 	love.graphics.setCanvas(self.debug_canvas)
-	love.graphics.clear()
-
 	for y = 0, self.height-1 do
 		for x = 0, self.width-1 do
 			local tile = self:get_tile(x,y).n
@@ -181,7 +185,7 @@ end
 function debug_draw_map(self, px, py)
 	px = px or 0
 	py = py or 0
-	love.graphics.draw(self.debug_canvas, px, py)
+	--love.graphics.draw(self.debug_canvas, px, py)
 end
 
 

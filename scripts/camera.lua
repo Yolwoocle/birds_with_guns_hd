@@ -43,11 +43,12 @@ function update_camera(self, dt)
 	if not self.lock_y then 
 		self.fake_y = self.fake_y + (self.target_y - self.fake_y) * smoothing
 	end
-	self.shk_x = self.shk_x * min(1, self.shk_fric * dt)
-	self.shk_y = self.shk_y * min(1, self.shk_fric * dt)
+	self.shk_x = self.shk_x * min(0.9, self.shk_fric * dt)
+	self.shk_y = self.shk_y * min(0.9, self.shk_fric * dt)
 
 	-- Offset
 	local mx, my = get_cursor_pos()
+	notification = ""
 	if not self.lock_x then
 		self.offset_x = (mx - window_w/2) * self.aim_offset
 	end
@@ -56,8 +57,10 @@ function update_camera(self, dt)
 	end
 
 	-- Apply shake
-	self.x = self.fake_x + self.shk_x-- + self.offset_x
-	self.y = self.fake_y + self.shk_y-- + self.offset_y
+	self.x = self.fake_x + self.shk_x + self.offset_x
+	self.y = self.fake_y + self.shk_y + self.offset_y
+	self.x = floor(self.x)
+	self.y = floor(self.y)
 end
 
 function draw_camera(self, dt)

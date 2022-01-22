@@ -56,7 +56,7 @@ end
 
 ------------- BAR -------------
 
-function make_bar(self, name, x, y, max_val, val, spr, spr_empty)
+function make_bar(self, name, x, y, max_val, val, spr, spr_empty, icon)
 	spr = spr or spr_hp_bar
 	local bar = {
 		type = "bar",
@@ -66,6 +66,7 @@ function make_bar(self, name, x, y, max_val, val, spr, spr_empty)
 		h = spr:getHeight(), 
 		spr = spr,
 		spr_empty = spr_empty or spr_hp_bar_empty,
+		spr_icon = icon,
 		val = 10,--val or max_val,
 		max_val = max_val or 10,
 
@@ -84,12 +85,23 @@ function draw_bar(self)
 	local x = camera.x+self.x
 	local y = camera.y+self.y
 	local w = floor(self.w*(self.val/self.max_val))
-	local w = floor(self.h)
+	local h = floor(self.h)
 	
 	love.graphics.draw(self.spr_empty, camera.x+self.x, camera.y+self.y)
 	local buffer_quad = love.graphics.newQuad(0, 0, w, self.h, self.spr:getDimensions())
 	love.graphics.draw(self.spr, buffer_quad, x, y)
-	love.graphics.print(tostr(self.val).."_"..tostr(self.max_val), x + 5, y)
+
+	local fonth = love.graphics.getFont():getHeight()
+	x = floor(x+5)
+	icon_y = floor(y + h/2 - self.spr_icon:getHeight()/2)
+	if self.spr_icon then
+		love.graphics.draw(self.spr_icon, x, icon_y, 0, 1, 1)
+		x = x + self.spr_icon:getWidth() + 3
+	end
+
+	y = floor(y+h/2 - fonth/2)
+	local txt = tostr(self.val).."_"..tostr(self.max_val)
+	love.graphics.print(txt, x, y)
 end
 function get_val(self)
 	return self.val

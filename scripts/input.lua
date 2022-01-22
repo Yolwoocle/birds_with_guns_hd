@@ -31,11 +31,16 @@ function get_cursor_pos(camera)
 	if camera then
 		return get_mouse_pos(camera)  
 	else
-		return love.mouse.getPosition()
+		return get_canvas_mouse_pos()
 	end 
 end
 
 function get_mouse_pos(camera)
 	local mx, my = love.mouse.getPosition()
 	return mx/screen_sx + camera.x, my/screen_sy + camera.y
+end 
+
+function get_canvas_mouse_pos()
+	local mx, my = love.mouse.getPosition()
+	return mx/screen_sx, my/screen_sy
 end

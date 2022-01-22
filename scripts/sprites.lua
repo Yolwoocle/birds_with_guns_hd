@@ -19,6 +19,8 @@ spr_missing = load_image("missing")
 spr_hp_bar = load_image("hp_bar")
 spr_ammo_bar = load_image("ammo_bar")
 spr_hp_bar_empty = load_image("hp_bar_empty")
+spr_icon_heart = load_image("icon_heart")
+spr_icon_ammo = load_image("icon_ammo")
 
 -- Players
 anim_pigeon_idle = {
@@ -58,8 +60,8 @@ spr_pick_ammo = load_image("pickups/ammo")
 spr_pick_life = load_image("pickups/life")
 
 -- Guns
-spr_revolver_big = load_image("gun_revolver")
-spr_revolver = load_image("gun_revolver_small")
+spr_revolver_big = load_image("guns/gun_revolver")
+spr_revolver = load_image("guns/gun_revolver_small")
 
 -- Tiles
 spr_ground_dum = load_image("dummy_ground")

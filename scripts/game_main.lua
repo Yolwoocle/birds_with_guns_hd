@@ -78,7 +78,7 @@ function draw_game_main(self)
 	gui:draw()
 
 	-- Debug
-	debug_y = 30
+	debug_y = 60
 	debug_print(notification)
 	debug_print(#bullets)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end

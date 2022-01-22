@@ -25,6 +25,8 @@ function love.load()
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 
+	res_1080p = 480, 270
+
 	window_w, window_h = 480, 270 --rename to canvas_w, canvas_h
 	screen_sx = screen_w/window_w or screen_w
 	screen_sy = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
@@ -41,8 +43,8 @@ function love.load()
 	love.graphics.setFont(font_thick)
 
 	gui = make_gui()
-	gui:make_bar("life_bar", 2,2, 10,10, spr_hp_bar,   spr_hp_bar_empty)
-	gui:make_bar("ammo_bar", 2,24,nil,nil, spr_ammo_bar, spr_hp_bar_empty)
+	gui:make_bar("life_bar", 2,2, 10,10, spr_hp_bar, spr_hp_bar_empty, spr_icon_heart)
+	gui:make_bar("ammo_bar", 2,24,nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
 
 	notification = ""
 	
