@@ -12,6 +12,7 @@ function init_game_main(self)
 end
 
 function udpate_game_main(self, dt)
+	gf = 0
     camera.aim_offset = player_list[1].gun.camera_offset
 	map:update()
 	pickups:update()
@@ -57,6 +58,11 @@ function draw_game_main(self)
 	for i,z in ipairs(zones) do
 		z:draw()
 	end
+	for i,m in pairs(mobs) do
+		if m.life<=0 then
+			table.remove(mobs , i)
+		end
+	end
 	
 	for _,m in pairs(mobs) do
 		m:draw()
@@ -80,9 +86,10 @@ function draw_game_main(self)
 	-- Debug
 	debug_y = 60
 	debug_print(notification)
+	debug_print(gf)
 	debug_print(#bullets)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
-	map:debug_draw(camera.x+5, camera.y+30)
+	--map:debug_draw(camera.x+5, camera.y+30)
 end

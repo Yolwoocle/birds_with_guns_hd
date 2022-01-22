@@ -56,10 +56,12 @@ function killzone(self,i)
 end
 
 function damageinzone(self,l) 
-    if self.active then
-        for i,m in pairs(mobs) do --fix avec valeur de parcour de liste true si deja pris damage
 
-            if dist(self.x,self.y,m.x,m.y) < self.rayon then
+    if self.active then
+        for i,m in pairs(mobs) do
+            gf = gf + 1
+
+            if dist(self.x,self.y,m.x,m.y) < self.rayon+5 then
 
                 m.life = m.life - self.damage
 
@@ -67,9 +69,6 @@ function damageinzone(self,l)
                     self.ondamage(m)
                 end
 
-                if m.life<=0 then
-                table.remove(mobs , i)
-                end
             end
 
         end

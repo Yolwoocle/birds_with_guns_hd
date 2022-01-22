@@ -5,7 +5,7 @@ require "scripts/utility"
 guns = {
 	revolver = make_gun({
 		name = "revolver",
-		type = "bullet",			--"bullet" "laser"
+		type = "laser",			--"bullet" "laser"
 		
         category = "instant",	--"persistent" "instant"
 		bounce = true,
@@ -28,7 +28,7 @@ guns = {
 
 		spr = spr_revolver, 
 
-        bullet_spd = 10,
+        bullet_spd = 100,
         ospd = 0,
         cooldown = 1,
 
@@ -91,7 +91,7 @@ guns = {
 	jsp = make_gun({
 		name = "jsp", 
 		type = "bullet",
-		bounce = true,
+		bounce = 1,
 		scale = .5,
 		oscale = 0,
 
@@ -101,10 +101,11 @@ guns = {
 
 	jspp = make_gun({
 		name = "jsp", 
-		type = "bullet",
+		type = "laser",
+		laser_length = 3000,
 		category = "instent",
-		bounce = true,
-		max_ammo = 20,
+		bounce = 1,
+		max_ammo = 200000,
 		charge = true,
 		charge_curve = 2,			
 		charge_time = 1,
@@ -117,9 +118,9 @@ guns = {
 		oscale = 0,
 		nbshot = 10,
 
-		bullet_life = 1,
+		bullet_life = 10,
 
-		cooldown = .1,
+		cooldown = 0,
 		screenshake = 10,
 
 		bullet_spd = 100,
@@ -132,7 +133,7 @@ guns = {
 
 	boum = make_gun({
 		name = "jsp", 
-		type = "bullet",
+		type = "laser",
 		category = "instent",
 		bounce = false,
 		max_ammo = 400,
@@ -148,18 +149,19 @@ guns = {
 		oscale = 0,
 		nbshot = 1,
 
-		bullet_life = 10,
+		bullet_life = .15,
 
 
-		cooldown = .5,
+		cooldown = .1,
 
 		spdslow = 1.1,
 
 		bullet_spd = 100,
 		on_death = function(self , k)
 			
-			 table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 			 table.remove(bullets, k)
+			 --bullets = {}
+			 --table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 		end
 
 	}),

@@ -16,7 +16,7 @@ function make_gun(a)
 
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
-		bounce 		  = a.bounce		or false,
+		bounce 		  = a.bounce		or 0,
 		spr 	      = a.spr           or spr_revolver,
 		bullet_spd    = a.bullet_spd    or 600,
 		offset_spd    = a.ospd	        or 0,
@@ -112,9 +112,9 @@ function default_shoot(g,p)
 	return shot
 end
 
-----------------------------------------------------------------------
-------------------------------- BULLET -------------------------------
-----------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------- BULLET -------------------------------------------------------------------------------------------
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 function make_bullet(self, p, angle,spread,type)
 	--`p`: player or entity shooting
@@ -133,6 +133,7 @@ function make_bullet(self, p, angle,spread,type)
 		rot = angle+scatter+spread,
 		spdslow = self.spdslow,
 		life = self.bullet_life,
+		maxlife = self.bullet_life,
 		delete = false,
 		category	  = self.category,
 		type = self.type,
@@ -178,9 +179,9 @@ function init_laser(self)
 
 	self.active = true
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
-	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y})
+	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y,bounce = self.bounce})
 
-	if self.bounce then
+	if self.bounce>0 then
 
 		prevray = ray
 		prevray.dx = self.dx/self.spd
@@ -190,7 +191,8 @@ function init_laser(self)
 
 		nwlength = self.laser_length-ray.dist
 
-		while nwlength>0 do
+		while nwlength>0 and self.bounce>0 do
+		self.bounce = self.bounce-1
 
 		bobject = {x=prevray.x ,y=prevray.y ,dx=(prevray.dx) ,dy=(prevray.dy) ,h=0 ,w=0,life = 10,rot = prevray.rot}
 
@@ -208,7 +210,8 @@ function init_laser(self)
 			dx=bobject.dx,
 			dy=bobject.dy,
 			x1 = bobject.x ,
-			y1 = bobject.y
+			y1 = bobject.y,
+			bounce = self.bounce
 		})
 
 		nwlength = nwlength-ray.dist
@@ -217,6 +220,7 @@ function init_laser(self)
 		prevray.dx = bobject.dx
 		prevray.dy = bobject.dy
 		prevray.rot = bobject.rot
+
 
 		end
 	end
@@ -237,9 +241,11 @@ function update_bullet(self, dt , i)
 	
 	self.rot = math.atan2(self.dy, self.dx)
 
-	if self.bounce then
+	if self.bounce>0 then
 		local coll = collide_object(self,1)
 		if coll then
+			self.bounce = self.bounce-1
+
 			local x = self.x
 			local y = self.y
 			local h = 3
@@ -254,7 +260,7 @@ function update_bullet(self, dt , i)
 			interact_map(self,map,(x+w)/ block_width, (y-h)/ block_width)
 			interact_map(self,map,(x-w)/ block_width, (y+h)/ block_width)
 			interact_map(self,map,(x+w)/ block_width, (y+h)/ block_width)
---
+
 			interact_map(self,map,(x  )/ block_width, (y-h)/ block_width)
         	interact_map(self,map,(x-w)/ block_width, (y  )/ block_width)
        	 	interact_map(self,map,(x+w)/ block_width, (y  )/ block_width)
@@ -310,8 +316,8 @@ function bouncedir(self)
 			self.x = self.x+(self.dx)*odx*4
 			self.y = self.y+(self.dy)*ody*4
 			if not(checkdeath(self)) then
-				self.x = self.x-(self.dx)*odx*3.85
-				self.y = self.y-(self.dy)*ody*3.85
+				self.x = self.x-(self.dx)*odx*1 --change if bugs with laser bounce
+				self.y = self.y-(self.dy)*ody*1 --change if bugs with laser bounce
 
 				if not(odx+ody==-2 or odx+ody==2) then
 					self.rot = -self.rot
@@ -337,14 +343,21 @@ end
 function draw_laser(self)
 	for i,v in ipairs(self.length) do
 
-		if checkdeath({x=v.x ,y=v.y,life = 10}) then
-			local mapx, mapy = v.x / block_width, v.y / block_width
-			if map:is_solid(mapx, mapy) then
-			interact_map(self, map, mapx, mapy)
+		if self.active then
+			if checkdeath({x=v.x ,y=v.y,life = 10}) then
+				local mapx, mapy = v.x / block_width, v.y / block_width
+				if map:is_solid(mapx, mapy) then
+				interact_map(self, map, mapx, mapy)
+				end
 			end
 		end
 
-		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale)
+
+
+		local scmax = (-(-self.maxlife/-2)^2)+(-self.maxlife/-2)*self.maxlife
+		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*((-(self.life^2)+self.life*self.maxlife)/scmax))
+
+		--love.graphics.print(v.bounce, v.x, v.y-10)
 	end
 end
 
@@ -372,6 +385,7 @@ function checkdeath(self)
 end
 
 function damage_everyone(self, k)
+	
 	-- Collisions between enemies and bullets
 	for l,m in pairs(mobs) do
 		--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
@@ -380,12 +394,15 @@ function damage_everyone(self, k)
 			local coll = coll_rect(m.x, m.y, m.w*3, m.h*3, self.x, self.y, self.scale*3, self.scale*3)
 			if not self.is_enemy and coll then
 				m.life = m.life - self.damage
-
+				gf = gf +1
 				self:on_death(k)
+				
 
 				if m.life<=0 then
 					table.remove(mobs , l)
 				end
+
+				return
 			end
 
 		elseif self.type == "laser" then
@@ -396,13 +413,14 @@ function damage_everyone(self, k)
 					if dist < self.scale*30 then
 						m.life = m.life - self.damage
 						--table.remove(bullets, k)
-					end
-					if m.life<=0 then
-						table.remove(mobs , l)
+
+						if m.life<=0 then
+							table.remove(mobs , l)
+						end
+
 					end
 				end
 			end
-
 		end
 
 	end
@@ -413,7 +431,7 @@ function damage_everyone(self, k)
 
 			p:damage(self.damage)
 			self:on_death(k)
-
+			return
 		end
 	end
 end

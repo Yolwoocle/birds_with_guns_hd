@@ -18,6 +18,7 @@ require "scripts/game_menu_main"
 require "scripts/pickup"
 
 function love.load()
+
 	game = make_game_main()
 	prevray = {}
 
@@ -88,41 +89,43 @@ function love.load()
 	g = 0
 
 	set_debug_canvas(map)
+
 end
 
 function love.update(dt)
-	--TODO: camera for all players
-	camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
-	camera:update(dt)
+    --TODO: camera for all players
+    camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
+    camera:update(dt)
 
-	
-	game:update(dt)
+    
+    game:update(dt)
 
 
-	table.insert(perf, dt)
+    table.insert(perf, dt)
 end
 
 function love.draw()
-	love.graphics.setCanvas(canvas)
-	love.graphics.clear()
-	love.graphics.translate(0, 0)
-	
-	game:draw()
-	
-	-- Canvas for that sweet pixel art
-	love.graphics.setCanvas()
-	love.graphics.origin()
-	love.graphics.scale(1, 1)
-	love.graphics.draw(canvas, screen_ox, screen_oy, 0, screen_scale, screen_scale)
+    love.graphics.setCanvas(canvas)
+    love.graphics.clear()
+    love.graphics.translate(0, 0)
+    
+    game:draw()
+    
+    -- Canvas for that sweet pixel art
+    love.graphics.setCanvas()
+    love.graphics.origin()
+    love.graphics.scale(1, 1)
+    love.graphics.draw(canvas, screen_ox, screen_oy, 0, screen_scale, screen_scale)
 
-	love.graphics.setColor({1,0,0})
-	for i=2,#perf do
-		--love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
-	end
-	love.graphics.setColor({1,1,1})
+    love.graphics.setColor({1,0,0})
+    for i=2,#perf do
+        --love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
+    end
+    love.graphics.setColor({1,1,1})
 end
 
 function love.keypressed(key)
+
 	if key == "f5" then
 		--remove for release
 		love.event.quit("restart")
@@ -138,4 +141,5 @@ function love.keypressed(key)
 		end
 	end
 end
+
 
