@@ -42,11 +42,17 @@ function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
 	local ix = x
 	for i=1, len_path do
 		local room = rooms[room_ids[i]]
-		self:write_room(room, ix, y)
+		self:write_room(room, ix, y, rng)
 		ix = ix + self:get_room_width(room)
 	end
 
 	return {x=ix}
+end
+
+function tile_spawn_mob(self, rnd, x, y)
+	if not self:get_tile(x, y).is_solid and rnd:random(10)==1 then
+		table.insert(mobs, mob_list.fox:spawn(x*block_width, y*block_width))
+	end
 end
 
 function load_from_file(self, file)
@@ -92,12 +98,15 @@ end
 function get_room_tile(self, room, x, y)
 	return room[y][x]
 end
-function write_room(self, room, x, y)
+function write_room(self, room, x, y, rng)
 	x = x or 0
 	y = y or 0
 	for iy = 0, #room do
 		for ix = 0, #room[0] do
 			self:set_tile(x+ix, y+iy, self:get_room_tile(room,ix,iy))
+			if rng then
+				self:spawn_mob(rng, x+ix, y+iy)
+			end
 		end
 	end
 end

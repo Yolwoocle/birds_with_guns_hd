@@ -16,6 +16,8 @@ function make_mob(a)
 		h       = a.h   or 6,
 		dx      = a.dx  or 0,
 		dy      = a.dy  or 0,
+		dx_idle = 0,
+		dy_idle = 0,
 		speed   = a.speed or 20,
 		friction 	 = a.friction   	or 0.95,
 		bounce   	 = a.bounce     	or 0.6,
@@ -90,16 +92,16 @@ function update_mob(self, dt)
 			self.dx =  self.dxplayer * self.spd
 			self.dy =  self.dyplayer * self.spd
 
-			self.dxidel = self.dx
-			self.dyidel = self.dy
+			self.dx_idle = self.dx
+			self.dy_idle = self.dy
 
 			mv = true
 		elseif self.distplayer< self.closest_p then
 			self.dx =  -self.dxplayer * self.spd
 			self.dy =  -self.dyplayer * self.spd
 
-			self.dxidel = self.dx
-			self.dyidel = self.dy
+			self.dx_idle = self.dx
+			self.dy_idle = self.dy
 
 			mv = true
 		else
@@ -113,16 +115,16 @@ function update_mob(self, dt)
 		end
 
 		if not(mv or self.close_mv) then
-			self.dx  = 0
-			self.dy  = 0
+			self.dx = 0
+			self.dy = 0
 		end
 
 	else
 		self.dtmouvement = max(self.dtmouvement-dt,0)
 
 		if self.dtmouvement > 0 and self.dtmouvement <self.mv_mouvement then
-			self.dx = self.dxidel
-			self.dy = self.dyidel
+			self.dx = self.dx_idle
+			self.dy = self.dy_idle
 		elseif self.dtmouvement == 0 then
 
 			self.dtmouvement = self.mv_mouvement + self.mv_pause
@@ -134,11 +136,11 @@ function update_mob(self, dt)
 	end
 
 	if collide_object(self,1) then
-		if not( sgn(self.dx) == sgn(self.dxidel)) then
-			self.dxidel = -self.dxidel
+		if not( sgn(self.dx) == sgn(self.dx_idle)) then
+			self.dx_idle = -self.dx_idle
 		end
-		if not( sgn(self.dy) == sgn(self.dyidel)) then
-			self.dyidel = -self.dyidel
+		if not( sgn(self.dy) == sgn(self.dy_idle)) then
+			self.dy_idle = -self.dy_idle
 		end
 	end
 	self.x = self.x + self.dx * dt
@@ -161,6 +163,6 @@ end
 
 function rndmouvement(self,spd)
 	local angle = random_float(0,pi2)
-	self.dxidel = math.cos(angle)*spd
-	self.dyidel = math.sin(angle)*spd
+	self.dx_idle = math.cos(angle)*spd
+	self.dy_idle = math.sin(angle)*spd
 end

@@ -18,72 +18,76 @@ require "scripts/game_menu_main"
 require "scripts/pickup"
 
 function love.load()
-    game = make_game_main()
-    prevray = {}
 
-    love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})    
-    screen_w, screen_h = love.graphics.getDimensions()
-    love.graphics.setDefaultFilter("nearest", "nearest")
+	game = make_game_main()
+	prevray = {}
 
-    window_w, window_h = 480, 270 --rename to canvas_w, canvas_h
-    screen_sx = screen_w/window_w or screen_w
-    screen_sy = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
-    screen_scale = min(screen_sx, screen_sy)
-    screen_ox = max(0, (screen_w - window_w*screen_scale)/2)
-    screen_oy = max(0, (screen_h - window_h*screen_scale)/2)
+	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
+	screen_w, screen_h = love.graphics.getDimensions()
+	love.graphics.setDefaultFilter("nearest", "nearest")
 
-    canvas = love.graphics.newCanvas(window_w, window_h)
+	window_w, window_h = 480, 270 --rename to canvas_w, canvas_h
+	screen_sx = screen_w/window_w or screen_w
+	screen_sy = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
+	screen_scale = min(screen_sx, screen_sy)
+	screen_ox = max(0, (screen_w - window_w*screen_scale)/2)
+	screen_oy = max(0, (screen_h - window_h*screen_scale)/2)
 
---    font_def = love.graphics.getFont()
-    font_small = love.graphics.newFont("assets/fonts/Kenney Mini.ttf", 8)
-    font_normal = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
-    font_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
-    love.graphics.setFont(font_thick)
+	canvas = love.graphics.newCanvas(window_w, window_h)
 
-    gui = make_gui()
-    gui:make_bar("life_bar", 2,2, 10,10, spr_hp_bar,   spr_hp_bar_empty)
-    gui:make_bar("ammo_bar", 2,24,nil,nil, spr_ammo_bar, spr_hp_bar_empty)
+--	font_def = love.graphics.getFont()
+	font_small = love.graphics.newFont("assets/fonts/Kenney Mini.ttf", 8)
+	font_normal = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
+	font_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
+	love.graphics.setFont(font_thick)
 
-    notification = ""
-    
-    init_keybinds()
-    camera = init_camera()
-    camera.lock_y = false
+	gui = make_gui()
+	gui:make_bar("life_bar", 2,2, 10,10, spr_hp_bar,   spr_hp_bar_empty)
+	gui:make_bar("ammo_bar", 2,24,nil,nil, spr_ammo_bar, spr_hp_bar_empty)
 
-    map = init_map(600, 100)
-    map:generate_map(love.math.random()*40000)
-    map:update_sprite_map()
+	notification = ""
+	
+	init_keybinds()
+	camera = init_camera()
+	camera.lock_y = false
 
-    nb_joueurs = 1
-    player_list = {}
-    for i =1,nb_joueurs do
-        local ply = init_player(20+random_float(0, 0), 16*20+random_float(0, 100))
-        table.insert(player_list, ply)
-    end
+	nb_joueurs = 1
+	player_list = {}
+	for i =1,nb_joueurs do
+		local ply = init_player(20+random_float(0, 0), 16*20+random_float(0, 100))
+		table.insert(player_list, ply)
+	end
 
-    bullets = {}
-    _shot = {}
-    zones = {}
-    mobs = {}
-    for i = 1,10 do
-        table.insert(mobs, mob_list.Leo_renome:spawn(300,300))
-    end
-    pickups = make_pickups()
-    pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+30)
-    pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y-30)
-    pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+40)
-    pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+50)
-    pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+60)
-    pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+70)
-    pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+80)
-    
-    prevfire = button_down("fire")
+	zones = {}
+	mobs = {}
+	for i = 1,10 do
+		table.insert(mobs, mob_list.fox:spawn(100,100))
+	end
+	pickups = make_pickups()
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+30)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y-30)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+40)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+50)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+60)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+70)
+	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+80)
+	pickups:spawn("life", 2, player_list[1].x+100, player_list[1].y+80)
 
-    perf = {}
+	map = init_map(600, 100)
+	map:generate_map(love.math.random()*40000)
+	map:update_sprite_map()
 
-    g = 0
+	bullets = {}
+	_shot = {}
+	
+	prevfire = button_down("fire")
 
-    set_debug_canvas(map)
+	perf = {}
+
+	g = 0
+
+	set_debug_canvas(map)
+
 end
 
 function love.update(dt)
@@ -119,18 +123,21 @@ function love.draw()
 end
 
 function love.keypressed(key)
-    if key == "f5" then
-        --remove for release
-        love.event.quit("restart")
-    elseif key == "escape" then
-        --remove for release
-        love.event.quit()
-    
-    elseif key == "f2" then
-        if canvas then
-            screenshot()
-        else
-            notification = "Could not save screenshot: no canvas"
-        end
-    end
+
+	if key == "f5" then
+		--remove for release
+		love.event.quit("restart")
+	elseif key == "escape" then
+		--remove for release
+		love.event.quit()
+	
+	elseif key == "f2" then
+		if canvas then
+			screenshot()
+		else
+			notification = "Could not save screenshot: no canvas"
+		end
+	end
 end
+
+

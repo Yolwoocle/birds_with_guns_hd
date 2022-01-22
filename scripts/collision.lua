@@ -47,6 +47,10 @@ function dist_to_segment(p, u, v)
 	return math.sqrt(dist_to_segment_squared(p, u, v))
 end
 
+function coll_rect_objects(o1, o2)
+	return coll_rect(o1.x, o1.y, o1.w, o1.h, o2.x, o2.y, o2.w, o2.h)
+end
+
 function coll_rect(x1,y1,w1,h1,x2,y2,w2,h2)
 	return x1 + w1 > x2 - h2
 	   and x1 - w1 < x2 + w2 

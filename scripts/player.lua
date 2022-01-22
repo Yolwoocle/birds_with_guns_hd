@@ -45,6 +45,7 @@ function init_player(x,y)
 		gun_dist = 14,
 
 		damage = damage_player,
+		get_pickups = player_get_pickups,
 
 		update = update_player,
 		draw = draw_player,
@@ -71,17 +72,18 @@ function update_player(self, dt)
 	-- Update gun
 	self.gun:update(dt, self)
 
+	-- Pickups
+	self:get_pickups()
+
 	-- Life, damage
 	self.iframes_timer = self.iframes_timer - dt
 	self.invincible = self.iframes_timer > 0 
 	self.life = clamp(0, self.life, self.max_life)
+	self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
 	gui.elements.life_bar.val = self.life
 	gui.elements.life_bar.max_val = self.max_life
 	gui.elements.ammo_bar.val = self.gun.ammo
 	gui.elements.ammo_bar.max_val = self.gun.max_ammo
-
-	print('max life', self.max_life)
-	print('max ammo', self.max_ammo)
 
 	self:animate()
 end
@@ -205,6 +207,18 @@ function damage_player(self, dmg)
 		self.life = self.life - dmg
 		self.iframes_timer = self.iframes
 	end
+end
+
+function player_get_pickups(self)
+	print("enter func{")
+	for _,pick in ipairs(pickups.table) do
+		print("	pickup")
+		if coll_rect_objects(self, pick) then
+			print("	COLLISION")
+			pick:is_picked(self)
+		end
+	end
+	print("}")
 end
 
 function save_gun_stats(self)
