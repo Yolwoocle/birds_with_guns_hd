@@ -36,6 +36,9 @@ function make_mob(a)
 
 		spawn = spawn_mob,
 		shoot = shoot_gun,
+		kill = kill_mob,
+		damage = damage_mob,
+		loot = loot_mob,
 
 		update = update_mob,
 		draw = draw_mob,
@@ -57,6 +60,19 @@ function spawn_mob(self, x, y)
 	c.x = x
 	c.y = y
 	return c
+end
+
+function damage_mob(self, dmg)
+	self.life = self.life - dmg
+end
+
+function kill_mob(self, mobs, i)
+	self:loot(pickups)
+	table.remove(mobs, i)
+end
+
+function loot_mob(self, pickups)
+	pickups:spawn_random_loot(self.x, self.y)
 end
 
 function update_mob(self, dt)

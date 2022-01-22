@@ -387,19 +387,17 @@ end
 function damage_everyone(self, k)
 	
 	-- Collisions between enemies and bullets
-	for l,m in pairs(mobs) do
+	for i,m in ipairs(mobs) do
 		--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
 		if self.type ==  "bullet" then
 			-- Bullet
 			local coll = coll_rect(m.x, m.y, m.w*3, m.h*3, self.x, self.y, self.scale*3, self.scale*3)
 			if not self.is_enemy and coll then
-				m.life = m.life - self.damage
-				gf = gf +1
+				m:damage(self.damage)
 				self:on_death(k)
-				
 
 				if m.life<=0 then
-					table.remove(mobs , l)
+					m:kill(mobs,i)
 				end
 
 				return
@@ -411,18 +409,17 @@ function damage_everyone(self, k)
 				if self.active then
 					local dist = dist_to_segment({x=m.x, y=m.y}, {x=v.x1, y=v.y1}, {x=v.x, y=v.y})
 					if dist < self.scale*30 then
-						m.life = m.life - self.damage
+						m:damage(self.damage)
 						--table.remove(bullets, k)
 
 						if m.life<=0 then
-							table.remove(mobs , l)
+							m:kill(mobs,i)
 						end
 
 					end
 				end
 			end
 		end
-
 	end
 
 	for _,p in ipairs(player_list) do

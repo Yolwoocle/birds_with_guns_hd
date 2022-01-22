@@ -41,6 +41,7 @@ function get_mouse_pos(camera)
 end 
 
 function get_canvas_mouse_pos()
+	-- TODO add screen offset
 	local mx, my = love.mouse.getPosition()
 	return mx/screen_sx, my/screen_sy
 end

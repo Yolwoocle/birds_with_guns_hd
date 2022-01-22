@@ -6,6 +6,7 @@ function make_pickups()
 		table = {},
 	
 		spawn = spawn_pickup,
+		spawn_random_loot = spawn_random_loot,
 		update = update_pickups,
 		draw = draw_pickups,
 	}
@@ -15,7 +16,7 @@ end
 function is_picked(self, obj)
 	self.delete = true
 	if self.type == "ammo" then
-		obj.gun.ammo = obj.gun.ammo + self.q
+		obj.gun.ammo = obj.gun.ammo + floor(self.q * obj.gun.max_ammo) 
 	elseif self.type == "life" then
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
@@ -29,8 +30,8 @@ function spawn_pickup(self, type, q, x, y)
 		type = type,
 		x = floor(x),
 		y = floor(y),
-		w = 5,
-		h = 5,
+		w = 8,
+		h = 8,
 
 		q = 0,
 		spr = spr_missing,
@@ -50,6 +51,16 @@ function spawn_pickup(self, type, q, x, y)
 
 	end
 	table.insert(self.table, pick)
+end
+
+function spawn_random_loot(self, x, y)
+	if love.math.random() <= 1.03 then
+		self:spawn("gun", 0.25, x, y)
+	elseif love.math.random() <= 0.03 then
+		self:spawn("life", 2, x, y)
+	elseif love.math.random() <= 0.01 then
+		self:spawn("ammo", 0.25, x, y)
+	end
 end
 
 function update_pickups(self, dt)
