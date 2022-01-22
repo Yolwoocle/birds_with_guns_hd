@@ -91,7 +91,19 @@ function shoot_gun(self)
 end
 
 function default_shoot(g,p)
-	local shot = {}
+
+	local dist = dist(g.spawn_x+p.x,g.spawn_y+p.y,p.x,p.y)
+
+	local offsetangle = math.atan2(-g.spawn_y,g.spawn_x)
+
+	local xg = math.cos(p.rot + offsetangle * g.flip)
+	local yg = math.sin(p.rot + offsetangle * g.flip)
+
+	local rayca = raycast(p.x,p.y,xg, yg, dist,.5)
+
+
+	if rayca.hit or p.see_dist then
+		local shot = {}
 		nbshot = g.nbshot-1
 		for k=0,g.rafale-1 do
 		if nbshot==0 then
@@ -110,6 +122,7 @@ function default_shoot(g,p)
 		end
 	end
 	return shot
+	end
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------

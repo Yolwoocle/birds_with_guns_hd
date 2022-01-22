@@ -21,7 +21,10 @@ function udpate_game_main(self, dt)
 		p:update(dt, camera)
 		if p.shoot then
 			--_shot = player.gun:make_bullet(player,player.rot)
-			append_list(_shot, p.gun:make_shot(p))
+			local bullet = p.gun:make_shot(p)
+			if bullet then
+				append_list(_shot, bullet)
+			end
 		end
 	end
 	camera.aim_offset = player_list[1].gun.camera_offset
@@ -44,6 +47,11 @@ function udpate_game_main(self, dt)
 		z:update(dt,i)
 		damageinzone(z,i) 
 	end
+	--for i,m in pairs(mobs) do
+	--	if m.life<=0 then
+	--		table.remove(mobs , i)
+	--	end
+	--end
 	prevfire = button_down("fire")
 	gui:update()
 
@@ -84,7 +92,7 @@ function draw_game_main(self)
 	gui:draw()
 
 	-- Debug
-	debug_y = 60
+	debug_y = 30
 	debug_print(notification)
 	debug_print(gf)
 	debug_print(#bullets)
