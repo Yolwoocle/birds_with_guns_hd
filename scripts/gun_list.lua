@@ -133,7 +133,7 @@ guns = {
 
 	boum = make_gun({
 		name = "jsp", 
-		type = "bullet",
+		type = "laser",
 		category = "instent",
 		bounce = false,
 		max_ammo = 400,
@@ -149,10 +149,10 @@ guns = {
 		oscale = 0,
 		nbshot = 1,
 
-		bullet_life = 10,
+		bullet_life = .15,
 
 
-		cooldown = .5,
+		cooldown = .1,
 
 		spdslow = 1.1,
 
@@ -161,7 +161,7 @@ guns = {
 			
 			 table.remove(bullets, k)
 			 --bullets = {}
-			 table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
+			 --table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 		end
 
 	}),

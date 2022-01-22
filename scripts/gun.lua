@@ -133,6 +133,7 @@ function make_bullet(self, p, angle,spread,type)
 		rot = angle+scatter+spread,
 		spdslow = self.spdslow,
 		life = self.bullet_life,
+		maxlife = self.bullet_life,
 		delete = false,
 		category	  = self.category,
 		type = self.type,
@@ -351,7 +352,10 @@ function draw_laser(self)
 			end
 		end
 
-		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale)
+
+
+		local scmax = (-(-self.maxlife/-2)^2)+(-self.maxlife/-2)*self.maxlife
+		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*((-(self.life^2)+self.life*self.maxlife)/scmax))
 
 		--love.graphics.print(v.bounce, v.x, v.y-10)
 	end

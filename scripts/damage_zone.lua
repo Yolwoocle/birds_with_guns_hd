@@ -61,7 +61,7 @@ function damageinzone(self,l)
         for i,m in pairs(mobs) do
             gf = gf + 1
 
-            if dist(self.x,self.y,m.x,m.y) < self.rayon then
+            if dist(self.x,self.y,m.x,m.y) < self.rayon+5 then
 
                 m.life = m.life - self.damage
 
