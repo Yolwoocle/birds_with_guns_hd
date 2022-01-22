@@ -24,7 +24,7 @@ mob_list = {
 		shoot_dist = 80,
 		see_dist = 310,
 
-		closest_p = 0,
+		closest_p = 70,
 		far_p	  = 80,
     }),
 }
