@@ -6,7 +6,6 @@ function make_mob(a)
 		name           		= a.name       		or "enemy",
 		spr 	       		= a.spr        		or spr_revolver,
 		life	       		= a.life			or 2,	
-		cooldown_timer 		= 0,		
 		is_enemy = true,
 
 		spd 	= a.spd	or 10,
@@ -18,7 +17,6 @@ function make_mob(a)
 		dy      = a.dy  or 0,
 		dx_idle = 0,
 		dy_idle = 0,
-		speed   = a.speed or 20,
 		friction 	 = a.friction   	or 0.95,
 		bounce   	 = a.bounce     	or 0.6,
 		mv_pause	 = a.mv_pause		or .25,
@@ -34,6 +32,8 @@ function make_mob(a)
 		gun_dist 			= a.gun_dist 		or 14,
 		close_mv			= a.close_mv		or false,
 
+		gun = a.gun or guns.boum,
+
 		spawn = spawn_mob,
 		shoot = shoot_gun,
 		kill = kill_mob,
@@ -42,6 +42,7 @@ function make_mob(a)
 
 		update = update_mob,
 		draw = draw_mob,
+		cooldown_timer = 0,
 	}
 
 	mob.gun = guns.revolver
@@ -51,6 +52,7 @@ end
 
 function spawn_mob(self, x, y)
 	-- add randome pause et mouvement avec un offset 
+	--self = mob_list.jspr
 	local c = copy(self)
 	c.gun = copy(c.gun)
 	x = x or 0 
