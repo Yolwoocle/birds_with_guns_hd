@@ -28,14 +28,20 @@ function udpate_game_main(self, dt)
 		end
 	end
 	camera.aim_offset = player_list[1].gun.camera_offset
+	toremove = {}
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
 			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset))
-			table.remove(_shot, i)
+			table.insert(toremove , i)
 		else
 			v.time=v.time-dt
 		end
 	end
+
+	for i,v in ipairs(toremove) do
+		table.remove(_shot, v)
+	end
+	
 	for i,b in ipairs(bullets) do
 		b:update(dt,i)
 		damage_everyone(b,i)

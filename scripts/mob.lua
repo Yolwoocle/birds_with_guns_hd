@@ -42,10 +42,8 @@ function make_mob(a)
 
 		update = update_mob,
 		draw = draw_mob,
-		cooldown_timer = 0,
+		gun = a.gun or guns.boum,
 	}
-
-	mob.gun = guns.revolver
 
 	return mob
 end
