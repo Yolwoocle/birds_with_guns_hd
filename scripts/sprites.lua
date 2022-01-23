@@ -60,7 +60,6 @@ spr_pick_life = load_image("pickups/life")
 -- Guns
 spr_revolver_big = load_image("guns/gun_revolver")
 spr_revolver = load_image("guns/gun_revolver_small")
-spr_revolver = load_image("guns/revolver")
 spr_shotgun = load_image("guns/shotgun")
 
 -- Tiles

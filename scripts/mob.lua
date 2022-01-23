@@ -44,7 +44,7 @@ function make_mob(a)
 		draw = draw_mob,
 	}
 
-	mob.gun = guns.jsp
+	mob.gun = guns.revolver
 
 	return mob
 end
