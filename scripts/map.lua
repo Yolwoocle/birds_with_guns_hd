@@ -32,7 +32,8 @@ function init_map(w, h)
 			oy=44-16
 		}),
 		make_tile(3, spr_box, {
-			is_solid=true, is_destructible=true, is_transparent=true
+			is_solid=true, is_destructible=true, is_transparent=true,
+			ox=1, oy=1,
 		}),
 		make_tile(4, spr_chain, {
 			is_solid=false, is_destructible=false, is_transparent=false
@@ -103,7 +104,6 @@ function valid_tile(self, tile)
 	if tile == nil then  return false  end 
 	return 1 <= tile and tile <= #self.palette 
 end
-
 
 function update_sprite_map(self)
 	for y=0, self.height-1 do

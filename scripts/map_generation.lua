@@ -50,8 +50,9 @@ function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
 end
 
 function tile_spawn_mob(self, rnd, x, y)
-	if not self:get_tile(x, y).is_solid and rnd:random(10)==1 then
-		table.insert(mobs, mob_list.fox:spawn(x*block_width, y*block_width))
+	local bw = block_width 
+	if not self:get_tile(x, y).is_solid and rnd:random(50)==1 then
+		table.insert(mobs, mob_list.fox:spawn(x*bw + bw/2, y*bw + bw/2))
 	end
 end
 

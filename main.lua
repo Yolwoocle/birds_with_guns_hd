@@ -30,7 +30,7 @@ function love.load()
 
 	window_w, window_h = 480, 270 --rename to canvas_w, canvas_h
 	screen_sx = screen_w/window_w or screen_w
-	screen_sy = screen_h/window_h or screen_h --FIXME this won't work well in non 9:16 screens
+	screen_sy = screen_h/window_h or screen_h
 	screen_scale = min(screen_sx, screen_sy)
 	screen_ox = max(0, (screen_w - window_w*screen_scale)/2)
 	screen_oy = max(0, (screen_h - window_h*screen_scale)/2)
@@ -41,6 +41,11 @@ function love.load()
 	font_small = love.graphics.newFont("assets/fonts/Kenney Mini.ttf", 8)
 	font_normal = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
 	font_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
+	
+	font_equipment = love.graphics.newFont("assets/fonts/somepx/EquipmentPro.ttf", 16) 
+	font_expression = love.graphics.newFont("assets/fonts/somepx/ExpressionPro.ttf", 16) 
+	font_futile = love.graphics.newFont("assets/fonts/somepx/FutilePro.ttf", 16) 
+	font_matchup = love.graphics.newFont("assets/fonts/somepx/MatchupPro.ttf", 16)
 	love.graphics.setFont(font_thick)
 
 	gui = make_gui()
@@ -95,14 +100,14 @@ function love.load()
 end
 
 function love.update(dt)
+
 	updatejoystick()
     --TODO: camera for all players
+
     camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
     camera:update(dt)
 
-    
     game:update(dt)
-
 
     table.insert(perf, dt)
 end
