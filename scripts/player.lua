@@ -241,7 +241,7 @@ function player_get_pickups(self)
 			pick:is_picked(self)
 			if pick.type == "gun" then
 				self.pickup_cd = self.max_pickup_cd
-			end
+			end 
 		end
 	end
 end
