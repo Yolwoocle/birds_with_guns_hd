@@ -52,6 +52,7 @@ end
 function tile_spawn_mob(self, rnd, x, y)
 	local bw = block_width 
 	if not self:get_tile(x, y).is_solid and rnd:random(50)==1 then
+		table.insert(mobs, mob_list.jspr:spawn(x*bw + bw/2, y*bw + bw/2))
 		table.insert(mobs, mob_list.fox:spawn(x*bw + bw/2, y*bw + bw/2))
 	end
 end

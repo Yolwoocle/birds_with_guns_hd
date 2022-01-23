@@ -101,7 +101,7 @@ guns = {
 
 	jspp = make_gun({
 		name = "jsp", 
-		type = "laser",
+		type = "bullet",
 		laser_length = 3000,
 		category = "instent",
 		bounce = 1,
@@ -125,7 +125,7 @@ guns = {
 
 		bullet_spd = 100,
 		on_death = function(self , k)
-			 --table.insert(zones, zone.fire:spawn_zone( self.x, self.y))
+			 table.insert(zones, zone.fire:spawn_zone( self.x, self.y))
 			 table.remove(bullets, k)
 		end
 

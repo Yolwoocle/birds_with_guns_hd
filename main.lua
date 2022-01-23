@@ -69,9 +69,9 @@ function love.load()
 
 	zones = {}
 	mobs = {}
-	for i = 1,10 do
-		table.insert(mobs, mob_list.fox:spawn(100,100))
-	end
+	--for i = 1,10 do
+	--	table.insert(mobs, mob_list.jspr:spawn(100,100))
+	--end
 	pickups = make_pickups()
 	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+30)
 	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y-30)
