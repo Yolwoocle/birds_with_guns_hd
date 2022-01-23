@@ -51,7 +51,7 @@ function init_player(x,y)
 		draw = draw_player,
 	}
 	player.anim_sprs = player.anim_idle
-	player.gun = copy(guns.revolver)
+	player.gun = copy(guns.boum)
 	return player
 end
 
