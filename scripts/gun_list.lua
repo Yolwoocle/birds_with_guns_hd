@@ -21,9 +21,9 @@ guns = {
 	}),
 	test = make_gun({
 		type = "bullet",			--"bullet" "laser"
-        category = "instant",	--"persistent" "instant"
+		category = "instant",	--"persistent" "instant"
 		bounce = 0,
-
+		
 		charge = true,
 		charge_time = 1,
 		charge_nbrafale = 10,
@@ -42,15 +42,15 @@ guns = {
 
 		spr = spr_revolver, 
 
-        bullet_spd = 100,
-        ospd = 0,
-        cooldown = .1,
+		bullet_spd = 100,
+		ospd = 0,
+		cooldown = .1,
 
 		scale = .25,
 		oscale = 0,
 
-        max_ammo = inf,
-        scattering = 1,
+		max_ammo = inf,
+		scattering = 1,
 
 		damage = 1,
 
