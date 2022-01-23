@@ -1,5 +1,6 @@
 require "scripts/utility"
 require "scripts/sprites"
+require "scripts/gun"
 
 function make_pickups()
 	local p = {
@@ -20,7 +21,7 @@ function is_picked(self, obj)
 	elseif self.type == "life" then
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
-		obj.gun = self.gun
+		obj.gun = copy(self.gun)
 	end
 end
 
@@ -48,6 +49,7 @@ function spawn_pickup(self, type, q, x, y)
 
 	elseif type == "gun" then
 		pick.gun = q
+		pick.spr = q.spr
 
 	end
 	table.insert(self.table, pick)
@@ -55,7 +57,7 @@ end
 
 function spawn_random_loot(self, x, y)
 	if love.math.random() <= 1.03 then
-		self:spawn("gun", 0.25, x, y)
+		self:spawn("gun", guns.revolver, x, y)
 	elseif love.math.random() <= 0.03 then
 		self:spawn("life", 2, x, y)
 	elseif love.math.random() <= 0.01 then

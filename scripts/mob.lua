@@ -45,6 +45,8 @@ function make_mob(a)
 		cooldown_timer = 0,
 	}
 
+	mob.gun = guns.revolver
+
 	return mob
 end
 

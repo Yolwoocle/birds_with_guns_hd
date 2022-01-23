@@ -11,6 +11,8 @@ min = math.min
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 	local w = spr:getWidth() or 0
 	local h = spr:getHeight() or 0
+	if spr == nil then spr = spr_missing end 
+
 	if (camera.x-w < x) and (x < camera.x+window_w+w) 
 	and (camera.y-h < y) and (y < camera.y+window_h+h) then
 		x = x
@@ -54,6 +56,10 @@ function color(hex)
 end
 
 function sgn(n)
+	if n == nil then  
+		return 0
+	end
+
 	if n >= 0 then
 		return 1
 	end

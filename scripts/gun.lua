@@ -8,16 +8,17 @@ function make_gun(a)
 	spr = a.spr or spr_revolver
 	
 	local gun = {
-		name          = a.name          or "gun",
-		type          = a.type          or "bullet",
+		name = a.name or "gun",
+		type = a.type or "bullet",
 		x = 0,
 		y = 0,
 		dir = 0,
+		flip = 1,
+		spr = a.spr or spr_revolver,
 
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		bounce 		  = a.bounce		or 0,
-		spr 	      = a.spr           or spr_revolver,
 		bullet_spd    = a.bullet_spd    or 600,
 		offset_spd    = a.ospd	        or 0,
 		cooldown      = a.cooldown      or 0.2,
@@ -33,7 +34,7 @@ function make_gun(a)
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1,
-		scale 		  = a.scale			or 1,
+		scale 		  = a.scale			or 0.5,
 		oscale 		  = a.oscale        or 0,
 		on_death 	  = a.on_death		or kill,
 
@@ -198,8 +199,7 @@ function init_laser(self)
 	ray = raycast(self.x,self.y,self.dx/self.spd,self.dy/self.spd,self.laser_length,3)
 	table.insert(self.length , {length = ray.dist,x=ray.x ,y=ray.y,rot = self.rot,dx=self.dx/self.spd,dy=self.dy/self.spd,x1 = self.x,y1 = self.y,bounce = self.bounce})
 
-	if self.bounce>0 then
-
+	if self.bounce > 0 then
 		prevray = ray
 		prevray.dx = self.dx/self.spd
 		prevray.dy = self.dy/self.spd
@@ -354,7 +354,7 @@ end
 
 function draw_bullet(self)
 	draw_centered(self.spr, self.x, self.y, self.rot, self.scale, self.scale)
-	rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
+	--rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
 	--love.graphics.pr int(self.scale,self.x+10,self.y+10)
 end
 

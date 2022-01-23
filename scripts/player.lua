@@ -39,7 +39,7 @@ function init_player(x,y)
 		anim_walk = anim_pigeon_walk,
 		anim_idle = anim_pigeon_idle,
 		anim_frame = 0,
-		anim_frame_len = .07, --70 ms
+		anim_frame_len = .05, --70 ms
 		animate = animate_player,
 
 		gun_dist = 14,
@@ -51,7 +51,9 @@ function init_player(x,y)
 		draw = draw_player,
 	}
 	player.anim_sprs = player.anim_idle
-	player.gun = copy(guns.boum)
+
+	player.gun = copy(guns.shotgun)
+
 	return player
 end
 
@@ -96,12 +98,14 @@ function draw_player(self)
 		is_drawn = self.iframes_timer % (2*ft) <= ft
 	end
 
-	-- Gun pseudo-3D
-	if     self.looking_up then self.gun:draw(self) end
+	-- Draw player
 	if is_drawn then
+		if self.looking_up then self.gun:draw(self) end
 		draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
+		if not self.looking_up then self.gun:draw(self) end
 	end
-	if not self.looking_up then self.gun:draw(self) end
+	love.graphics.setColor(1,1,1)
+	
 
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
