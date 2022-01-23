@@ -76,7 +76,7 @@ function damageinzone(self,l)
         for _,p in ipairs(player_list) do
 	        local coll = dist(self.x,self.y,p.x,p.y) < self.rayon
 	        if coll then
-	        	p.life = p.life - self.damage
+	        	p:damage(self.damage)
                 --p:damage(self.damage)
 
                 if self.ondamage then

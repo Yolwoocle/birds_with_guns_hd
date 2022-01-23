@@ -6,7 +6,7 @@ guns = {
 	revolver = make_gun({
 		name = "revolver",
 		spr = spr_revolver,
-		bullet_spd = 50,
+		bullet_spd = 500,
 		make_shot = default_shoot
 	}),
 	shotgun = make_gun({
