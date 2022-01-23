@@ -22,6 +22,18 @@ function is_picked(self, obj)
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
 		obj.gun = copy(self.gun)
+		toremove = {}
+
+		for k,v in ipairs(_shot) do
+			if v.player == obj then
+				table.insert(toremove , k)
+			end
+		end
+
+		for i,v in ipairs(toremove) do
+			table.remove(_shot, v-i+1)
+		end
+
 	end
 end
 

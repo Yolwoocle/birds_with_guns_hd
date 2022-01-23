@@ -190,7 +190,7 @@ function aim_player(self, dt)
 
 				self.shoot = true
 				self.gun:shoot()
-				camera:shake(self.gun.rot, self.gun.screenshake)
+				camera:shake(self.rot, self.gun.screenshake)
 				self.gun.dt = 0
 				
 			end

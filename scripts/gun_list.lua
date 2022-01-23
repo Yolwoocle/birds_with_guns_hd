@@ -14,6 +14,9 @@ guns = {
 		spr = spr_shotgun,
 		nbshot = 5,
 		bullet_spd = 500,
+		cooldown = 0.5,
+		rafale  = 1,
+		max_ammo = inf,
 		make_shot = default_shoot,
 	}),
 	test = make_gun({
@@ -131,7 +134,7 @@ guns = {
 
 		bullet_life = 10,
 
-		cooldown = 0,
+		--cooldown = 0,
 		screenshake = 10,
 
 		bullet_spd = 100,
