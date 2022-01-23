@@ -230,15 +230,15 @@ function damage_player(self, dmg)
 end
 
 function player_get_pickups(self)
-	print("enter func{")
+	--print("enter func{")
 	for _,pick in ipairs(pickups.table) do
-		print("	pickup")
+		--print("	pickup")
 		if coll_rect_objects(self, pick) then
-			print("	COLLISION")
+			--print("	COLLISION")
 			pick:is_picked(self)
 		end
 	end
-	print("}")
+	--print("}")
 end
 
 function save_gun_stats(self)
