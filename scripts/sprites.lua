@@ -49,18 +49,22 @@ spr_fox = {
 	load_image("fox_1")
 }
 
--- Projectiles
-spr_bullet = load_image("bullet_flat_1")
-spr_laser = load_image("laser")
-
 -- Pickups
 spr_pick_ammo = load_image("pickups/ammo")
 spr_pick_life = load_image("pickups/life")
+
+-- Projectiles
+spr_bullet = load_image("bullet_flat_1")
+spr_laser = load_image("laser")
+spr_rocket = load_image("projectiles/rocket")
+spr_bullet = spr_rocket
 
 -- Guns
 spr_revolver_big = load_image("guns/gun_revolver")
 spr_revolver = load_image("guns/gun_revolver_small")
 spr_shotgun = load_image("guns/shotgun")
+spr_firework_launcher = load_image("guns/firework_launcher")
+spr_firework_launcher_big = load_image("guns/firework_launcher_big")
 
 -- Tiles
 spr_ground_dum = load_image("dummy_ground")

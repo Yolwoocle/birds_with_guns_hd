@@ -15,13 +15,15 @@ function make_pickups()
 end
 
 function is_picked(self, obj)
-	self.delete = true
 	if self.type == "ammo" then
+		self.delete = true
 		obj.gun.ammo = obj.gun.ammo + floor(self.q * obj.gun.max_ammo) 
 	elseif self.type == "life" then
+		self.delete = true
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
-		obj.gun = copy(self.gun)
+		obj.gun, self.gun = self.gun, obj.gun
+		self.spr = self.gun.spr
 		toremove = {}
 
 		for k,v in ipairs(_shot) do
@@ -29,7 +31,6 @@ function is_picked(self, obj)
 				table.insert(toremove , k)
 			end
 		end
-
 		for i,v in ipairs(toremove) do
 			table.remove(_shot, v-i+1)
 		end
@@ -60,7 +61,7 @@ function spawn_pickup(self, type, q, x, y)
 		pick.spr = spr_pick_life
 
 	elseif type == "gun" then
-		pick.gun = q
+		pick.gun = copy(q)
 		pick.spr = q.spr
 
 	end
