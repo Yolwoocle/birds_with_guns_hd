@@ -18,7 +18,7 @@ require "scripts/game_menu_main"
 require "scripts/pickup"
 
 function love.load()
-
+	keymode = "keyboard"
 	game = make_game_main()
 	prevray = {}
 
@@ -49,7 +49,9 @@ function love.load()
 
 	notification = ""
 	
+	updatejoystick()
 	init_keybinds()
+	init_joystickbinds()
 	camera = init_camera()
 	camera.lock_y = false
 
@@ -93,6 +95,7 @@ function love.load()
 end
 
 function love.update(dt)
+	updatejoystick()
     --TODO: camera for all players
     camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
     camera:update(dt)
@@ -122,6 +125,11 @@ function love.draw()
         --love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
     end
     love.graphics.setColor({1,1,1})
+
+	--local joysticks = love.joystick.getJoysticks()
+    --for i, jo in ipairs(joysticks) do
+    --    love.graphics.print(jo:getName(), 10, i * 20 + 1000)
+    --end
 end
 
 function love.keypressed(key)

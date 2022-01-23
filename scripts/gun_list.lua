@@ -5,22 +5,22 @@ require "scripts/utility"
 guns = {
 	revolver = make_gun({
 		name = "revolver",
-		type = "laser",			--"bullet" "laser"
+		type = "bullet",			--"bullet" "laser"
 		
         category = "instant",	--"persistent" "instant"
-		bounce = true,
+		bounce = 0,
 
 		charge = true,
 		charge_time = 1,
 		charge_nbrafale = 10,
 		charge_bullet_spd = 1,
-		charge_laser_length = 300,
+		charge_laser_length = 30000,
 		charge_nbshot = 10,
 		charge_spread = 0,
 		charge_scattering = -.6, --difference between scattering and spread?
 		charge_scale = 2,
 		charge_ospd = 0,
-		charge_life = 1,
+		charge_life = 0,
 		charge_rafaledt = 0,
 		charge_spdslow = .002,
 		charge_damage = 10,
@@ -30,7 +30,7 @@ guns = {
 
         bullet_spd = 100,
         ospd = 0,
-        cooldown = 1,
+        cooldown = .1,
 
 		scale = .25,
 		oscale = 0,
@@ -43,7 +43,7 @@ guns = {
 		spawn_x = nil,
 		spawn_y = 0,
 
-		bullet_life	= 3,
+		bullet_life	= 10,
 
 		laser_length = 300,
 
@@ -66,7 +66,7 @@ guns = {
 		category = "instent",--FIXME "instant" not INSTENT GODDAMNIT
 		charge = true,
 		charge_time = .1,
-		bounce = true,
+		bounce = 1,
 		laser_length = 300,
 		scale = .1,
 		scattering = 0,

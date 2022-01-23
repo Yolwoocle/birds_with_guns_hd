@@ -92,6 +92,8 @@ end
 
 function default_shoot(g,p)
 
+	local rayca = {}
+	if not p.see_dist then
 	local dist = dist(g.spawn_x+p.x,g.spawn_y+p.y,p.x,p.y)
 
 	local offsetangle = math.atan2(-g.spawn_y,g.spawn_x)
@@ -99,7 +101,8 @@ function default_shoot(g,p)
 	local xg = math.cos(p.rot + offsetangle * g.flip)
 	local yg = math.sin(p.rot + offsetangle * g.flip)
 
-	local rayca = raycast(p.x,p.y,xg, yg, dist,.5)
+	rayca = raycast(p.x,p.y,xg, yg, dist,.4)
+	end
 
 
 	if rayca.hit or p.see_dist then
@@ -161,6 +164,7 @@ function make_bullet(self, p, angle,spread,type)
 		scale = self.scale + oscale,
 		damage = self.damage,
 		bounce =  self.bounce,
+		maxbounce = self.bounce,
 		length = {},
 		on_death = self.on_death,
 
@@ -301,6 +305,7 @@ function update_laser(self, dt , i)
 	end
 
 	if self.category == "persistent" and button_down("fire") then
+		self.bounce = self.maxbounce
 		self.length = {}
 		self.life = self.life + dt
 		self.x = self.player.x + math.cos(self.player.rot + self.offsetangle * self.gun.flip) * self.dist

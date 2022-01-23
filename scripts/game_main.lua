@@ -94,7 +94,8 @@ function draw_game_main(self)
 	-- Debug
 	debug_y = 30
 	debug_print(notification)
-	debug_print(gf)
+	--debug_print(joystick.x)
+	--debug_print(joystick.joy:getGamepadAxis("triggerleft"))
 	debug_print(#bullets)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
