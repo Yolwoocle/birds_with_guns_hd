@@ -28,14 +28,20 @@ function udpate_game_main(self, dt)
 		end
 	end
 	camera.aim_offset = player_list[1].gun.camera_offset
+	toremove = {}
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
 			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset))
-			table.remove(_shot, i)
+			table.insert(toremove , i)
 		else
 			v.time=v.time-dt
 		end
 	end
+
+	for i,v in ipairs(toremove) do
+		table.remove(_shot, v-i+1)
+	end
+
 	for i,b in ipairs(bullets) do
 		b:update(dt,i)
 		damage_everyone(b,i)
@@ -97,6 +103,7 @@ function draw_game_main(self)
 	--debug_print(joystick.x)
 	--debug_print(joystick.joy:getGamepadAxis("triggerleft"))
 	debug_print(#bullets)
+	debug_print(#_shot)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})

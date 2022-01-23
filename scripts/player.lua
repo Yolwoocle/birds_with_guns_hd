@@ -51,7 +51,9 @@ function init_player(x,y)
 		draw = draw_player,
 	}
 	player.anim_sprs = player.anim_idle
+
 	player.gun = copy(guns.shotgun)
+
 	return player
 end
 
@@ -188,7 +190,7 @@ function aim_player(self, dt)
 
 				self.shoot = true
 				self.gun:shoot()
-				camera:shake(self.gun.rot, self.gun.screenshake)
+				camera:shake(self.rot, self.gun.screenshake)
 				self.gun.dt = 0
 				
 			end

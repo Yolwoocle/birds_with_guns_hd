@@ -6,15 +6,18 @@ guns = {
 	revolver = make_gun({
 		name = "revolver",
 		spr = spr_revolver,
-		bullet_spd = 50,
+		bullet_spd = 500,
 		make_shot = default_shoot
 	}),
 	shotgun = make_gun({
 		name = "shotgun",
 		spr = spr_shotgun,
-		nbshot = 10,
-		bullet_spd = 50,
-		make_shot = default_shoot
+		nbshot = 5,
+		bullet_spd = 500,
+		cooldown = 0.5,
+		rafale  = 1,
+		max_ammo = inf,
+		make_shot = default_shoot,
 	}),
 	test = make_gun({
 		type = "bullet",			--"bullet" "laser"
@@ -131,7 +134,7 @@ guns = {
 
 		bullet_life = 10,
 
-		cooldown = 0,
+		--cooldown = 0,
 		screenshake = 10,
 
 		bullet_spd = 100,
@@ -146,7 +149,7 @@ guns = {
 		name = "jsp", 
 		type = "laser",
 		category = "instent",
-		bounce = false,
+		bounce = 0,
 		max_ammo = 400,
 		charge = false,
 		charge_curve = 2,			
