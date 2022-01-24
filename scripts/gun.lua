@@ -61,7 +61,7 @@ function make_gun(a)
 
 		make_shot = a.make_shot or default_shoot,
 		
-		screenkick = a.screenkick or 3,
+		screenkick = a.screenkick or 10,
 		camera_offset = a.camera_offset or 0.1,
 
 		shoot = shoot_gun,
@@ -248,6 +248,10 @@ function init_laser(self)
 end
 
 function update_bullet(self, dt , i)
+	if not self.is_enemy then
+		local x, y = random_polar(32)
+		particles:make("", self.x + x, self.y + y, 40)
+	end
 
 	if math.sqrt((self.dx * self.spdslow)^2+(self.dy * self.spdslow)^2)<self.vitesse_max then
 		self.dx = self.dx * self.spdslow

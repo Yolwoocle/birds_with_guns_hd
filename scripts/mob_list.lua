@@ -10,9 +10,8 @@ mob_list = {
 		h = 4,
 		hit_x = 8,
 		hit_y = 8,
+		gun = fox_revolver,
 
-		dx = 0,
-		dy = 0,
 		friction = 0.95,
 		bounce = 0.6,
 		mv_pause = 1,
@@ -49,6 +48,6 @@ mob_list = {
 
 		closest_p = 5,
 		far_p	  = 80,
-		gun = guns.jspp,
+		gun = guns.fox_revolver,
 	}),
 }

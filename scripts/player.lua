@@ -199,7 +199,7 @@ function aim_player(self, dt)
 
 				self.shoot = true
 				self.gun:shoot()
-				camera:kick(self.rot, self.gun.screenkick)
+				camera:kick(self.rot + pi, self.gun.screenkick)
 				self.gun.dt = 0
 				
 			end

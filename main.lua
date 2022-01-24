@@ -16,6 +16,7 @@ require "scripts/damage_zone"
 require "scripts/game_main"
 require "scripts/game_menu_main"
 require "scripts/pickup"
+require "scripts/particles"
 
 function love.load()
 	keymode = "keyboard"
@@ -90,13 +91,13 @@ function love.load()
 	_shot = {}
 	
 	prevfire = button_down("fire")
+	particles = init_particles()
 
 	perf = {}
 
 	g = 0
 
 	set_debug_canvas(map)
-
 end
 
 function love.update(dt)

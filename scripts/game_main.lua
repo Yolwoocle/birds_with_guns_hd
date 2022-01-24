@@ -27,7 +27,6 @@ function udpate_game_main(self, dt)
 			end
 		end
 	end
-	camera.aim_offset = player_list[1].gun.camera_offset
 	toremove = {}
 	for i,v in ipairs(_shot) do
 		if v.time <= 0 then
@@ -61,6 +60,7 @@ function udpate_game_main(self, dt)
 	prevfire = button_down("fire")
 	gui:update()
 
+	particles:update(dt)
 end
 
 function draw_game_main(self)
@@ -90,10 +90,10 @@ function draw_game_main(self)
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
-	
 	for _,p in ipairs(player_list) do
 		p:draw()
 	end
+	particles:draw()
 
 	gui:draw()
 

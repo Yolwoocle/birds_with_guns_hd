@@ -17,6 +17,7 @@ guns = {
 
 		spdslow = 1.3,
 		bullet_spd = 10,
+		screenkick = 5,
 		
 		scale = 1,
 		cooldown = 0.2,
@@ -38,6 +39,18 @@ guns = {
 			table.remove(bullets, k)
 	   end
 	}),
+
+	fox_revolver = make_gun({
+		name = "Fox revolver",
+		type = "bullet",
+		spr = spr_revolver,
+		bullet_spd = 10,
+		
+		scale = 1,
+		cooldown = 0.2,
+		make_shot = default_shoot,
+	}),
+
 	test = make_gun({
 		type = "bullet",			--"bullet" "laser"
 		category = "instant",	--"persistent" "instant"
@@ -166,7 +179,7 @@ guns = {
 
 	boum = make_gun({
 		name = "jsp", 
-		type = "laser",
+		type = "bullet",
 		category = "instent",
 		bounce = 0,
 		max_ammo = 400,
