@@ -152,6 +152,8 @@ function love.keypressed(key)
 		else
 			notification = "Could not save screenshot: no canvas"
 		end
+	elseif key == "f3" then
+		screenshot_clip()
 	end
 end
 

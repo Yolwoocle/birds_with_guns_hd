@@ -18,8 +18,13 @@ function screenshot()
 
 	buffer_canvas:newImageData():encode("png", filename)
 	local filepath = love.filesystem.getSaveDirectory().."/"..filename
-
 	notification = "Image saved at: "..filepath
 	print(notification)
-	--io.popen('clip','w'):write(filepath):close()
+
+	return filepath
+end
+
+function screenshot_clip()
+	local path = screenshot()
+	io.popen('clip','w'):write(path):close()
 end
