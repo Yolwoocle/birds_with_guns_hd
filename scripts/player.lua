@@ -16,8 +16,8 @@ function init_player(x,y)
 		dy = 0,
 		walk_dir = {x=0, y=0},
 
-		speed = 120,
-		friction = 0.6, --FIXME player glides more when FPS low
+		speed = 64,
+		friction = 20, --FIXME player glides more when FPS low
 		bounce = 0.6,
 		is_walking = false,
 		is_enemy = false,
@@ -102,6 +102,7 @@ function draw_player(self)
 	if self.invincible then
 		is_drawn = self.iframes_timer % (2*ft) <= ft
 	end
+	local is_drawn = true
 
 	-- Draw player
 	if is_drawn then
@@ -122,7 +123,7 @@ function player_movement(self, dt)
 	self.walk_dir = {x=0, y=0}
 	self.is_walking = false
 	if button_down("left") or (joystick and joystick.x<-joystick_deadzone) then
-		if (joystick and joystick.x<-joystick_deadzone) then 
+		if (joystick and joystick.x < -joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
 		dir_vector.x = dir_vector.x - 1
@@ -168,8 +169,11 @@ function player_movement(self, dt)
 
 	self.dx = self.dx + (dir_vector.x * self.speed)
 	self.dy = self.dy + (dir_vector.y * self.speed)
-	self.dx = self.dx * self.friction
-	self.dy = self.dy * self.friction
+	
+	-- Idk why this friction works but thanks stackoverflow
+	local fricratio = 1 / (1 + dt * self.friction);
+	self.dx = self.dx * fricratio
+	self.dy = self.dy * fricratio
 end
 
 function aim_player(self, dt)
@@ -195,7 +199,7 @@ function aim_player(self, dt)
 
 				self.shoot = true
 				self.gun:shoot()
-				camera:shake(self.rot, self.gun.screenshake)
+				camera:kick(self.rot, self.gun.screenkick)
 				self.gun.dt = 0
 				
 			end

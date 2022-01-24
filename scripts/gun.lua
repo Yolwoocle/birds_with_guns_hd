@@ -61,7 +61,7 @@ function make_gun(a)
 
 		make_shot = a.make_shot or default_shoot,
 		
-		screenshake = a.screenshake or 3,
+		screenkick = a.screenkick or 3,
 		camera_offset = a.camera_offset or 0.1,
 
 		shoot = shoot_gun,
