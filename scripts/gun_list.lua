@@ -23,11 +23,17 @@ guns = {
 		max_ammo = inf,
 		make_shot = default_shoot,
 
-		on_death = function(self , k)
+		on_death = function(self , k) -- fix le delet des bullets qui est pt + c'est pas la direction de l'objet qu'il faut prendre bref c'est bugé
 			--elt = copy(guns.jspp)
 			--elt.player.gun = copy(guns.jspp)
 			--append_list(_shot, elt:make_shot(self))
-			--append_list(_shot, self.player.gun:make_shot(self))
+			--obj = copy(self.player)
+			--print(self.name)
+			--obj.x = self.x
+			--obj.y = self.y
+			--obj.gun = copy(guns.jspp)
+			--append_list(_shot, obj.gun:make_shot(obj))
+			table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 			table.remove(bullets, k)
 	   end
 	}),

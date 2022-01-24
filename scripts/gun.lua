@@ -406,7 +406,7 @@ function checkdeath(self)
 	return false
 end
 
-function damage_everyone(self, k)
+function damage_everyone(self, k) -- problemes de remove des bullets avec index
 	
 	-- Collisions between enemies and bullets
 	for i,m in ipairs(mobs) do
