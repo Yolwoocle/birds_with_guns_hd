@@ -23,6 +23,14 @@ guns = {
 		rafale  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
+
+		on_death = function(self , k)
+			--elt = copy(guns.jspp)
+			--elt.player.gun = copy(guns.jspp)
+			--append_list(_shot, elt:make_shot(self))
+			--append_list(_shot, self.player.gun:make_shot(self))
+			table.remove(bullets, k)
+	   end
 	}),
 	test = make_gun({
 		type = "bullet",			--"bullet" "laser"
