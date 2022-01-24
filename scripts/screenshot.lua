@@ -5,7 +5,7 @@ function screenshot()
 	--TODO: option to use love.graphics.captureScreenshot( filename )
 	--TODO: setting to set pixel scale (2 or 3) by default
 	--TODO: paste screenshot into pastebin
-	--TODO: capture GIFs
+	--TODO: capture GIFs: https://love2d.org/forums/viewtopic.php?t=81543 + lua-gd lib
 	--These features are important as it provides an easy way 
 	--for players to share the game with others (GIF especially)
 	local filename = os.date('birds_with_guns_%Y-%m-%d_%H-%M-%S.png') 
@@ -17,5 +17,14 @@ function screenshot()
 	love.graphics.setCanvas()
 
 	buffer_canvas:newImageData():encode("png", filename)
-	notification = "Image saved at: "..love.filesystem.getSaveDirectory().."/"..filename
+	local filepath = love.filesystem.getSaveDirectory().."/"..filename
+	notification = "Image saved at: "..filepath
+	print(notification)
+
+	return filepath
+end
+
+function screenshot_clip()
+	local path = screenshot()
+	io.popen('clip','w'):write(path):close()
 end

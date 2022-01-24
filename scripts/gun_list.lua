@@ -6,6 +6,7 @@ guns = {
 	revolver = make_gun({
 		name = "revolver",
 		spr = spr_revolver,
+		screenkick = 10,
 		bullet_spd = 500,
 		make_shot = default_shoot
 	}),
@@ -87,7 +88,7 @@ guns = {
 
 		spdslow = 1,
 
-		screenshake = 3,
+		screenkick = 3,
 
 		make_shot = default_shoot
 	}),
@@ -153,7 +154,7 @@ guns = {
 		bullet_life = 10,
 
 		--cooldown = 0,
-		screenshake = 10,
+		screenkick = 10,
 
 		bullet_spd = 100,
 		on_death = function(self , k)
