@@ -26,5 +26,7 @@ end
 
 function screenshot_clip()
 	local path = screenshot()
-	io.popen('clip','w'):write(path):close()
+	local cmd = io.popen('clip','w')
+	cmd:write(path)
+	cmd:close()
 end

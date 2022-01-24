@@ -132,7 +132,7 @@ function player_movement(self, dt)
 		self.walk_dir.x = self.walk_dir.x - 1
 	end
 	if button_down("right") or (joystick and joystick.x>joystick_deadzone) then
-		if (joystick and joystick.x>joystick_deadzone) then 
+		if (joystick and joystick.x > joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
 		dir_vector.x = dir_vector.x + 1
