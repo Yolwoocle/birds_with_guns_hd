@@ -11,10 +11,14 @@ guns = {
 	}),
 	shotgun = make_gun({
 		name = "shotgun",
-		spr = spr_shotgun,
-		nbshot = 5,
-		bullet_spd = 500,
-		cooldown = 0.5,
+		spr = spr_firework_launcher,
+		nbshot = 1,
+
+		spdslow = 1.3,
+		bullet_spd = 10,
+		
+		scale = 1,
+		cooldown = 0.2,
 		rafale  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,

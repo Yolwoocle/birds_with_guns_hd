@@ -84,6 +84,10 @@ function draw_gun(self, p)
 	local x = p.x + math.cos(p.rot) * p.gun_dist 
 	local y = p.y + math.sin(p.rot) * p.gun_dist 
 	draw_centered(p.gun.spr, x, y, p.rot, 1, p.gun.flip)
+
+	--local x = p.x + math.cos(p.rot+pi) * p.gun_dist 
+	--local y = p.y + math.sin(p.rot+pi) * p.gun_dist 
+	--draw_centered(spr_firework_launcher_big, x, y, p.rot, 0.5, 0.5*p.gun.flip)
 end
 
 function shoot_gun(self)
