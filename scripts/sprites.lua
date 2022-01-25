@@ -57,7 +57,6 @@ spr_pick_life = load_image("pickups/life")
 spr_bullet = load_image("bullet_flat_1")
 spr_laser = load_image("laser")
 spr_rocket = load_image("projectiles/rocket")
-spr_bullet = spr_rocket
 
 -- Guns
 spr_revolver_big = load_image("guns/gun_revolver")

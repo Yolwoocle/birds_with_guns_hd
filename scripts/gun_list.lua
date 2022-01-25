@@ -13,11 +13,11 @@ guns = {
 	shotgun = make_gun({
 		name = "shotgun",
 		spr = spr_firework_launcher,
-		nbshot = 1,
+		nbshot = 5,
 
 		spdslow = 1.3,
-		bullet_spd = 10,
-		
+		bullet_spd = 500,
+		scattering    = 0,
 		scale = 1,
 		cooldown = 0.2,
 		rafale  = 1,
@@ -34,7 +34,7 @@ guns = {
 			--obj.y = self.y
 			--obj.gun = copy(guns.jspp)
 			--append_list(_shot, obj.gun:make_shot(obj))
-			table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
+			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 			table.remove(bullets, k)
 	   end
 	}),
@@ -167,6 +167,7 @@ guns = {
 	boum = make_gun({
 		name = "jsp", 
 		type = "laser",
+		bulletspr = spr_laser,
 		category = "instent",
 		bounce = 0,
 		max_ammo = 400,
