@@ -108,8 +108,8 @@ end
 function default_shoot(g,p)
 
 	local shot = {}
-	nbshot = g.nbshot-1
-	for k=0,g.rafale-1 do
+		nbshot = g.nbshot-1
+		for k=0,g.rafale-1 do
 		if nbshot==0 then
 			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
 		else
@@ -119,22 +119,9 @@ function default_shoot(g,p)
 					gun = g,
 					player = p,
 					angle = p.rot,
-					offset = 0,
-					time = k*g.rafaledt,
-					spr = g.bullet_spr,
+					offset = o,
+					time = k*g.rafaledt
 				})
-			else
-				for i=0,nbshot-1 do
-					local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot)+(1/g.nbshot/2))*g.spread
-					table.insert(shot,{
-						gun = g,
-						player = p,
-						angle = p.rot,
-						offset = o,
-						time = k*g.rafaledt,
-						spr = g.bullet_spr,
-					})
-				end
 			end
 		end
 	end
