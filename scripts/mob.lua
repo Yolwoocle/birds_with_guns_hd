@@ -32,7 +32,7 @@ function make_mob(a)
 		gun_dist 			= a.gun_dist 		or 14,
 		close_mv			= a.close_mv		or false,
 
-		gun = a.gun or guns.boum,
+		gun = a.gun or guns.fox_revolver,
 
 		spawn = spawn_mob,
 		shoot = shoot_gun,
@@ -164,9 +164,14 @@ function update_mob(self, dt)
 end
 
 function draw_mob(self)
+	local jump_of = math.sin(love.timer.getTime()*10)
+	local y = self.y - math.abs(jump_of*20)
+	local a = jump_of * 0.2
+
 	if     self.looking_up then self.gun:draw(self) end
-	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
+	draw_centered(self.spr, self.x, y, a, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
+	
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	--love.graphics.print(self.life,self.x,self.y)
 	--love.graphics.print(self.gun.scale,self.x+10,self.y+10)

@@ -10,16 +10,37 @@ guns = {
 		bullet_spd = 500,
 		make_shot = default_shoot
 	}),
+	fire_extinguisher = make_gun({
+		name = "fire extinguisher",
+		spr = spr_fire_extinguisher,
+		nbshot = 10,
+
+		spdslow = 1.5,
+		bullet_spd = 100,
+		screenkick = 20,
+
+		spawn_x = 50,
+		
+		scale = 1,
+		cooldown = 0,
+		rafale  = 1,
+		max_ammo = inf,
+		make_shot = default_shoot,
+	}),
 	shotgun = make_gun({
 		name = "shotgun",
 		spr = spr_firework_launcher,
+
 		nbshot = 5,
 
 		spdslow = 1.3,
 		bullet_spd = 500,
 		scattering    = 0,
+
+		screenkick = 20,
+
 		scale = 1,
-		cooldown = 0.2,
+		cooldown = 0,
 		rafale  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
@@ -38,6 +59,18 @@ guns = {
 			table.remove(bullets, k)
 	   end
 	}),
+
+	fox_revolver = make_gun({
+		name = "Fox revolver",
+		type = "bullet",
+		spr = spr_revolver,
+		bullet_spd = 10,
+		
+		scale = 1,
+		cooldown = 0.2,
+		make_shot = default_shoot,
+	}),
+
 	test = make_gun({
 		type = "bullet",			--"bullet" "laser"
 		category = "instant",	--"persistent" "instant"
@@ -166,8 +199,12 @@ guns = {
 
 	boum = make_gun({
 		name = "jsp", 
+
 		type = "laser",
 		bulletspr = spr_laser,
+
+		type = "bullet",
+
 		category = "instent",
 		bounce = 0,
 		max_ammo = 400,

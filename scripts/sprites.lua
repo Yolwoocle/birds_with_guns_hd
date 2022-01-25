@@ -14,6 +14,7 @@ function load_image_table(name, n, w, h)
 end
 
 spr_missing = load_image("missing")
+spr_empty = load_image("empty")
 
 -- UI
 spr_hp_bar = load_image("hp_bar")
@@ -64,10 +65,11 @@ spr_revolver = load_image("guns/gun_revolver_small")
 spr_shotgun = load_image("guns/shotgun")
 spr_firework_launcher = load_image("guns/firework_launcher")
 spr_firework_launcher_big = load_image("guns/firework_launcher_big")
+spr_fire_extinguisher = load_image("guns/fire_extinguisher")
 
 -- Tiles
 spr_ground_dum = load_image("dummy_ground")
-spr_wall_1 = load_image("wall_1")
+spr_wall_1 = load_image("wall_dummy")
 sprs_floor_wood = {
 	load_image("floor_wood_1"),
 	load_image("floor_wood_2"),

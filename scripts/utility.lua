@@ -67,6 +67,14 @@ function sgn(n)
 end
 sign = sgn
 
+function round_if_near_zero(val, thr)
+	thr = thr or 0.1
+	if math.abs(val) < thr then
+		return 0
+	end
+	return thr
+end
+
 function dist(x1,y1,x2,y2)
 	return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
 end
@@ -76,6 +84,14 @@ function random_float(min, max)
 	local offset = range * math.random()
 	local num = min + offset
 	return num
+end
+
+function random_polar(rad)
+	local rnd_ang = love.math.random() * pi2
+	local rnd_rad = love.math.random() * rad
+	local x = math.cos(rnd_ang) * rnd_rad
+	local y = math.sin(rnd_ang) * rnd_rad
+	return x, y
 end
 
 function copy(t)
@@ -160,4 +176,10 @@ end
 
 function round(n)
 	return math.floor(n + 0.5)
+end
+
+function inv_dt(val, dt)
+	-- Idk why this friction works but thanks stackoverflow
+	-- https://gamedev.stackexchange.com/questions/80081/frame-rate-independent-friction-on-movement-in-2d-game
+	return 1 / (1 + dt * val)
 end

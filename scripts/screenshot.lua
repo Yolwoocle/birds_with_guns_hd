@@ -1,5 +1,6 @@
 require "scripts/utility"
 require "scripts/settings"
+local ffi = require "ffi"
 
 function screenshot()
 	--TODO: option to use love.graphics.captureScreenshot( filename )
@@ -16,17 +17,29 @@ function screenshot()
 	love.graphics.draw(canvas, 0, 0, 0, screenshot_scale)
 	love.graphics.setCanvas()
 
-	buffer_canvas:newImageData():encode("png", filename)
+	local imgdata = buffer_canvas:newImageData()
+	local imgpng = imgdata:encode("png", filename)
 	local filepath = love.filesystem.getSaveDirectory().."/"..filename
 	notification = "Image saved at: "..filepathsd
 	print(notification)
 
-	return filepath
+	return filepath, imgdata, imgpng
 end
 
 function screenshot_clip()
-	local path = screenshot()
-	local cmd = io.popen('clip','w')
+	--[[
+	local cmd = io.popen('clip-copyfile','w')
 	cmd:write(path)
-	cmd:close()
+	cmd:close()--]] 
+	
+	--echo "<img src='data:image/png;base64,"$(base64 -w0 "$TMP")"' />" | \
+	--xclip -selection clipboard -t text/html || screenshotfail
+
+	--local filepath, imgdata, imgpng = screenshot()
+
+	--local img_str = imgdata:getString()
+	--local txt = love.system.getClipboardText( )
+
+	--local encoded_img = love.data.encode("string", "base64", img_str)
+	--love.system.setClipboardText(encoded_img)
 end

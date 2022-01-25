@@ -59,8 +59,10 @@ function init_map(w, h)
 	map.load_from_file = load_from_file
 	map.generate_path = generate_path
 	map.spawn_mob = tile_spawn_mob
-	map.lvl1_main_rooms = map:load_from_file("lvl1_rooms_1.txt")
-	map.lvl1_branch_rooms = map:load_from_file("lvl1_rooms_branch.txt")
+	
+	--map.lvl1_main_rooms = map:load_from_file("lvl1_rooms_1.txt")
+	--map.lvl1_branch_rooms = map:load_from_file("lvl1_rooms_branch.txt")
+	map.lvl_arena = map:load_from_file("arena.txt")
 	
 	return map
 end

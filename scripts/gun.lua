@@ -21,6 +21,7 @@ function make_gun(a)
 		--spr_rocket
 		--spr_bullet
 
+		bullet_spr = a.bullet_spr or spr_bullet,
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		bounce 		  = a.bounce		or 0,
@@ -66,13 +67,17 @@ function make_gun(a)
 
 		make_shot = a.make_shot or default_shoot,
 		
-		screenkick = a.screenkick or 3,
-		camera_offset = a.camera_offset or 0.1,
+		screenkick = a.screenkick or 6,
+		screenkick_shake = a.screenkick_shake or 1,
+		screenshake = a.screenshake or 6,
+		camera_offset = a.camera_offset or 0.3,
 
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
 	}
+
+	if gun.type == "laser" then  gun.bullet_spr = spr_laser  end 
 	return gun
 end
 
@@ -114,9 +119,22 @@ function default_shoot(g,p)
 					gun = g,
 					player = p,
 					angle = p.rot,
-					offset = o,
-					time = k*g.rafaledt
+					offset = 0,
+					time = k*g.rafaledt,
+					spr = g.bullet_spr,
 				})
+			else
+				for i=0,nbshot-1 do
+					local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot)+(1/g.nbshot/2))*g.spread
+					table.insert(shot,{
+						gun = g,
+						player = p,
+						angle = p.rot,
+						offset = o,
+						time = k*g.rafaledt,
+						spr = g.bullet_spr,
+					})
+				end
 			end
 		end
 	end
@@ -127,7 +145,7 @@ end
 ------------------------------------------------------------------------------------------- BULLET -------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-function make_bullet(self, p, angle,spread,type)
+function make_bullet(self, p, angle, spread, type, spr)
 	--`p`: player or entity shooting
 	local spread = spread or 0
 	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
@@ -139,9 +157,11 @@ function make_bullet(self, p, angle,spread,type)
 	local bullet = {
 		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
 		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
+		spr = spr,
 		dx = math.cos(angle+scatter+spread) * spd,
 		dy = math.sin(angle+scatter+spread) * spd,
 		rot = angle+scatter+spread,
+
 		spdslow = self.spdslow,
 		life = self.bullet_life,
 		maxlife = self.bullet_life,
@@ -173,12 +193,12 @@ function make_bullet(self, p, angle,spread,type)
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
 		bullet.update = update_bullet
-		--bullet.spr = spr_bullet
+
 	elseif self.type ==  "laser" then
 		bullet.draw = draw_laser
 		bullet.update = update_laser
 		bullet.laser_length = self.laser_length
-		--bullet.spr = spr_laser
+
 		bullet.init = true
 	end
 
@@ -198,7 +218,6 @@ function init_laser(self)
 		prevray.dx = self.dx/self.spd
 		prevray.dy = self.dy/self.spd
 		prevray.rot = self.rot
-
 
 		nwlength = self.laser_length-ray.dist
 
@@ -238,6 +257,10 @@ function init_laser(self)
 end
 
 function update_bullet(self, dt , i)
+	if not self.is_enemy then
+		local x, y = random_polar(10)
+		particles:make("circle", self.x + x, self.y + y, 10)
+	end
 
 	if math.sqrt((self.dx * self.spdslow)^2+(self.dy * self.spdslow)^2)<self.vitesse_max then
 		self.dx = self.dx * self.spdslow
