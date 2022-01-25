@@ -71,9 +71,9 @@ function love.load()
 
 	zones = {}
 	mobs = {}
-	--for i = 1,10 do
-	--	table.insert(mobs, mob_list.jspr:spawn(100,100))
-	--end
+	for i = 1,100 do
+		table.insert(mobs, mob_list.knight:spawn(100,100))
+	end
 	pickups = make_pickups()
 	
 	map = init_map(600, 100)

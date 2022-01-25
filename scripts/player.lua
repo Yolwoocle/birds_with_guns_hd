@@ -54,7 +54,7 @@ function init_player(x,y)
 	}
 	player.anim_sprs = player.anim_idle
 
-	player.gun = copy(guns.fire_extinguisher)
+	player.gun = copy(guns.shotgun)
 
 	return player
 end

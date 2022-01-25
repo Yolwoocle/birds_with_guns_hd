@@ -15,13 +15,11 @@ function make_gun(a)
 		dir = 0,
 		flip = 1,
 		spr = a.spr or spr_revolver,
-		bulletspr = a.bulletspr or spr_bullet,
+		bulletspr = a.bulletspr,
 		--spr_bullet
 		--spr_laser 
 		--spr_rocket
 		--spr_bullet
-
-		bullet_spr = a.bullet_spr or spr_bullet,
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		bounce 		  = a.bounce		or 0,
@@ -246,7 +244,7 @@ end
 function update_bullet(self, dt , i)
 	if not self.is_enemy then
 		local x, y = random_polar(10)
-		particles:make("circle", self.x + x, self.y + y, 10)
+		--particles:make("circle", self.x + x, self.y + y, 10)
 	end
 
 	if math.sqrt((self.dx * self.spdslow)^2+(self.dy * self.spdslow)^2)<self.vitesse_max then

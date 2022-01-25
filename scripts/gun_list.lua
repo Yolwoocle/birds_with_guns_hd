@@ -27,6 +27,27 @@ guns = {
 		max_ammo = inf,
 		make_shot = default_shoot,
 	}),
+
+	knight_gun = make_gun({
+		name = "knight_gun",
+		spr = spr_fire_extinguisher,
+		nbshot = 5,
+		bulletspr = spr_bullet,
+
+		spdslow = 1.2,
+		bullet_spd = 10,
+		screenkick = 0,
+
+		spawn_x = 20,
+		
+		scale = 1.25,
+		cooldown = 1,
+		rafale  = 1,
+		max_ammo = inf,
+		make_shot = default_shoot,
+		spread  = pi,
+	}),
+
 	shotgun = make_gun({
 		name = "shotgun",
 		spr = spr_firework_launcher,
@@ -35,12 +56,12 @@ guns = {
 
 		spdslow = 1.3,
 		bullet_spd = 500,
-		scattering    = 0,
+		scattering    = 1,
 
 		screenkick = 20,
 
 		scale = 1,
-		cooldown = 0,
+		cooldown = 0.2,
 		rafale  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
