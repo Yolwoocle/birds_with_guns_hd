@@ -8,8 +8,8 @@ require "scripts/settings"
 
 function init_player(x,y)
 	local player = {
-		x = x or 100,
-		y = y or 100,
+		x = x or 32,
+		y = y or 32,
 		w = 4,
 		h = 4,
 		dx = 0,
@@ -54,7 +54,7 @@ function init_player(x,y)
 	}
 	player.anim_sprs = player.anim_idle
 
-	player.gun = copy(guns.shotgun)
+	player.gun = copy(guns.fire_extinguisher)
 
 	return player
 end

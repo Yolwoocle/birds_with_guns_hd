@@ -59,12 +59,13 @@ function love.load()
 	init_keybinds()
 	init_joystickbinds()
 	camera = init_camera()
-	camera.lock_y = false
+	camera.lock_x = true
+	camera.lock_y = true
 
 	nb_joueurs = 1
 	player_list = {}
 	for i =1,nb_joueurs do
-		local ply = init_player(20+random_float(0, 0), 16*20+random_float(0, 100))
+		local ply = init_player(20, 20)
 		table.insert(player_list, ply)
 	end
 
@@ -74,15 +75,7 @@ function love.load()
 	--	table.insert(mobs, mob_list.jspr:spawn(100,100))
 	--end
 	pickups = make_pickups()
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+30)
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y-30)
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+40)
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+50)
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+60)
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+70)
-	pickups:spawn("ammo", 2, player_list[1].x, player_list[1].y+80)
-	pickups:spawn("life", 2, player_list[1].x+100, player_list[1].y+80)
-
+	
 	map = init_map(600, 100)
 	map:generate_map(love.math.random()*40000)
 	map:update_sprite_map()

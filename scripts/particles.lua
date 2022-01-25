@@ -9,14 +9,17 @@ function init_particles()
 	return ptc
 end
 
-function make_particle(self, type, x, y, r, dx, dy, fric)
+function make_particle(self, type, x, y, r, dx, dy, spd_fric, rad_fric)
+	if spd_fric == nil then  spd_fric = 1  end
+	if rad_fric == nil then  rad_fric = spd_fric  end
 	local ptc = {
 		type = type,
 		x = x, 
 		y = y, 
 		dx = dx or 0,
 		dy = dy or 0,
-		fric = fric or 20,
+		spd_fric = spd_fric or 30,
+		rad_fric = rad_fric or 30,
 
 		r = r or 16,
 	}
@@ -28,7 +31,7 @@ function update_particles(self, dt)
 		ptc.x = ptc.x + ptc.dx 
 		ptc.y = ptc.y + ptc.dx 
 
-		ptc.r = ptc.r - dt*ptc.fric
+		ptc.r = ptc.r - ptc.rad_fric ^ dt
 		if ptc.delete or ptc.r <= 0 then
 			table.remove(self.table, i)
 		end

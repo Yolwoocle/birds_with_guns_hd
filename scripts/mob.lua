@@ -165,10 +165,11 @@ end
 
 function draw_mob(self)
 	local jump_of = math.sin(love.timer.getTime()*10)
-	local y = self.y - math.abs(jump_of*30)
+	local y = self.y - math.abs(jump_of*20)
+	local a = jump_of * 0.2
 
 	if     self.looking_up then self.gun:draw(self) end
-	draw_centered(self.spr, self.x, y, jump_of, pixel_scale*self.gun.flip, pixel_scale)
+	draw_centered(self.spr, self.x, y, a, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
 	
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})

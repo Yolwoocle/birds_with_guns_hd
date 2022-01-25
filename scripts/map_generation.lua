@@ -12,7 +12,10 @@ function generate_map(self, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 10, 15)
+	print(#self.lvl_arena)
+	self:write_room(self.lvl_arena[1], 0, 0)
+
+	--[[self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 10, 15)
 	local params = {
 		{y=0, room=self.lvl1_branch_rooms}, 
 		{y=32, room=self.lvl1_branch_rooms}
@@ -24,7 +27,7 @@ function generate_map(self, seed)
 			local res = self:generate_path(rng, p.room, ix, p.y, 1,5)
 			ix = res.x
 		end
-	end 
+	end --]]
 end
 
 function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
@@ -56,6 +59,28 @@ function tile_spawn_mob(self, rnd, x, y)
 		table.insert(mobs, mob_list.fox:spawn(x*bw + bw/2, y*bw + bw/2))
 	end
 end
+function get_room_tile(self, room, x, y)
+	return room[y][x]
+end
+function write_room(self, room, x, y, rng)
+	x = x or 0
+	y = y or 0
+	for iy = 0, #room do
+		for ix = 0, #room[0] do
+			self:set_tile(x+ix, y+iy, self:get_room_tile(room,ix,iy))
+			if rng then
+				self:spawn_mob(rng, x+ix, y+iy)
+			end
+		end
+	end
+end
+
+function get_room_width(self, room)
+	return #room[0] + 1
+end
+function get_room_height(self, room)
+	return #room + 1
+end
 
 function load_from_file(self, file)
 	-- . ground
@@ -71,6 +96,7 @@ function load_from_file(self, file)
 	local room = 1
 	local y = 0
 	for line in love.filesystem.lines("assets/rooms/"..file) do
+		print(line, "\\n")
 		if #line == 0 then 
 			room = room + 1 
 			y = 0
@@ -96,26 +122,4 @@ function load_from_file(self, file)
 		end
 	end
 	return rooms
-end
-function get_room_tile(self, room, x, y)
-	return room[y][x]
-end
-function write_room(self, room, x, y, rng)
-	x = x or 0
-	y = y or 0
-	for iy = 0, #room do
-		for ix = 0, #room[0] do
-			self:set_tile(x+ix, y+iy, self:get_room_tile(room,ix,iy))
-			if rng then
-				self:spawn_mob(rng, x+ix, y+iy)
-			end
-		end
-	end
-end
-
-function get_room_width(self, room)
-	return #room[0] + 1
-end
-function get_room_height(self, room)
-	return #room + 1
 end

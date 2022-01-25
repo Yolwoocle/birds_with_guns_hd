@@ -29,8 +29,9 @@ function udpate_game_main(self, dt)
 	end
 	toremove = {}
 	for i,v in ipairs(_shot) do
+		-- Summon shots
 		if v.time <= 0 then
-			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset))
+			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset,nil,v.spr))
 			table.insert(toremove , i)
 		else
 			v.time=v.time-dt

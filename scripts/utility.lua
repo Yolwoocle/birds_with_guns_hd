@@ -177,3 +177,9 @@ end
 function round(n)
 	return math.floor(n + 0.5)
 end
+
+function inv_dt(val, dt)
+	-- Idk why this friction works but thanks stackoverflow
+	-- https://gamedev.stackexchange.com/questions/80081/frame-rate-independent-friction-on-movement-in-2d-game
+	return 1 / (1 + dt * val)
+end

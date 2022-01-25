@@ -10,17 +10,35 @@ guns = {
 		bullet_spd = 500,
 		make_shot = default_shoot
 	}),
+	fire_extinguisher = make_gun({
+		name = "fire extinguisher",
+		spr = spr_fire_extinguisher,
+		nbshot = 10,
+
+		spdslow = 1.5,
+		bullet_spd = 100,
+		screenkick = 20,
+
+		spawn_x = 50,
+		
+		scale = 1,
+		cooldown = 0,
+		rafale  = 1,
+		max_ammo = inf,
+		make_shot = default_shoot,
+	}),
 	shotgun = make_gun({
 		name = "shotgun",
 		spr = spr_firework_launcher,
-		nbshot = 1,
+		bullet_spr = spr_empty,
+		nbshot = 10,
 
 		spdslow = 1.3,
 		bullet_spd = 10,
-		screenkick = 5,
+		screenkick = 20,
 		
 		scale = 1,
-		cooldown = 0.2,
+		cooldown = 0,
 		rafale  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
