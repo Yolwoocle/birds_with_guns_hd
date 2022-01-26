@@ -165,6 +165,6 @@ function draw_game_main(self)
 	debug_print(#_shot)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
-	circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
+	--circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
 	--map:debug_draw(camera.x+5, camera.y+30)
 end
