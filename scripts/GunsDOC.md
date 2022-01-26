@@ -29,18 +29,18 @@ The following variables are similar to above except they represent the maximum v
 |-|-|-|
 | `charge_time`          | float                            | the time required to fully charge the weapon |
 
-| name | type | description |
-|-|-|-|
-| `charge_nbrafale`      |  |                          | same as above but is added according to the time you spent loading the gun |
-| `charge_bullet_spd`    |  |                          | same as above but is added according to the time you spent loading the gun |
-| `charge_laser_length`  |  |                          | same as above but is added according to the time you spent loading the gun |
-| `charge_nbshot`        |  |                            | same as above but is added according to the time you spent loading the gun |
-| `charge_spread`        |  |                            | same as above but is added according to the time you spent loading the gun |
-| `charge_scattering`    |  |                          | same as above but is added according to the time you spent loading the gun |
-| `charge_scale`         |  |                            | same as above but is added according to the time you spent loading the gun |
-| `charge_oscale`        |  |                            | same as above but is added according to the time you spent loading the gun |
-| `charge_ospd`          |  |                            | same as above but is added according to the time you spent loading the gun |
-| `charge_life`          |  |                            | same as above but is added according to the time you spent loading the gun |
-| `charge_rafaledt`      |  |                           | same as above but is added according to the time you spent loading the gun |
-| `charge_spdslow`       |  |                           | same as above but is added according to the time you spent loading the gun |
-| `charge_damage`        |  |                             | same as above but is added according to the time you spent loading the gun |
+| name | 
+|-|
+| `charge_nbrafale`      |
+| `charge_bullet_spd`    |
+| `charge_laser_length`  |
+| `charge_nbshot`        |
+| `charge_spread`        |
+| `charge_scattering`    |
+| `charge_scale`         |
+| `charge_oscale`        |
+| `charge_ospd`          |
+| `charge_life`          |
+| `charge_rafaledt`      |
+| `charge_spdslow`       |
+| `charge_damage`        |
