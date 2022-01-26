@@ -15,8 +15,11 @@ function make_gun(a)
 		dir = 0,
 		flip = 1,
 		spr = a.spr or spr_revolver,
-
-		bullet_spr = a.bullet_spr or spr_bullet,
+		bulletspr = a.bulletspr,
+		--spr_bullet
+		--spr_laser 
+		--spr_rocket
+		--spr_bullet
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		bounce 		  = a.bounce		or 0,
@@ -104,49 +107,26 @@ function shoot_gun(self)
 end
 
 function default_shoot(g,p)
-	local rayca = {}
-	if not p.see_dist then
-		local dist = dist(g.spawn_x+p.x,g.spawn_y+p.y,p.x,p.y)
 
-		local offsetangle = math.atan2(-g.spawn_y,g.spawn_x)
-
-		local xg = math.cos(p.rot + offsetangle * g.flip)
-		local yg = math.sin(p.rot + offsetangle * g.flip)
-
-		rayca = raycast(p.x,p.y,xg, yg, dist,.4)
-	end
-
-	if rayca.hit or p.see_dist then
-		local shot = {}
+	local shot = {}
 		nbshot = g.nbshot-1
-
-		for k=0, g.rafale-1 do
-			if nbshot==0 then
+		for k=0,g.rafale-1 do
+		if nbshot==0 then
+			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
+		else
+			for i=0,nbshot do
+				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot)+(1/g.nbshot/2))*g.spread
 				table.insert(shot,{
 					gun = g,
 					player = p,
 					angle = p.rot,
-					offset = 0,
-					time = k*g.rafaledt,
-					spr = g.bullet_spr,
+					offset = o,
+					time = k*g.rafaledt
 				})
-			else
-				for i=0,nbshot-1 do
-					local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot)+(1/g.nbshot/2))*g.spread
-					table.insert(shot,{
-						gun = g,
-						player = p,
-						angle = p.rot,
-						offset = o,
-						time = k*g.rafaledt,
-						spr = g.bullet_spr,
-					})
-				end
 			end
 		end
-		return shot
-
 	end
+	return shot
 end
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -177,7 +157,7 @@ function make_bullet(self, p, angle, spread, type, spr)
 		category	  = self.category,
 		type = self.type,
 		gun = self,
-
+		spr = self.bulletspr or spr_bullet,
 		player = p,
 		offsetangle = offsetangle,
 		dist = dist,
@@ -202,10 +182,12 @@ function make_bullet(self, p, angle, spread, type, spr)
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
 		bullet.update = update_bullet
+
 	elseif self.type ==  "laser" then
 		bullet.draw = draw_laser
 		bullet.update = update_laser
 		bullet.laser_length = self.laser_length
+
 		bullet.init = true
 	end
 
@@ -305,11 +287,13 @@ function update_bullet(self, dt , i)
 	if checkdeath(self) then 
 		if self.life <= 0 then
 			self:on_death(i)
+			nb_delet = nb_delet+1
 		end
 		local mapx, mapy = self.x / block_width, self.y / block_width
 		if map:is_solid(mapx, mapy) then
 		interact_map(self, map, mapx, mapy)
 		self:on_death(i)
+		nb_delet = nb_delet+1
 		end
 	end
 

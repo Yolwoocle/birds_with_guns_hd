@@ -77,15 +77,21 @@ function udpate_game_main(self, dt)
 	for i,v in ipairs(toremove) do
 		table.remove(_shot, v-i+1)
 	end
-
-	for i,b in ipairs(bullets) do
+	nb_delet = 0
+	--for i,b in ipairs(bullets) do
+	for i = #bullets , 1 , -1 do
+		b = bullets[i]
 		b:update(dt,i)
 		damage_everyone(b,i)
 	end
-	for i,m in ipairs(mobs) do
+	--for i,m in ipairs(mobs) do
+	for i = #mobs , 1 , -1 do
+		m = mobs[i]
 		m:update(dt)
 	end
-	for i,z in ipairs(zones) do
+	--for i,z in ipairs(zones) do
+	for i = #zones , 1 , -1 do
+		z = zones[i]
 		z:update(dt,i)
 		damageinzone(z,i) 
 	end

@@ -55,6 +55,37 @@ function love.load()
 	init_joystickbinds()
 	init_button_last_state_table()
 
+	camera = init_camera()
+	camera.lock_x = true
+	camera.lock_y = true
+
+	nb_joueurs = 1
+	player_list = {}
+	for i =1,nb_joueurs do
+		local ply = init_player(20, 20)
+		table.insert(player_list, ply)
+	end
+
+	zones = {}
+	mobs = {}
+	for i = 1,1 do
+		table.insert(mobs, mob_list.knight:spawn(100,100))
+	end
+	pickups = make_pickups()
+	
+	map = init_map(600, 100)
+	map:generate_map(love.math.random()*40000)
+	map:update_sprite_map()
+
+	bullets = {}
+	_shot = {}
+	
+	prevfire = button_down("fire")
+	particles = init_particles()
+
+	perf = {}
+	g = 0
+
 	game = make_game_main()
 	set_debug_canvas(map)
 end

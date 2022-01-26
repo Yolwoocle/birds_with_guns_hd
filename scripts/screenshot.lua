@@ -20,7 +20,7 @@ function screenshot()
 	local imgdata = buffer_canvas:newImageData()
 	local imgpng = imgdata:encode("png", filename)
 	local filepath = love.filesystem.getSaveDirectory().."/"..filename
-	notification = "Image saved at: "..filepath
+	notification = "Image saved at: "..filepathsd
 	print(notification)
 
 	return filepath, imgdata, imgpng
