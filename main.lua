@@ -71,7 +71,7 @@ function love.load()
 
 	zones = {}
 	mobs = {}
-	for i = 1,100 do
+	for i = 1,1 do
 		table.insert(mobs, mob_list.knight:spawn(100,100))
 	end
 	pickups = make_pickups()

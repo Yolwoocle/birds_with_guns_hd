@@ -31,11 +31,12 @@ guns = {
 	knight_gun = make_gun({
 		name = "knight_gun",
 		spr = spr_fire_extinguisher,
-		nbshot = 5,
+		nbshot = 10,
 		bulletspr = spr_bullet,
+		bullet_life = 5,
 
-		spdslow = 1.2,
-		bullet_spd = 10,
+		--spdslow = 1,
+		bullet_spd = 100,
 		screenkick = 0,
 
 		spawn_x = 20,
@@ -50,7 +51,9 @@ guns = {
 
 	shotgun = make_gun({
 		name = "shotgun",
+		--type = "laser",
 		spr = spr_firework_launcher,
+		--bulletspr = spr_laser,
 
 		nbshot = 5,
 
@@ -65,17 +68,15 @@ guns = {
 		rafale  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
+		bullet_life = .2,
 
-		on_death = function(self , k) -- fix le delet des bullets qui est pt + c'est pas la direction de l'objet qu'il faut prendre bref c'est bugé
-			--elt = copy(guns.jspp)
-			--elt.player.gun = copy(guns.jspp)
-			--append_list(_shot, elt:make_shot(self))
-			--obj = copy(self.player)
-			--print(self.name)
-			--obj.x = self.x
-			--obj.y = self.y
-			--obj.gun = copy(guns.jspp)
-			--append_list(_shot, obj.gun:make_shot(obj))
+		on_death = function(self , k)
+			obj = copy(self.player)
+			obj.x = self.x
+			obj.y = self.y
+			obj.rot = math.atan2(self.dy,self.dx)
+			obj.gun = copy(guns.jspp)
+			append_list(_shot, obj.gun:make_shot(obj))
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 			table.remove(bullets, k)
 	   end
@@ -221,15 +222,15 @@ guns = {
 	boum = make_gun({
 		name = "jsp", 
 
-		type = "laser",
-		bulletspr = spr_laser,
+		--type = "laser",
+		--bulletspr = spr_laser,
 
 		type = "bullet",
-
-		category = "instent",
+		bulletspr = spr_bullet,
+		--category = "instent",
 		bounce = 0,
 		max_ammo = 400,
-		charge = false,
+		charge = true,
 		charge_curve = 2,			
 		charge_time = 1,
 		charge_nbrafale = 10,
@@ -241,7 +242,7 @@ guns = {
 		oscale = 0,
 		nbshot = 1,
 
-		bullet_life = .15,
+		bullet_life = 1,
 
 
 		cooldown = .1,
