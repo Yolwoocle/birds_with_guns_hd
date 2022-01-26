@@ -131,6 +131,7 @@ function draw_game_main(self)
 		end
 	end
 	
+	particles:draw()
 	for _,m in pairs(mobs) do
 		m:draw()
 		--draw_mob(m)
@@ -143,7 +144,6 @@ function draw_game_main(self)
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
-	particles:draw()
 	
 	for _,p in ipairs(player_list) do
 		p:draw()

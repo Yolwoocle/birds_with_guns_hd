@@ -25,6 +25,7 @@
 | `spdslow`              | float                            | used ONLY for **balls** the number by which the speed of the bullet will` |
 
 The following variables are similar to above except they represent the maximum value when a "chargable" gun is max charged. 
+
 | name | type | description |
 |-|-|-|
 | `charge_time`          | float                            | the time required to fully charge the weapon |
