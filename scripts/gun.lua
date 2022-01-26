@@ -67,6 +67,9 @@ function make_gun(a)
 		screenshake = a.screenshake or 6,
 		camera_offset = a.camera_offset or 0.3,
 
+		ptc_type = a.ptc_type or "none", 
+		ptc_size = a.ptc_size or 10,
+
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
@@ -191,6 +194,7 @@ function make_bullet(self, p, angle, spread, type, spr)
 		is_enemy = p.is_enemy,
 
 		vitesse_max = self.vitesse_max,
+		ptc_timer = 0,
 
 		w=0,--(self.scale + oscale ),
 		h=0,--(self.scale + oscale ),
@@ -225,47 +229,40 @@ function init_laser(self)
 		nwlength = self.laser_length-ray.dist
 
 		while nwlength>0 and self.bounce>0 do
-		self.bounce = self.bounce-1
+			self.bounce = self.bounce-1
 
-		bobject = {x=prevray.x ,y=prevray.y ,dx=(prevray.dx) ,dy=(prevray.dy) ,h=0 ,w=0,life = 10,rot = prevray.rot}
+			bobject = {x=prevray.x ,y=prevray.y ,dx=(prevray.dx) ,dy=(prevray.dy) ,h=0 ,w=0,life = 10,rot = prevray.rot}
 
-		of = bouncedir(bobject)
-		bobject.dx = bobject.dx*of.odx
-		bobject.dy = bobject.dy*of.ody
+			of = bouncedir(bobject)
+			bobject.dx = bobject.dx*of.odx
+			bobject.dy = bobject.dy*of.ody
 
-		ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,nwlength,3)
+			ray = raycast(bobject.x,bobject.y,bobject.dx,bobject.dy,nwlength,3)
 
-		table.insert(self.length , {
-			length = ray.dist,
-			x = ray.x,
-			y = ray.y, 
-			rot = bobject.rot,
-			dx=bobject.dx,
-			dy=bobject.dy,
-			x1 = bobject.x ,
-			y1 = bobject.y,
-			bounce = self.bounce
-		})
+			table.insert(self.length , {
+				length = ray.dist,
+				x = ray.x,
+				y = ray.y, 
+				rot = bobject.rot,
+				dx = bobject.dx,
+				dy = bobject.dy,
+				x1 = bobject.x,
+				y1 = bobject.y,
+				bounce = self.bounce
+			})
 
-		nwlength = nwlength-ray.dist
+			nwlength = nwlength-ray.dist
 
-		prevray = ray
-		prevray.dx = bobject.dx
-		prevray.dy = bobject.dy
-		prevray.rot = bobject.rot
-
-
+			prevray = ray
+			prevray.dx = bobject.dx
+			prevray.dy = bobject.dy
+			prevray.rot = bobject.rot
 		end
 	end
 end
 
 function update_bullet(self, dt , i)
-	if not self.is_enemy then
-		local x, y = random_polar(10)
-		particles:make("circle", self.x + x, self.y + y, 10)
-	end
-
-	if math.sqrt((self.dx * self.spdslow)^2+(self.dy * self.spdslow)^2)<self.vitesse_max then
+	if (self.dx * self.spdslow)^2 + (self.dy * self.spdslow)^2 < self.vitesse_max^2 then
 		self.dx = self.dx * self.spdslow
 		self.dy = self.dy * self.spdslow
 	end
@@ -315,6 +312,14 @@ function update_bullet(self, dt , i)
 		self:on_death(i)
 		end
 	end
+
+	-- Particles
+	if self.gun.ptc_type == "circle" and self.ptc_timer <= 0 then
+		local x, y = random_polar(10)
+		particles:make("circle", self.x + x, self.y + y, 10)
+		self.ptc_timer = 1/30 --OPTI
+	end
+	self.ptc_timer = self.ptc_timer - dt
 end
 
 function update_laser(self, dt , i)

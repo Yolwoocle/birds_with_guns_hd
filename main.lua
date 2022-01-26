@@ -20,7 +20,6 @@ require "scripts/particles"
 
 function love.load()
 	keymode = "keyboard"
-	game = make_game_main()
 	prevray = {}
 
 	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
@@ -49,47 +48,14 @@ function love.load()
 	font_matchup = love.graphics.newFont("assets/fonts/somepx/MatchupPro.ttf", 16)
 	love.graphics.setFont(font_thick)
 
-	gui = make_gui()
-	gui:make_bar("life_bar", 2,2, 10,10, spr_hp_bar, spr_hp_bar_empty, spr_icon_heart)
-	gui:make_bar("ammo_bar", 2,24,nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
-
 	notification = ""
 	
 	updatejoystick()
 	init_keybinds()
 	init_joystickbinds()
-	camera = init_camera()
-	camera.lock_x = true
-	camera.lock_y = true
+	init_button_last_state_table()
 
-	nb_joueurs = 1
-	player_list = {}
-	for i =1,nb_joueurs do
-		local ply = init_player(20, 20)
-		table.insert(player_list, ply)
-	end
-
-	zones = {}
-	mobs = {}
-	--for i = 1,10 do
-	--	table.insert(mobs, mob_list.jspr:spawn(100,100))
-	--end
-	pickups = make_pickups()
-	
-	map = init_map(600, 100)
-	map:generate_map(love.math.random()*40000)
-	map:update_sprite_map()
-
-	bullets = {}
-	_shot = {}
-	
-	prevfire = button_down("fire")
-	particles = init_particles()
-
-	perf = {}
-
-	g = 0
-
+	game = make_game_main()
 	set_debug_canvas(map)
 end
 

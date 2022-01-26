@@ -1,24 +1,34 @@
 require "scripts/utility"
 require "scripts/collision"
 
-function make_gui()
+function make_hud()
 	return {
 		elements = {},
-		update = update_gui,
-		draw = draw_gui,
+		update = update_hud,
+		draw = draw_hud,
+
+		insert_element = insert_element,
 
 		make_bar = make_bar,
 		make_button = make_button,
+		make_img = make_img,
 	}
 end
-function update_gui(self)
+function update_hud(self)
 	for k,el in pairs(self.elements) do
 		el:update()
 	end
 end
-function draw_gui(self)
+function draw_hud(self)
 	for k,el in pairs(self.elements) do
 		el:draw()
+	end
+end
+function insert_element(self, el, name)
+	if name then
+		self.elements[name] = el
+	else
+		table.insert(self.elements, el)
 	end
 end
 
@@ -64,7 +74,7 @@ function make_bar(self, name, x, y, max_val, val, spr, spr_empty, icon)
 		y = y, 
 		w = spr:getWidth(), 
 		h = spr:getHeight(), 
-		spr = spr,
+		spr = spr, 
 		spr_empty = spr_empty or spr_hp_bar_empty,
 		spr_icon = icon,
 		val = 10,--val or max_val,
@@ -73,11 +83,7 @@ function make_bar(self, name, x, y, max_val, val, spr, spr_empty, icon)
 		update = update_bar,
 		draw = draw_bar,
 	}
-	if name then
-		self.elements[name] = bar
-	else
-		table.insert(self.elements, bar)
-	end
+	self:insert_element(bar, name)
 end
 function update_bar(self)
 end
@@ -111,3 +117,23 @@ function set_val(self, val)
 end
 
 ------
+
+function make_img(self, name, x, y, spr)
+	local img = {
+		type = "image",
+		x = x, 
+		y = y, 
+		rot = 0, 
+		spr = spr, 
+
+		update = update_img,
+		draw = draw_img,
+	}
+	self:insert_element(img, name)
+end
+function update_img(self)
+
+end
+function draw_img(self)
+	love.graphics.draw(self.spr, camera.x+self.x, camera.y+self.y, self.rot)
+end

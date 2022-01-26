@@ -4,11 +4,47 @@ function make_game_main()
 		update = udpate_game_main,
         draw = draw_game_main,
     } 
+	game:init()
     return game
 end
 
 function init_game_main(self)
-	--todo
+	camera = init_camera()
+	camera.lock_x = true
+	camera.lock_y = true
+
+	nb_joueurs = 1
+	player_list = {}
+	for i =1,nb_joueurs do
+		local ply = init_player(20, 20)
+		table.insert(player_list, ply)
+	end
+
+	zones = {}
+	mobs = {}
+	pickups = make_pickups()
+	
+	map = init_map(600, 100)
+	map:generate_map(love.math.random()*40000)
+	map:update_sprite_map()
+
+	bullets = {}
+	_shot = {}
+	
+	prevfire = button_down("fire")
+	particles = init_particles()
+
+	perf = {}
+
+	g = 0
+
+	hud = make_hud()
+	hud:make_bar("life_bar", 6,6, 10,10, spr_hp_bar, spr_hp_bar_empty, spr_icon_heart)
+	hud:make_bar("ammo_bar", 6,26,nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
+	hud:make_img("gun_1", 78,6, spr_missing)
+	hud:make_img("gun_2", 78,6, spr_missing)
+
+	spawn_timer = 0
 end
 
 function udpate_game_main(self, dt)
@@ -59,9 +95,15 @@ function udpate_game_main(self, dt)
 	--	end
 	--end
 	prevfire = button_down("fire")
-	gui:update()
+	hud:update()
 
 	particles:update(dt)
+
+	spawn_timer = spawn_timer - dt
+	if spawn_timer <= 0 then
+		--table.insert(mobs, mob_list.fox:spawn(window_w/2, window_h/2))
+		spawn_timer = 1
+	end
 end
 
 function draw_game_main(self)
@@ -91,12 +133,13 @@ function draw_game_main(self)
 	for _,b in pairs(bullets) do
 		b:draw()
 	end 
+	particles:draw()
+	
 	for _,p in ipairs(player_list) do
 		p:draw()
 	end
-	particles:draw()
 
-	gui:draw()
+	hud:draw()
 
 	-- Debug
 	debug_y = 30

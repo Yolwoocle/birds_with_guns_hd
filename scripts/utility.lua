@@ -183,3 +183,7 @@ function inv_dt(val, dt)
 	-- https://gamedev.stackexchange.com/questions/80081/frame-rate-independent-friction-on-movement-in-2d-game
 	return 1 / (1 + dt * val)
 end
+
+function mod_plus_1(val, mod)
+	return ((val-1) % mod)+1
+end

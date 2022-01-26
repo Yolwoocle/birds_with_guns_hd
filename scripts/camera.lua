@@ -46,9 +46,6 @@ function update_camera(self, dt)
 		self.fake_y = self.fake_y + (self.target_y - self.fake_y) * smoothing
 	end
 
-	self.kick_x = self.kick_x * inv_dt(self.kick_fric, dt)
-	self.kick_y = self.kick_y * inv_dt(self.kick_fric, dt)
-
 	-- Offset
 	local mx, my = get_cursor_pos()
 	if not self.lock_x then
@@ -57,6 +54,11 @@ function update_camera(self, dt)
 	if not self.lock_y then
 		self.offset_y = (my - window_h/2) * self.aim_offset
 	end
+	self.fake_x = self.fake_x + self.offset_x
+	self.fake_y = self.fake_y + self.offset_y
+
+	self.kick_x = self.kick_x * inv_dt(self.kick_fric, dt)
+	self.kick_y = self.kick_y * inv_dt(self.kick_fric, dt)
 
 	-- Apply shake
 	local rnd_ang = love.math.random() * pi2
@@ -66,8 +68,8 @@ function update_camera(self, dt)
 	self.shake_rad = self.shake_rad * inv_dt(self.shake_fric, dt)
 	self.shake_rad = round_if_near_zero(self.shake_rad) 
 
-	self.x = self.fake_x + self.kick_x + self.shake_x + self.offset_x
-	self.y = self.fake_y + self.kick_y + self.shake_y + self.offset_y
+	self.x = self.fake_x + self.kick_x + self.shake_x 
+	self.y = self.fake_y + self.kick_y + self.shake_y 
 	self.x = floor(self.x)
 	self.y = floor(self.y)
 end

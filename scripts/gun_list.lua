@@ -15,17 +15,19 @@ guns = {
 		spr = spr_fire_extinguisher,
 		nbshot = 10,
 
-		spdslow = 1.5,
-		bullet_spd = 100,
-		screenkick = 20,
+		spdslow = 1,
+		bullet_spd = 200,
+		screenkick = 7,
 
-		spawn_x = 50,
-		
+		spawn_x = 40,
+		spread = pi2ds,
+
+		bullet_spr = spr_empty,
 		scale = 1,
-		cooldown = 0,
-		rafale  = 1,
+		cooldown = 0.01,
+
+		ptc_type = "circle",
 		max_ammo = inf,
-		make_shot = default_shoot,
 	}),
 	shotgun = make_gun({
 		name = "shotgun",
