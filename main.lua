@@ -17,9 +17,9 @@ require "scripts/game_main"
 require "scripts/game_menu_main"
 require "scripts/pickup"
 require "scripts/particles"
+require "scripts/waves"
 
 function love.load()
-	nbwave = 0
 	keymode = "keyboard"
 	prevray = {}
 

@@ -1,4 +1,5 @@
 require "scripts/waves"
+require "scripts/utility"
 
 function make_game_main()
     local game = {
@@ -11,6 +12,9 @@ function make_game_main()
 end
 
 function init_game_main(self)
+	spawn_time = inf
+	nbwave = 0
+	sp_mark = {}
 	camera = init_camera()
 	camera.lock_x = true
 	camera.lock_y = true
@@ -45,8 +49,8 @@ function init_game_main(self)
 	hud:make_bar("ammo_bar", 6,26,nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
 	hud:make_img("gun_1", 78,6, spr_missing)
 	hud:make_img("gun_2", 78,6, spr_missing)
-
-	spawn_timer = 0
+	spawn_location = {}
+	
 end
 
 function udpate_game_main(self, dt)
@@ -55,7 +59,7 @@ function udpate_game_main(self, dt)
     camera.aim_offset = player_list[1].gun.camera_offset
 	map:update()
 	pickups:update()
-	update_waves()
+	update_waves(dt)
 
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
@@ -109,11 +113,11 @@ function udpate_game_main(self, dt)
 
 	particles:update(dt)
 
-	spawn_timer = spawn_timer - dt
-	if spawn_timer <= 0 then
-		--table.insert(mobs, mob_list.fox:spawn(window_w/2, window_h/2))
-		spawn_timer = 1
-	end
+	--spawn_timer = spawn_timer - dt
+	--if spawn_timer <= 0 then
+	--	--table.insert(mobs, mob_list.fox:spawn(window_w/2, window_h/2))
+	--	spawn_timer = 1
+	--end
 end
 
 function draw_game_main(self)
@@ -121,6 +125,7 @@ function draw_game_main(self)
 	-- TODO: y-sorting
 	map:draw()
 	pickups:draw()
+	draw_waves()
 
 	for i,z in ipairs(zones) do
 		z:draw()
@@ -156,7 +161,7 @@ function draw_game_main(self)
 	debug_print(notification)
 	--debug_print(joystick.x)
 	--debug_print(joystick.joy:getGamepadAxis("triggerleft"))
-	debug_print(#bullets)
+	debug_print(spawn_time)
 	debug_print(#_shot)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
