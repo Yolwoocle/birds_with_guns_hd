@@ -42,7 +42,10 @@ function init_player(x,y)
 		anim_frame_len = .05, --70 ms
 		animate = animate_player,
 
+		gun = nil,
 		gun_dist = 14,
+		guns = {copy(guns.fire_extinguisher), copy(guns.revolver)},
+		gun_n = 1,
 
 		damage = damage_player,
 		get_pickups = player_get_pickups,
@@ -54,7 +57,7 @@ function init_player(x,y)
 	}
 	player.anim_sprs = player.anim_idle
 
-	player.gun = copy(guns.shotgun)
+	player.gun = player.guns[1]
 
 	return player
 end
@@ -74,6 +77,10 @@ function update_player(self, dt)
 	self.looking_up = self.rot > pi
 
 	-- Update gun
+	if button_pressed("alt") then
+		self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
+		self.gun = self.guns[self.gun_n]
+	end
 	self.gun:update(dt, self)
 
 	-- Pickups
@@ -87,10 +94,15 @@ function update_player(self, dt)
 	self.invincible = self.iframes_timer > 0 
 	self.life = clamp(0, self.life, self.max_life)
 	self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
-	gui.elements.life_bar.val = self.life
-	gui.elements.life_bar.max_val = self.max_life
-	gui.elements.ammo_bar.val = self.gun.ammo
-	gui.elements.ammo_bar.max_val = self.gun.max_ammo
+	hud.elements.life_bar.val = self.life
+	hud.elements.life_bar.max_val = self.max_life
+	hud.elements.ammo_bar.val = self.gun.ammo
+	hud.elements.ammo_bar.max_val = self.gun.max_ammo
+
+	hud.elements.gun_1.spr = self.guns[1].spr
+	hud.elements.gun_2.spr = self.guns[2].spr
+	local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6
+	hud.elements.gun_2.x = x
 
 	self:animate()
 end
@@ -106,9 +118,9 @@ function draw_player(self)
 
 	-- Draw player
 	if is_drawn then
-		if self.looking_up then self.gun:draw(self) end
+		if self.looking_up then  self.gun:draw(self)  end
 		draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
-		if not self.looking_up then self.gun:draw(self) end
+		if not self.looking_up then  self.gun:draw(self)  end
 	end
 	love.graphics.setColor(1,1,1)
 	

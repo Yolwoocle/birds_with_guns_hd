@@ -8,7 +8,6 @@ function init_keybinds()
 		alt   = {{"x" }},
 	}
 end
-
 function init_joystickbinds()
 	joystickbinds = {
 		left  = {{"dpleft"}}, 
@@ -18,6 +17,12 @@ function init_joystickbinds()
 		fire  = {{"triggerleft"}},
 		alt   = {{"triggerright"}},
 	}
+end
+function init_button_last_state_table()
+	button_last_state = {}
+	for key,_ in pairs(keybinds) do
+		button_last_state[key] = false
+	end
 end
 
 
@@ -36,8 +41,6 @@ function button_down(command, player_n)
 	if command == "alt" and (love.mouse.isDown(2) or (joystick and joystick.joy:isGamepadDown("leftshoulder"))) then
 		return true
 	end
-
-
 
 	local keys = keybinds[command][player_n]
 	for _,k in pairs(keys) do
@@ -61,6 +64,20 @@ function button_down(command, player_n)
 		--end
 	end
 
+	return false
+end
+
+function button_pressed(cmd, n)
+	local btnd = button_down(cmd, n)
+	local last_btnd = button_last_state[cmd]
+	if btnd then 
+		if not last_btnd then
+			button_last_state[cmd] = true
+			return true
+		end
+	else
+		button_last_state[cmd] = fakse
+	end
 	return false
 end
 

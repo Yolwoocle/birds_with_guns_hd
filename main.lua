@@ -21,7 +21,6 @@ require "scripts/particles"
 function love.load()
 	nbwave = 0
 	keymode = "keyboard"
-	game = make_game_main()
 	prevray = {}
 
 	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
@@ -50,15 +49,13 @@ function love.load()
 	font_matchup = love.graphics.newFont("assets/fonts/somepx/MatchupPro.ttf", 16)
 	love.graphics.setFont(font_thick)
 
-	gui = make_gui()
-	gui:make_bar("life_bar", 2,2, 10,10, spr_hp_bar, spr_hp_bar_empty, spr_icon_heart)
-	gui:make_bar("ammo_bar", 2,24,nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
-
 	notification = ""
 	
 	updatejoystick()
 	init_keybinds()
 	init_joystickbinds()
+	init_button_last_state_table()
+
 	camera = init_camera()
 	camera.lock_x = true
 	camera.lock_y = true
@@ -88,9 +85,9 @@ function love.load()
 	particles = init_particles()
 
 	perf = {}
-
 	g = 0
 
+	game = make_game_main()
 	set_debug_canvas(map)
 end
 
