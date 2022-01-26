@@ -1,3 +1,5 @@
+require "scripts/waves"
+
 function make_game_main()
     local game = {
         init = init_game_main,
@@ -13,9 +15,11 @@ end
 
 function udpate_game_main(self, dt)
 	gf = 0
+	
     camera.aim_offset = player_list[1].gun.camera_offset
 	map:update()
 	pickups:update()
+	update_waves()
 
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)

@@ -19,6 +19,7 @@ require "scripts/pickup"
 require "scripts/particles"
 
 function love.load()
+	nbwave = 0
 	keymode = "keyboard"
 	game = make_game_main()
 	prevray = {}
@@ -71,9 +72,9 @@ function love.load()
 
 	zones = {}
 	mobs = {}
-	for i = 1,1 do
-		table.insert(mobs, mob_list.knight:spawn(100,100))
-	end
+	--for i = 1,1 do
+	--	table.insert(mobs, mob_list.knight:spawn(100,100))
+	--end
 	pickups = make_pickups()
 	
 	map = init_map(600, 100)
