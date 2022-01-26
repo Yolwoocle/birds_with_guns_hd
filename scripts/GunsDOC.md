@@ -45,32 +45,3 @@
     charge_rafaledt		: same as above but is added according to the time you spent loading the gun                                        -------
     charge_spdslow 		: same as above but is added according to the time you spent loading the gun                                        -------
     charge_damage		: same as above but is added according to the time you spent loading the gun                                        -------
-
-the name of the weapon                                                                                                   
-the type of bullet it fires, can be "laser" or "bullet".                                                                   
-the sprite of the weapon                                                                                                    
-the sprite of the bullet fired by the weapon                                                                                   
-the amount of damage it inflicts on impact                                                                          
-used ONLY for **lasers**, can be "instant" it fires immediately or "persistent" a laser fires continuously from your weapon.  
-the number of times the bullet or laser can bounce before being destroyed                                                 
-used ONLY for **balls** the speed at which the bullet travels                                                          
-the difference between the fastest and slowest bullet your weapon can fire                                                  
-how long to wait between shots                                                                               
-the maximum amount of ammunition your gun can hold                                                                                
-the random offset on the bullet or laser angel to add imprecision                                                
-the x-offset of where the bullet appears in relation to the player's center                                             
-the y-offset of where the ball appears relative to the center of the player                                             
-the number of times the gun fires                                                                                        
-the time between the moment the burst is fired                                                                                             
-the time before the bullet is destroyed                                                                                 
-used ONLY for **lasers** the length of the laser                                                                         
-the number of bullets or lasers it creates in a single shot                                                                    
-the range of the angels on which the bullet will be fired 360 -> 2ft                                                        
-used ONLY for **balls** the number by which the speed of the bullet will be multiplied per second           
-the size of the bullet or laser                                                                                          
-the difference in size between the largest and smallest bullet                                                            
-the maximum speed at which a ball can go                                                                                     
-the function that is called when the bullet dies 
-
-
-
