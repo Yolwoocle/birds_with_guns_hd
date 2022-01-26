@@ -13,7 +13,9 @@ guns = {
 	fire_extinguisher = make_gun({
 		name = "fire extinguisher",
 		spr = spr_fire_extinguisher,
+		bulletspr = spr_empty,
 		nbshot = 10,
+		damage = 0.01,
 
 		spdslow = 1,
 		bullet_spd = 200,
@@ -91,7 +93,7 @@ guns = {
 		bullet_spd = 100,
 		
 		scale = 1,
-		cooldown = 0.2,
+		cooldown = 0.8,
 		make_shot = default_shoot,
 	}),
 
