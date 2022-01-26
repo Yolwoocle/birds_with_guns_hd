@@ -70,15 +70,15 @@ guns = {
 		rafale  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
-		bullet_life = .2,
+		bullet_life = 2,
 
 		on_death = function(self , k)
-			obj = copy(self.player)
-			obj.x = self.x
-			obj.y = self.y
-			obj.rot = math.atan2(self.dy,self.dx)
-			obj.gun = copy(guns.jspp)
-			append_list(_shot, obj.gun:make_shot(obj))
+			--obj = copy(self.player)
+			--obj.x = self.x
+			--obj.y = self.y
+			--obj.rot = math.atan2(self.dy,self.dx)
+			--obj.gun = copy(guns.jspp)
+			--append_list(_shot, obj.gun:make_shot(obj))
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 			table.remove(bullets, k)
 	   end
@@ -88,7 +88,7 @@ guns = {
 		name = "Fox revolver",
 		type = "bullet",
 		spr = spr_revolver,
-		bullet_spd = 10,
+		bullet_spd = 100,
 		
 		scale = 1,
 		cooldown = 0.2,
