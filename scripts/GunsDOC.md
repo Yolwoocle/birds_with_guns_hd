@@ -23,7 +23,14 @@
 | `nbshot`               | integer                          | the number of bullets or lasers it creates in a single shot |
 | `spread`               | float                            | the range of the angels on which the bullet will be fired 360 -> 2ft |
 | `spdslow`              | float                            | used ONLY for **balls** the number by which the speed of the bullet will` |
+
+The following variables are similar to above except they represent the maximum value when a "chargable" gun is max charged. 
+| name | type | description |
+|-|-|-|
 | `charge_time`          | float                            | the time required to fully charge the weapon |
+
+| name | type | description |
+|-|-|-|
 | `charge_nbrafale`      |  |                          | same as above but is added according to the time you spent loading the gun |
 | `charge_bullet_spd`    |  |                          | same as above but is added according to the time you spent loading the gun |
 | `charge_laser_length`  |  |                          | same as above but is added according to the time you spent loading the gun |
