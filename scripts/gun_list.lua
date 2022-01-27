@@ -50,6 +50,10 @@ guns = {
 
 		ptc_type = "circle",
 		max_ammo = inf,
+
+		update_option = function(self,dt)
+			table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
+		end
 	}),
 
 	knight_gun = make_gun({
