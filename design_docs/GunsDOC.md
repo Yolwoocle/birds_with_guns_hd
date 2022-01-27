@@ -1,32 +1,50 @@
-# How to create a gun
+# `make_gun` function documentation
 
-| type                   | name    | description |
+### Metadata
+| name                   | type    | description |
 | ---------------------- | ------- | - |
 | `name`                 | string  | the name of the weapon |
 | `type`                 | string  | the type of bullet it fires, can be "laser" or "bullet". |
+| `category`             | string  | used ONLY for **lasers**: `"instant"`: fires immediately; `"persistent"`: a laser fires continuously from your weapon. TODO: rename to `laser_catergory` |
 | `spr`                  | image   | the sprite of the weapon |
 | `bulletspr`            | image   | the sprite of the bullet fired by the weapon |
-| `damage`               | float   | the amount of damage it inflicts on impact |
-| `category`             | string  | used ONLY for **lasers**: 
-- `"instant"`: fires immediately 
-- `"persistent"`: a laser fires continuously from your weapon. |
-| `bounce`               | integer | the number of times the bullet or laser can bounce before being destroyed |
-| `bullet_spd`           | float   | used ONLY for **balls** the speed at which the bullet travels |
-| `offset_spd`           | float   | the difference between the fastest and slowest bullet your weapon can fire |
-| `cooldown`             | float   | how long to wait between shots |
-| `max_ammo`             | integer | the maximum amount of ammunition your gun can hold |
-| `scattering`           | float   | the random offset on the bullet or laser angel to add imprecision |
-| `spawn_x`              | integer | the x-offset of where the bullet appears in relation to the player's center |
-| `spawn_y`              | integer | the y-offset of where the ball appears relative to the center of the player |
-| `rafale`               | integer | the number of times the gun fires |
-| `rafaledt`             | float   | the time between the moment the burst is fired |
-| `bullet_life`          | float   | the time before the bullet is destroyed |
-| `laser_length`         | integer | used ONLY for **lasers** the length of the laser |
-| `nbshot`               | integer | the number of bullets or lasers it creates in a single shot |
-| `spread`               | float   | the range of the angels on which the bullet will be fired 360 -> 2ft |
-| `spdslow`              | float   | used ONLY for **bullets** the number by which the speed of the bullet will` |
 
-The following variables are similar to above except they represent the maximum value when a "chargable" gun is max charged. 
+### General properties
+| name                   | type    | description |
+| ---------------------- | ------- | - |
+| `max_ammo`             | integer | maximum amount of ammo the gun can hold |
+| `cooldown`             | float   | how long to wait between shots |
+| `damage`               | float   | amount of damage it inflicts on impact |
+| `bounce`               | integer | number of times the fired bullet or laser can bounce before being destroyed |
+| `bullet_life`          | float   | time before the bullet is destroyed |
+| `nbshot`               | integer | number of bullets or lasers created when fired |
+| `spread`               | float   | range of the angles on which the bullet will be fired 360 -> 2ft |
+| `scattering`           | float   | range of the random value added to the angle when fired |
+
+### Speed properties (only for bullets)
+| name                   | type    | description |
+| ---------------------- | ------- | - |
+| `bullet_spd`           | float   | speed at which bullets travels |
+| `offset_spd`           | float   | range of the random variation of `bullet_spd` |
+| `spdslow`              | float   | how much a bullet slows down over time |
+
+### Other properties
+| name                   | type    | description |
+| ---------------------- | ------- | - |
+| `spawn_x`              | integer | x-offset of where the bullet spawns, relative to the gun position. |
+| `spawn_y`              | integer | y-offset of where the bullet spawns, relative to the gun position. |
+| `rafale`               | integer | number of shots when the gun is fired     TODO:rename to `burst` or something |
+| `rafaledt`             | float   | time interval between shots during a burst |
+
+### Laser properties:
+| name                   | type    | description |
+| ---------------------- | ------- | - |
+| `category`             | string  | used ONLY for **lasers**: `"instant"`: fires immediately; `"persistent"`: a laser fires continuously from your weapon. TODO: rename to `laser_catergory` |
+| `laser_length`         | integer | length of the laser |
+| `bounce`               | integer | number of times the laser will bounce before being destroyed. _NOTE: this property can also be used for bullets._ |
+
+### Charge
+The following variables are similar to above, except they represent the maximum value when a "chargable" gun is max charged. 
 
 | name | type | description |
 |-|-|-|
