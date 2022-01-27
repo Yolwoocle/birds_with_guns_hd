@@ -5,7 +5,6 @@
 | ---------------------- | ------- | - |
 | `name`                 | string  | the name of the weapon |
 | `type`                 | string  | the type of bullet it fires, can be "laser" or "bullet". |
-| `category`             | string  | used ONLY for **lasers**: `"instant"`: fires immediately; `"persistent"`: a laser fires continuously from your weapon. TODO: rename to `laser_catergory` |
 | `spr`                  | image   | the sprite of the weapon |
 | `bulletspr`            | image   | the sprite of the bullet fired by the weapon |
 
@@ -18,8 +17,11 @@
 | `bounce`               | integer | number of times the fired bullet or laser can bounce before being destroyed |
 | `bullet_life`          | float   | time before the bullet is destroyed |
 | `nbshot`               | integer | number of bullets or lasers created when fired |
-| `spread`               | float   | range of the angles on which the bullet will be fired 360 -> 2ft |
+| `spread`               | float   | range of the angles on which the bullet will be fired 360 deg -> 2pi |
 | `scattering`           | float   | range of the random value added to the angle when fired |
+| `bounce`               | integer | number of times the laser will bounce before being destroyed. _NOTE: this property can also be used for bullets._ |
+| `scale`                | float   | the size of the laser or bullet |
+| `oscale` 	             | float   |  range of the random variation of `scale` |
 
 ### Speed properties (only for bullets)
 | name                   | type    | description |
@@ -35,13 +37,14 @@
 | `spawn_y`              | integer | y-offset of where the bullet spawns, relative to the gun position. |
 | `rafale`               | integer | number of shots when the gun is fired     TODO:rename to `burst` or something |
 | `rafaledt`             | float   | time interval between shots during a burst |
+| `update_option`        | function| optional custom update function for the ball or laser, called at each update. |
+| `on_death`             | float   | optional custom update function for the ball or laser, called on death. |
 
 ### Laser properties:
 | name                   | type    | description |
 | ---------------------- | ------- | - |
 | `category`             | string  | used ONLY for **lasers**: `"instant"`: fires immediately; `"persistent"`: a laser fires continuously from your weapon. TODO: rename to `laser_catergory` |
 | `laser_length`         | integer | length of the laser |
-| `bounce`               | integer | number of times the laser will bounce before being destroyed. _NOTE: this property can also be used for bullets._ |
 
 ### Screenshake & Camera effects
 | name                   | type    | description |
