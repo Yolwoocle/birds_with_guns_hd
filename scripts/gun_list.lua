@@ -10,6 +10,12 @@ guns = {
 		bullet_spd = 500,
 		make_shot = default_shoot
 	}),
+	shotgun = make_gun{
+		name = "shotgun",
+		spr = spr_assult_rifle,
+
+		rafale
+	},
 	fire_extinguisher = make_gun({
 		name = "fire extinguisher",
 		spr = spr_fire_extinguisher,

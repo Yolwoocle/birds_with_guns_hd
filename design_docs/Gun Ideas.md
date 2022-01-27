@@ -1,0 +1,67 @@
+# Gun Ideas
+- Bread gun (DUCK)
+- Ketchup-Mustard gun:  
+  - ![](images/Clipboard_2022-01-26-21-27-49.png)  
+  each sauce has a different direction and the gun alternames Ketchup-mustard-whitesauce-ketchup...
+- Seed gun
+- Egg gun
+- Hotdog gun (?)
+- Flame arrows
+- Paperclip gun :paperclip:
+- !! Paper plane gun inspired by the guy who made this a real thing
+  - Movement of the plane would be it constantly rotates and that every random time, it switches direction  
+  - ![](images/Clipboard_2022-01-26-21-42-36.png)  
+- idk gravity gun? lol
+- Magnet gun: attracts bullets/repels strongly them on impact
+- Goo gun: slows down enemies (`spdslow` property of bullet)
+- Paint gun, ref to platoon
+- Water gun
+- Blender gun: mixes fruits to make juice
+  - with a tank that's literall fruits   
+  ![](images/Clipboard_2022-01-26-21-33-41.png)  
+- low poly gun
+- Pico-8 gun (8x8, color palette)
+  - Maybe call it retro gun or something
+  - cheeky reference
+- Feather gun (lol what)
+  - shoots sort of balls with feathers on the back  
+  ![](images/Clipboard_2022-01-26-21-37-29.png)  
+- Doodle gun that looks like a doodle
+- Bird (??) 
+  - the gun is literall a bird
+- Worm gun
+  - With a mini terrarium  
+  ![](images/Clipboard_2022-01-26-21-38-41.png)  
+- Floating island gun like in avatar
+  - ![](images/Clipboard_2022-01-26-21-39-22.png)  
+- Grass gun
+- Grappling hook that's textured like vines
+  - Actually, laser gun that's just vines
+- Harp (blazing beaks)
+- Bow
+- A literal pirate cannon
+- Paper toiler gun, throws paper toilet rolls
+- M&M's gun
+- Spike ball gun
+- Fries
+- ~~draw a pattern gun/magic pencil: inspired by Gungeon's lettern bullets, you draw with mouse bullets and the go in dir~~ incompatible with controllers also just a pain
+- Colored pencil gun, like Paper Mario Orgimi King pencil boss
+- Gold gun, sends cash and gold
+  - Maybe an ATC?
+- Nerf gun
+- Water gun
+- _More serious idea:_ Bomb gun, recharges till release and sends bomb like in bomb chicken
+- Tire gun (why not)
+- Vending machine
+- The letter `r`. Just like in gungeon
+- Lamp torch gun (idk to chase ghosts?)
+- Knife gun, for crow bc it's black magic or something
+  - Makes weapons as ammo and turns them into knives
+- Speaker, just shout extremely loudly (esp for parrot)
+- Poison gun
+- Blood gun? idk like in nuclear throne it takes life as ammo????? idk
+- Crate gun, sends crates
+- Book gun, sends you the KNOWLEDGE!!! :O
+- Pizza gun, like these mini pizzas for apéritif
+  - Peanut gun?
+- Butter gun
