@@ -64,6 +64,8 @@ function make_gun(a)
 		vitesse_max	   = a.vitesse_max				or 600,
 
 		make_shot = a.make_shot or default_shoot,
+
+		update_option = a.update_option,
 		
 		screenkick = a.screenkick or 6,
 		screenkick_shake = a.screenkick_shake or 1,
@@ -176,6 +178,8 @@ function make_bullet(self, p, angle, spread, type, spr)
 		vitesse_max = self.vitesse_max,
 		ptc_timer = 0,
 
+		update_option = self.update_option,
+
 		w=0,--(self.scale + oscale ),
 		h=0,--(self.scale + oscale ),
 	}
@@ -248,6 +252,8 @@ function update_bullet(self, dt , i)
 		self.dx = self.dx * self.spdslow
 		self.dy = self.dy * self.spdslow
 	end
+
+	if self.update_option then self:update_option(dt) end
 
 	self.life = self.life - dt
 	self.life = self.life - dt
