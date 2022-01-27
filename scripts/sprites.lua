@@ -40,6 +40,11 @@ anim_pigeon_walk = {
 	load_image("pigeon/pigeon_walk_10"),
 	--load_image("pigeon_walk_2"),
 }
+anim_duck_walk = {
+	load_image("duck/duck_1"),
+	--load_image("pigeon_walk_2"),
+}
+
 spr_crow = {
 	load_image("crow_walk_1"),
 	load_image("crow_walk_1"),
@@ -60,12 +65,14 @@ spr_laser = load_image("laser")
 spr_rocket = load_image("projectiles/rocket")
 
 -- Guns
-spr_revolver_big = load_image("guns/gun_revolver")
 spr_revolver = load_image("guns/gun_revolver_small")
 spr_shotgun = load_image("guns/shotgun")
 spr_firework_launcher = load_image("guns/firework_launcher")
-spr_firework_launcher_big = load_image("guns/firework_launcher_big")
 spr_fire_extinguisher = load_image("guns/fire_extinguisher")
+spr_assult_rifle = load_image("guns/assault_rifle")
+
+spr_revolver_big = load_image("guns/gun_revolver")
+spr_firework_launcher_big = load_image("guns/firework_launcher_big")
 
 -- Tiles
 spr_ground_dum = load_image("dummy_ground")

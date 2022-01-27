@@ -36,8 +36,8 @@ function init_player(x,y)
 		flip = -1,
 
 		anim_sprs = nil,
-		anim_walk = anim_pigeon_walk,
-		anim_idle = anim_pigeon_idle,
+		anim_walk = anim_duck_walk,
+		anim_idle = anim_duck_walk,--anim_pigeon_idle,
 		anim_frame = 0,
 		anim_frame_len = .05, --70 ms
 		animate = animate_player,
