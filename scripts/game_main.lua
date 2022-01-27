@@ -19,10 +19,10 @@ function init_game_main(self)
 	camera.lock_x = true
 	camera.lock_y = true
 
-	nb_joueurs = 1
+	nb_joueurs = 2
 	player_list = {}
 	for i =1,nb_joueurs do
-		local ply = init_player(20, 20)
+		local ply = init_player(i, 90+i*32, 90)
 		table.insert(player_list, ply)
 	end
 

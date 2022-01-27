@@ -12,7 +12,6 @@ function generate_map(self, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	print(#self.lvl_arena)
 	self:write_room(self.lvl_arena[1], 0, 0)
 
 	--[[self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 10, 15)
@@ -96,7 +95,6 @@ function load_from_file(self, file)
 	local room = 1
 	local y = 0
 	for line in love.filesystem.lines("assets/rooms/"..file) do
-		print(line, "\\n")
 		if #line == 0 then 
 			room = room + 1 
 			y = 0

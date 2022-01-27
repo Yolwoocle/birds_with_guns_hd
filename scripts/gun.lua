@@ -15,7 +15,7 @@ function make_gun(a)
 		dir = 0,
 		flip = 1,
 		spr = a.spr or spr_revolver,
-		bulletspr = a.bulletspr,
+		bulletspr = a.bulletspr or spr_bullet,
 		--spr_bullet
 		--spr_laser 
 		--spr_rocket
@@ -31,13 +31,14 @@ function make_gun(a)
 		scattering    = a.scattering    or .1,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
-		rafale	      = a.rafale	    or 1, --FIXME: burst pas rafale
-		rafaledt      = a.rafaledt	    or .5, --FIXME: burst_spd ou jsp quoi
+		burst	      = a.burst	    or 1, --FIXME: burst pas burst
+		burstdt      = a.burstdt	    or .5, --FIXME: burst_spd ou jsp quoi
 		bullet_life	  = a.bullet_life   or 2,	--bullet_life
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1,
+		
 		scale 		  = a.scale			or 0.5,
 		oscale 		  = a.oscale        or 0,
 		on_death 	  = a.on_death		or kill,
@@ -45,7 +46,7 @@ function make_gun(a)
 		charge				= a.charge 				or false,
 		charge_curve		= a.charge_curve		or 2,
 		charge_time 		= a.charge_time 		or 1,
-		charge_nbrafale 	= a.charge_nbrafale 	or 0,
+		charge_nbburst 	= a.charge_nbburst 	or 0,
 		charge_bullet_spd 	= a.charge_bullet_spd 	or 0,
 		charge_laser_length = a.charge_laser_length or 0,
 		charge_nbshot 		= a.charge_nbshot 		or 0,
@@ -55,13 +56,13 @@ function make_gun(a)
 		charge_oscale		= a.charge_oscale		or 0,
 		charge_ospd 		= a.charge_ospd 		or 0,
 		charge_life 		= a.charge_life 		or 0,
-		charge_rafaledt		= a.charge_rafaledt 	or 0,
+		charge_burstdt		= a.charge_burstdt 	or 0,
 		charge_spdslow 		= a.charge_spdslow 		or 0,
 		charge_damage		= a.charge_damage		or 0,
 
 		cooldown_timer = 0,
 		dt 			   = 0,
-		vitesse_max	   = a.vitesse_max				or 600,
+		speed_max	   = a.speed_max				or 600,
 
 		make_shot = a.make_shot or default_shoot,
 		
@@ -110,9 +111,9 @@ function default_shoot(g,p)
 
 	local shot = {}
 		nbshot = g.nbshot-1
-		for k=0,g.rafale-1 do
+		for k=0,g.burst-1 do
 		if nbshot==0 then
-			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.rafaledt})
+			table.insert(shot,{gun=g,player=p,angle=p.rot,offset=0,time=k*g.burstdt})
 		else
 			for i=0,nbshot do
 				local o=((i/g.nbshot)-(g.nbshot/2/g.nbshot)+(1/g.nbshot/2))*g.spread
@@ -121,7 +122,7 @@ function default_shoot(g,p)
 					player = p,
 					angle = p.rot,
 					offset = o,
-					time = k*g.rafaledt
+					time = k*g.burstdt
 				})
 			end
 		end
@@ -173,7 +174,7 @@ function make_bullet(self, p, angle, spread, type, spr)
 
 		is_enemy = p.is_enemy,
 
-		vitesse_max = self.vitesse_max,
+		speed_max = self.speed_max,
 		ptc_timer = 0,
 
 		w=0,--(self.scale + oscale ),
@@ -244,7 +245,7 @@ function init_laser(self)
 end
 
 function update_bullet(self, dt , i)
-	if (self.dx * self.spdslow)^2 + (self.dy * self.spdslow)^2 < self.vitesse_max^2 then
+	if (self.dx * self.spdslow)^2 + (self.dy * self.spdslow)^2 < self.speed_max^2 then
 		self.dx = self.dx * self.spdslow
 		self.dy = self.dy * self.spdslow
 	end

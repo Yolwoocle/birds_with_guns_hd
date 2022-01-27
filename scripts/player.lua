@@ -6,8 +6,9 @@ require "scripts/gun_list"
 require "scripts/collision"
 require "scripts/settings"
 
-function init_player(x,y)
+function init_player(n,x,y)
 	local player = {
+		n = n,
 		x = x or 32,
 		y = y or 32,
 		w = 4,
@@ -44,13 +45,18 @@ function init_player(x,y)
 
 		gun = nil,
 		gun_dist = 14,
-		guns = {copy(guns.fire_extinguisher), copy(guns.revolver)},
+		guns = {copy(guns.assault_rifle), copy(guns.fire_extinguisher)},
 		gun_n = 1,
 
 		damage = damage_player,
 		get_pickups = player_get_pickups,
 		pickup_cd = 0,
 		max_pickup_cd = 1,
+
+		get_nearest_enemy = get_nearest_enemy,
+		autoaim_max_dist = 128,
+		cu_x = 0,
+		cu_y = 0,
 
 		update = update_player,
 		draw = draw_player,
@@ -124,7 +130,7 @@ function draw_player(self)
 	end
 	love.graphics.setColor(1,1,1)
 	
-
+	draw_centered(spr_cursor, self.cu_x, self.cu_y)
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 end
@@ -134,7 +140,7 @@ function player_movement(self, dt)
 
 	self.walk_dir = {x=0, y=0}
 	self.is_walking = false
-	if button_down("left") or (joystick and joystick.x<-joystick_deadzone) then
+	if button_down("left", self.n) or (joystick and joystick.x<-joystick_deadzone) then
 		if (joystick and joystick.x < -joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
@@ -143,7 +149,7 @@ function player_movement(self, dt)
 		self.is_walking = true
 		self.walk_dir.x = self.walk_dir.x - 1
 	end
-	if button_down("right") or (joystick and joystick.x>joystick_deadzone) then
+	if button_down("right", self.n) or (joystick and joystick.x>joystick_deadzone) then
 		if (joystick and joystick.x > joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
@@ -152,7 +158,7 @@ function player_movement(self, dt)
 		self.is_walking = true
 		self.walk_dir.x = self.walk_dir.x + 1
 	end
-	if button_down("up") or (joystick and joystick.y<-joystick_deadzone) then
+	if button_down("up", self.n) or (joystick and joystick.y<-joystick_deadzone) then
 		if (joystick and joystick.y<-joystick_deadzone) then 
 			dir_vector.y = dir_vector.y + joystick.y
 		else
@@ -160,7 +166,7 @@ function player_movement(self, dt)
 		end
 		self.is_walking = true
 	end
-	if button_down("down") or (joystick and joystick.y>joystick_deadzone) then
+	if button_down("down", self.n) or (joystick and joystick.y>joystick_deadzone) then
 		if (joystick and joystick.y>joystick_deadzone) then 
 			dir_vector.y = dir_vector.y + joystick.y
 		else
@@ -185,16 +191,19 @@ function player_movement(self, dt)
 	-- Idk why this friction works but thanks stackoverflow
 	local fricratio = 1 / (1 + dt * self.friction);
 	self.dx = self.dx * fricratio
-	self.dy = self.dy * fricratio
+	self.dy = self.dy * fricratio 
 end
 
 function aim_player(self, dt)
-	local mx, my = get_cursor_pos(camera)
+	local mx, my = get_cursor_pos(self, camera)
+	self.cu_x = mx
+	self.cu_y = my
+
 	self.rot = math.atan2(my - self.y, mx - self.x)
 	self.shoot = false
 	if self.gun.cooldown_timer <= 0 then
-		if (not(self.gun.charge) and button_down("fire")) 
-		or (prevfire and not(button_down("fire")) 
+		if (not(self.gun.charge) and button_down("fire", self.n)) 
+		or (prevfire and not(button_down("fire", self.n)) 
 		and self.gun.charge) then
 			if self.gun.ammo > 0 then
 
@@ -215,7 +224,7 @@ function aim_player(self, dt)
 				self.gun.dt = 0
 				
 			end
-		elseif button_down("fire") and self.gun.charge then
+		elseif button_down("fire", self.n) and self.gun.charge then
 			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
 		end
 	end
@@ -260,6 +269,16 @@ function player_get_pickups(self)
 			end 
 		end
 	end
+end
+
+function get_nearest_enemy(self)
+	local nearest = nil
+	for i,m in ipairs(mobs) do
+		if dist_sq(self.x, self.y, m.x, m.y) <= sqr(self.autoaim_max_dist) then
+			nearest = m
+		end
+	end
+	return nearest
 end
 
 function save_gun_stats(self)

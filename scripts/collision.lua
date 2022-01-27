@@ -4,18 +4,12 @@ function swept_aabb(o1, o2)
 	-- https://www.gamedev.net/tutorials/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
 end
 
-function sqr(x) 
-	return x * x
-end
-function dist_sq(u, v) 
-	return sqr(u.x - v.x) + sqr(u.y - v.y)
-end
 function dist_to_segment_squared(p, u, v) 
 --https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
-	local l2 = dist_sq(u, v)
+	local l2 = dist_sq(u.x, u.y, v.x, v.y)
   	if l2 == 0 then 
 	  	-- if len is 0 then just return the distance to u
-  		return dist_sq(p, u) 
+  		return dist_sq(p.x, p.y, u.x, u.y) 
 	end
 	--[[
 
@@ -39,9 +33,10 @@ function dist_to_segment_squared(p, u, v)
 	-- add t*D to u.
 	-- Now that we have this point all that rests to do is compute
 	-- its distance to p. Tada! 
-	return dist_sq(p, { 
+	local prof = { 
 		x = u.x + t * (v.x - u.x),
-        y = u.y + t * (v.y - u.y) })
+        y = u.y + t * (v.y - u.y) }
+	return dist_sq(p.x, p.y, proj.x, proj.y)
 end
 function dist_to_segment(p, u, v) 
 	return math.sqrt(dist_to_segment_squared(p, u, v))

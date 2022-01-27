@@ -12,9 +12,23 @@ guns = {
 	}),
 	shotgun = make_gun{
 		name = "shotgun",
-		spr = spr_assult_rifle,
+		spr = spr_shotgun,
+		nbshot = 10,
+		offset_spd = 5,
+	},
+	assault_rifle = make_gun{
+		name = "assault rifle",
+		spr = spr_assault_rifle,
+		cooldown = 0.4,
+		scattering = 0.2,
+		damage = 3,
 
-		rafale
+		scale = 0.5, 
+
+		burst = 5,
+		burstdt = 0.05,
+
+		screenkick = 10,		
 	},
 	fire_extinguisher = make_gun({
 		name = "fire extinguisher",
@@ -53,14 +67,14 @@ guns = {
 		
 		scale = 1.25,
 		cooldown = 1,
-		rafale  = 1,
+		burst  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
 		spread  = pi,
 	}),
 
-	shotgun = make_gun({
-		name = "shotgun",
+	firework_launcher = make_gun({
+		name = "firework launcher",
 		--type = "laser",
 		spr = spr_firework_launcher,
 		--bulletspr = spr_laser,
@@ -75,7 +89,7 @@ guns = {
 
 		scale = 1,
 		cooldown = 0.2,
-		rafale  = 1,
+		burst  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
 		bullet_life = 2,
@@ -110,7 +124,7 @@ guns = {
 		
 		charge = true,
 		charge_time = 1,
-		charge_nbrafale = 10,
+		charge_nbburst = 10,
 		charge_bullet_spd = 1,
 		charge_laser_length = 30000,
 		charge_nbshot = 10,
@@ -119,7 +133,7 @@ guns = {
 		charge_scale = 2,
 		charge_ospd = 0,
 		charge_life = 0,
-		charge_rafaledt = 0,
+		charge_burstdt = 0,
 		charge_spdslow = .002,
 		charge_damage = 10,
 		charge_oscale = 10,
@@ -145,8 +159,8 @@ guns = {
 
 		laser_length = 300,
 
-		rafale  = 1,
-		rafaledt  = .1,
+		burst  = 1,
+		burstdt  = .1,
 
 		nbshot = 5,
 		spread  = pi/2,
@@ -207,7 +221,7 @@ guns = {
 		charge = true,
 		charge_curve = 2,			
 		charge_time = 1,
-		charge_nbrafale = 10,
+		charge_nbburst = 10,
 		scattering = 0,
 
 		spread  = pi/2,
@@ -243,7 +257,7 @@ guns = {
 		charge = true,
 		charge_curve = 2,			
 		charge_time = 1,
-		charge_nbrafale = 10,
+		charge_nbburst = 10,
 		scattering = .1,
 
 		spread  = pi/2,

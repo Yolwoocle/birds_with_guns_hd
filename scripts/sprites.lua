@@ -17,6 +17,7 @@ spr_missing = load_image("missing")
 spr_empty = load_image("empty")
 
 -- UI
+spr_cursor = load_image("cursor")
 spr_hp_bar = load_image("hp_bar")
 spr_ammo_bar = load_image("ammo_bar")
 spr_hp_bar_empty = load_image("hp_bar_empty")
@@ -69,7 +70,7 @@ spr_revolver = load_image("guns/gun_revolver_small")
 spr_shotgun = load_image("guns/shotgun")
 spr_firework_launcher = load_image("guns/firework_launcher")
 spr_fire_extinguisher = load_image("guns/fire_extinguisher")
-spr_assult_rifle = load_image("guns/assault_rifle")
+spr_assault_rifle = load_image("guns/assault_rifle")
 
 spr_revolver_big = load_image("guns/gun_revolver")
 spr_firework_launcher_big = load_image("guns/firework_launcher_big")

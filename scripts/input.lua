@@ -1,21 +1,21 @@
 function init_keybinds() 
 	keybinds = {
-		left  = {{"left",  "a"}}, 
-		right = {{"right", "d"}}, 
-		up    = {{"up",    "w" }},
-		down  = {{"down",  "s"}},
-		fire  = {{"c" }},
-		alt   = {{"x" }},
+		left  = {{"a"},{"left"}}, 
+		right = {{"d"},{"right"}}, 
+		up    = {{"w"},{"up"}},
+		down  = {{"s"},{"down"}},
+		fire  = {{"c"},{","}},
+		alt   = {{"x"},{"m"}},
 	}
 end
 function init_joystickbinds()
 	joystickbinds = {
-		left  = {{"dpleft"}}, 
-		right = {{"dpright"}}, 
-		up    = {{"dpup"   }},
-		down  = {{"dpdown"}},
-		fire  = {{"triggerleft"}},
-		alt   = {{"triggerright"}},
+		left  = {{"dpleft"}, {"dpleft"}}, 
+		right = {{"dpright"}, {"dpright"}}, 
+		up    = {{"dpup"}, {"dpup"}},
+		down  = {{"dpdown"}, {"dpdown"}},
+		fire  = {{"triggerleft"}, {"triggerleft"}},
+		alt   = {{"triggerright"}, {"triggerright"}},
 	}
 end
 function init_button_last_state_table()
@@ -67,6 +67,25 @@ function button_down(command, player_n)
 	return false
 end
 
+function get_autoaim(ply)
+	local ne = ply:get_nearest_enemy()
+	if ne then
+		local x = ne.x
+		local y = ne.y 
+		return x, y
+	else 
+--[[		local a = math.atan2(ply.dx, ply.dy)
+		local dirx, diry = math.cos(a), math.sin(a)
+		if ply.n==1 then print(dist(ply.dx, ply.dy, 0, 0), ply.speed) end
+]]
+		local dirx, diry = ply.dx, ply.dy
+
+		local x = ply.x + dirx / 4
+		local y = ply.y + diry / 4
+		return x, y
+	end
+end
+
 function button_pressed(cmd, n)
 	local btnd = button_down(cmd, n)
 	local last_btnd = button_last_state[cmd]
@@ -95,13 +114,15 @@ function updatejoystick()
 	end
 end
 
-function get_cursor_pos(camera)
-	--TODO: support controllers 
+function get_cursor_pos(ply, camera)
+	return get_autoaim(ply)
+
+	--[[TODO: support controllers 
 	if camera then
 		return get_mouse_pos(camera)  
 	else
 		return get_canvas_mouse_pos()
-	end 
+	end ]]
 end
 
 function get_mouse_pos(camera)

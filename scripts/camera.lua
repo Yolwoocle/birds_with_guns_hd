@@ -47,7 +47,7 @@ function update_camera(self, dt)
 	end
 
 	-- Offset
-	local mx, my = get_cursor_pos()
+	local mx, my = get_mouse_pos(self)
 	if not self.lock_x then
 		self.offset_x = (mx - window_w/2) * self.aim_offset
 	end

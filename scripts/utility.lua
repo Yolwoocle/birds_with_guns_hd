@@ -78,6 +78,12 @@ end
 function dist(x1,y1,x2,y2)
 	return math.sqrt((x2 - x1)^2 + (y2 - y1)^2)
 end
+function dist_sq(x1,y1,x2,y2) 
+	return sqr(x2 - x1) + sqr(y2 - y1)
+end
+function sqr(x) 
+	return x * x
+end
 
 function random_float(min, max)
 	local range = max - min
