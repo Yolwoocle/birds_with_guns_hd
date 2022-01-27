@@ -1,7 +1,7 @@
 # Gun Ideas
 - Bread gun (DUCK)
 - Ketchup-Mustard gun: 
-  - ![](Clipboard_2022-01-26-21-27-49.png)
+  - ![](images/Clipboard_2022-01-26-21-27-49.png)
   each sauce has a different direction and the gun alternames Ketchup-mustard-whitesauce-ketchup...
 - Seed gun
 - Egg gun
@@ -10,7 +10,7 @@
 - Paperclip gun :paperclip:
 - !! Paper plane gun inspired by the guy who made this a real thing
   - Movement of the plane would be it constantly rotates and that every random time, it switches direction 
-  - ![](Clipboard_2022-01-26-21-42-36.png)
+  - ![](images/Clipboard_2022-01-26-21-42-36.png)
 - idk gravity gun? lol
 - Magnet gun: attracts bullets/repels strongly them on impact
 - Goo gun: slows down enemies (`spdslow` property of bullet)
@@ -18,22 +18,22 @@
 - Water gun
 - Blender gun: mixes fruits to make juice
   - with a tank that's literall fruits 
-  ![](Clipboard_2022-01-26-21-33-41.png)
+  ![](images/Clipboard_2022-01-26-21-33-41.png)
 - low poly gun
 - Pico-8 gun (8x8, color palette)
   - Maybe call it retro gun or something
   - cheeky reference
 - Feather gun (lol what)
   - shoots sort of balls with feathers on the back
-  ![](Clipboard_2022-01-26-21-37-29.png)
+  ![](images/Clipboard_2022-01-26-21-37-29.png)
 - Doodle gun that looks like a doodle
 - Bird (??) 
   - the gun is literall a bird
 - Worm gun
   - With a mini terrarium
-  ![](Clipboard_2022-01-26-21-38-41.png)
+  ![](images/Clipboard_2022-01-26-21-38-41.png)
 - Floating island gun like in avatar
-  - ![](Clipboard_2022-01-26-21-39-22.png)
+  - ![](images/Clipboard_2022-01-26-21-39-22.png)
 - Grass gun
 - Grappling hook that's textured like vines
   - Actually, laser gun that's just vines
