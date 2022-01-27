@@ -57,6 +57,8 @@ function init_player(n,x,y)
 		autoaim_max_dist = 128,
 		cu_x = 0,
 		cu_y = 0,
+		dircux = 0,
+		dircuy = 0,
 
 		update = update_player,
 		draw = draw_player,
@@ -129,8 +131,10 @@ function draw_player(self)
 		if not self.looking_up then  self.gun:draw(self)  end
 	end
 	love.graphics.setColor(1,1,1)
-	
+
+	if self.show then 
 	draw_centered(spr_cursor, self.cu_x, self.cu_y)
+	end
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 end

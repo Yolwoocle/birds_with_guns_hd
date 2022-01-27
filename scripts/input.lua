@@ -19,7 +19,6 @@ function init_joystickbinds()
 	}
 end
 function init_button_last_state_table()
-	dircux , dircuy = 0,0
 	button_last_state = {}
 	for key,_ in pairs(keybinds) do
 		button_last_state[key] = false
@@ -73,6 +72,7 @@ function get_autoaim(ply)
 	if ne then
 		local x = ne.x
 		local y = ne.y 
+		ply.show = true
 		return x, y
 	else 
 --[[		local a = math.atan2(ply.dx, ply.dy)
@@ -80,11 +80,13 @@ function get_autoaim(ply)
 		if ply.n==1 then print(dist(ply.dx, ply.dy, 0, 0), ply.speed) end
 ]]	
 		if math.abs(ply.dx) + math.abs(ply.dy) > 0.1 then 
-			dircux, dircuy = ply.dx, ply.dy
+			ply.dircux, ply.dircuy = ply.dx, ply.dy
+			ply.show = true
+		else ply.show = false
 		end
 
-		local x = ply.x + dircux / 4
-		local y = ply.y + dircuy / 4
+		local x = ply.x + ply.dircux / 4
+		local y = ply.y + ply.dircuy / 4
 		return x, y
 	end
 end
