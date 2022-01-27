@@ -43,6 +43,15 @@
 | `laser_length`         | integer | length of the laser |
 | `bounce`               | integer | number of times the laser will bounce before being destroyed. _NOTE: this property can also be used for bullets._ |
 
+### Screenshake & Camera effects
+| name                   | type    | description |
+| ---------------------- | ------- | - |
+| `screenkick`           | number | value of the _directional_ kick when fired |
+| `screenkick_shake`     | number | value of screenshake added *to the kick* when fired |
+| `screenshake`          | number | value of screenshake; unline screenkick, is not directional |
+| `camera_offset`        | number | how far the camera is offset when moving the mouse around |
+
+
 ### Charge
 The following variables are similar to above, except they represent the maximum value when a "chargable" gun is max charged. 
 
