@@ -19,11 +19,14 @@ function init_game_main(self)
 	camera.lock_x = true
 	camera.lock_y = true
 
-	nb_joueurs = 2
+	nb_joueurs = 1
 	player_list = {}
+	birds_spr = {anim_pigeon_walk, anim_duck_walk,}--TODO: fix
 	for i =1,nb_joueurs do
 		local ply = init_player(i, 90+i*32, 90)
 		table.insert(player_list, ply)
+		player_list[i].anim_walk = birds_spr[i]
+		player_list[i].anim_idle = birds_spr[i]
 	end
 
 	zones = {}
@@ -61,6 +64,12 @@ function udpate_game_main(self, dt)
 	pickups:update()
 	update_waves(dt)
 
+	--for i,z in ipairs(zones) do
+	for i = #zones , 1 , -1 do
+		z = zones[i]
+		z:update(dt,i)
+		damageinzone(z,i) 
+	end
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
 		if p.shoot then
@@ -97,12 +106,7 @@ function udpate_game_main(self, dt)
 		m = mobs[i]
 		m:update(dt)
 	end
-	--for i,z in ipairs(zones) do
-	for i = #zones , 1 , -1 do
-		z = zones[i]
-		z:update(dt,i)
-		damageinzone(z,i) 
-	end
+	
 	--for i,m in pairs(mobs) do
 	--	if m.life<=0 then
 	--		table.remove(mobs , i)
@@ -158,11 +162,13 @@ function draw_game_main(self)
 
 	-- Debug
 	debug_y = 30
+	rect_color("line", 158, 128, block_width, block_width, {1,0,0})
+
 	debug_print(notification)
 	--debug_print(joystick.x)
 	--debug_print(joystick.joy:getGamepadAxis("triggerleft"))
-	debug_print(spawn_time)
-	debug_print(#_shot)
+	--debug_print(spawn_time)
+	--debug_print(#_shot)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	--circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
