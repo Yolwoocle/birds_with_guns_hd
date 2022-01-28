@@ -31,6 +31,81 @@ waves = {
         {mob_list.fox,8},
         {mob_list.knight,5},
     },
+    
+    ----------------------------
+
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
+    {
+        {mob_list.fox,8},
+        {mob_list.knight,5},
+    },
 
 }
 
@@ -44,8 +119,8 @@ function update_waves(dt)
             for w = 1,k[2] do
                 local x=5*16+math.random(300)
                 local y=4*16+math.random(160)
-                table.insert(spawn_location, {x=x,y=y})
-                table.insert(sp_mark,{x=x,y=y})
+                --table.insert(spawn_location, {x=x,y=y})
+                --table.insert(sp_mark,{x=x,y=y})
             end
         end
         
@@ -57,7 +132,7 @@ function update_waves(dt)
         for _,k in pairs(waves[nbwave]) do 
             for w = 1,k[2] do
                 nb_iteration = nb_iteration+1 --spawn_location
-                table.insert(mobs, k[1]:spawn(spawn_location[nb_iteration].x,spawn_location[nb_iteration].y))
+                --table.insert(mobs, k[1]:spawn(spawn_location[nb_iteration].x,spawn_location[nb_iteration].y))
             end
         end
         spawn_location = {}

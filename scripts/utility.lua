@@ -56,16 +56,21 @@ function color(hex)
 end
 
 function sgn(n)
-	if n == nil then  
-		return 0
-	end
-
 	if n >= 0 then
 		return 1
 	end
 	return -1
 end
 sign = sgn
+
+function sign0(n)
+	if n == 0 then
+		return 0
+	elseif n > 0 then
+		return 1
+	end
+	return -1
+end
 
 function round_if_near_zero(val, thr)
 	thr = thr or 0.1
@@ -171,7 +176,7 @@ function shuffle(t, rng)
 	end
 end
 
-function ternary ( cond , T , F )
+function ternary(cond, T, F)
 	--opti: T and F are always evaluated, unlike `cond and T or F` 
 	if cond then return T else return F end
 end
@@ -184,12 +189,20 @@ function round(n)
 	return math.floor(n + 0.5)
 end
 
-function inv_dt(val, dt)
-	-- Idk why this friction works but thanks stackoverflow
+function inv_dt(val, a)
+	-- Takes a value that's normally multiplied every frame (ie 60fps),
+	-- i.e. `speed_x = speed_x * friction`
+	-- but makes it work regardless of framerate.
+	-- Idk why this works, but thanks stackoverflow? I guess?
 	-- https://gamedev.stackexchange.com/questions/80081/frame-rate-independent-friction-on-movement-in-2d-game
+	local dt = love.timer.getDelta()
 	return 1 / (1 + dt * val)
 end
 
 function mod_plus_1(val, mod)
 	return ((val-1) % mod)+1
+end
+
+function lerp(a, b, t)
+	return a + (b-a) * t
 end

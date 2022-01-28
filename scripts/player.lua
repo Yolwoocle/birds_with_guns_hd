@@ -6,7 +6,7 @@ require "scripts/gun_list"
 require "scripts/collision"
 require "scripts/settings"
 
-function init_player(n,x,y , controle,nbcontroller)
+function init_player(n,x,y,spr, controle,nbcontroller)
 	local player = {
 		n = n,
 		x = x or 32,
@@ -31,7 +31,7 @@ function init_player(n,x,y , controle,nbcontroller)
 		hit_w = 12,
 		hit_h = 12,
 
-		spr = nil,
+		spr = spr,
 		rot = 0,
 		looking_up = false,
 		flip = -1,
@@ -54,7 +54,7 @@ function init_player(n,x,y , controle,nbcontroller)
 		max_pickup_cd = 1,
 
 		get_nearest_enemy = get_nearest_enemy,
-		autoaim_max_dist = 185,
+		autoaim_max_dist = 200,
 		cu_x = 0,
 		cu_y = 0,
 		dircux = 0,
@@ -76,8 +76,11 @@ function update_player(self, dt)
 	-- Movement
 	player_movement(self,dt)
 	-- Collisions
-	collide_object(self,.2)
-	-- Apply movement
+	--self.dx = round_if_near_zero(self.dx)
+	--self.dy = round_if_near_zero(self.dy)
+	--collide_object(self,.2)
+	collision_response(self, map)
+	-- Apply movement 
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt
 
@@ -134,16 +137,22 @@ function draw_player(self)
 	end
 	love.graphics.setColor(1,1,1)
 
-	if self.show then 
-	draw_centered(spr_cursor, self.cu_x, self.cu_y)
+	if self.show_cu then 
+		draw_centered(spr_cursor, self.cu_x, self.cu_y)
 	end
-	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})
+
+	
+	love.graphics.print(tostr(self.is_coll),self.x, self.y-16)
+	rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {0,1,0})
+	
+	--collision_response(self, map)
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 end
 
 function player_movement(self, dt)
 	local dir_vector = {x = 0, y = 0}
 
+	local j
 	if self.input_device[2] == "joystick" then
 		joystick = {}
 		j = joysticks[self.input_device[3]]
@@ -296,9 +305,12 @@ end
 
 function get_nearest_enemy(self)
 	local nearest = nil
+	local min_dist = math.huge
 	for i,m in ipairs(mobs) do
-		if dist_sq(self.x, self.y, m.x, m.y) <= sqr(self.autoaim_max_dist) then
+		local d = dist_sq(self.x, self.y, m.x, m.y)
+		if d <= sqr(self.autoaim_max_dist) and d < min_dist then
 			nearest = m
+			min_dist = d
 		end
 	end
 	return nearest

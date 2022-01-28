@@ -67,26 +67,27 @@ end
 
 function get_autoaim(ply)
 	local ne = ply:get_nearest_enemy()
+	local x, y
 	if ne then
-		local x = ne.x
-		local y = ne.y 
-		ply.show = true
-		return x, y
+		x = ne.x
+		y = ne.y 
+		ply.show_cu = true
 	else 
---[[		local a = math.atan2(ply.dx, ply.dy)
-		local dirx, diry = math.cos(a), math.sin(a)
-		if ply.n==1 then print(dist(ply.dx, ply.dy, 0, 0), ply.speed) end
-]]	
-		if math.abs(ply.dx) + math.abs(ply.dy) > 0.1 then 
+		if math.abs(ply.dx) + math.abs(ply.dy) > 0.5 then 
 			ply.dircux, ply.dircuy = ply.dx, ply.dy
-			ply.show = true
-		else ply.show = false
+			ply.show_cu = true
+		else 
+			ply.show_cu = false
 		end
-
-		local x = ply.x + ply.dircux / 4
-		local y = ply.y + ply.dircuy / 4
-		return x, y
+		local dir = math.atan2(ply.dircuy, ply.dircux)
+		local rad = 64
+		x = ply.x + math.cos(dir) * rad
+		y = ply.y + math.sin(dir) * rad
 	end
+	local dt = love.timer.getDelta()
+	x = lerp(ply.cu_x, x, 0.3)
+	y = lerp(ply.cu_y, y, 0.3)
+	return x, y
 end
 
 function button_pressed(cmd, n , input_device)
