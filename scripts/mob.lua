@@ -17,6 +17,8 @@ function make_mob(a)
 		dy      = a.dy  or 0,
 		dx_idle = 0,
 		dy_idle = 0,
+		dx_col = 0,
+		dy_col = 0,
 		friction 	 = a.friction   	or 0.95,
 		bounce   	 = a.bounce     	or 0.6,
 		mv_pause	 = a.mv_pause		or .25,
@@ -96,6 +98,7 @@ function update_mob(self, dt)
 
 	local rayc = {}
 
+
 	if self.see_dist >= self.distplayer then
 		rayc = raycast(self.x,self.y,
 		self.dxplayer, self.dyplayer, self.distplayer,3)
@@ -151,6 +154,17 @@ function update_mob(self, dt)
 		end
 	end
 
+	for i,m in ipairs(mobs) do
+		if not(m==self) and dist(m.x,m.y,self.x,self.y) < 15 then
+			local anglecol = math.atan2(m.y-self.y, m.x-self.x)
+			self.dx = self.dx + -math.cos(anglecol)*100
+			self.dy = self.dy + -math.sin(anglecol)*100
+		end
+	end
+	--self.dx = self.dx + self.dx_col
+	--self.dy = self.dy + self.dy_col
+
+
 	if collide_object(self,1) then
 		if not( sgn(self.dx) == sgn(self.dx_idle)) then
 			self.dx_idle = -self.dx_idle
@@ -159,6 +173,7 @@ function update_mob(self, dt)
 			self.dy_idle = -self.dy_idle
 		end
 	end
+
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt
 end

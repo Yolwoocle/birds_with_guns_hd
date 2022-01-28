@@ -19,11 +19,26 @@ function init_game_main(self)
 	camera.lock_x = true
 	camera.lock_y = true
 
-	nb_joueurs = 1
+	nb_joueurs = 4
 	player_list = {}
-	birds_spr = {anim_pigeon_walk, anim_duck_walk,}--TODO: fix
 	for i =1,nb_joueurs do
-		local ply = init_player(i, 90+i*32, 90)
+		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
+			controle = "keyboard+mouse"
+
+		elseif i == 2 then
+			controle = "keyboard"
+
+		--[[elseif i == 3 then 
+			controle = "joystick"
+			nbcontroller=1
+			
+		elseif i == 4 then 
+			controle = "joystick"
+			nbcontroller=2 --]]
+		end
+
+		birds_spr = {anim_pigeon_walk, anim_duck_walk,}--TODO: fix
+		local ply = init_player(i, 90+i*32, 90, birds_spr[i],controle,nbcontroller)
 		table.insert(player_list, ply)
 		player_list[i].anim_walk = birds_spr[i]
 		player_list[i].anim_idle = birds_spr[i]
@@ -40,7 +55,6 @@ function init_game_main(self)
 	bullets = {}
 	_shot = {}
 	
-	prevfire = button_down("fire")
 	particles = init_particles()
 
 	perf = {}
@@ -112,7 +126,7 @@ function udpate_game_main(self, dt)
 	--		table.remove(mobs , i)
 	--	end
 	--end
-	prevfire = button_down("fire")
+	prevfire = false
 	hud:update()
 
 	particles:update(dt)
