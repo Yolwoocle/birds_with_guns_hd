@@ -81,7 +81,7 @@ function love.load()
 	bullets = {}
 	_shot = {}
 	
-	prevfire = button_down("fire")
+	prevfire = false
 	particles = init_particles()
 
 	perf = {}

@@ -6,7 +6,7 @@ require "scripts/gun_list"
 require "scripts/collision"
 require "scripts/settings"
 
-function init_player(n,x,y)
+function init_player(n,x,y , controle)
 	local player = {
 		n = n,
 		x = x or 32,
@@ -62,6 +62,8 @@ function init_player(n,x,y)
 
 		update = update_player,
 		draw = draw_player,
+		input_device = {keybinds,controle,1}, --"keyboard+mouse" "keyboard" "joystick"
+		--TODO add keybinds
 	}
 	player.anim_sprs = player.anim_idle
 
@@ -85,7 +87,7 @@ function update_player(self, dt)
 	self.looking_up = self.rot > pi
 
 	-- Update gun
-	if button_pressed("alt") then
+	if button_pressed("alt", self.n,self.input_device) then
 		self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
 		self.gun = self.guns[self.gun_n]
 	end
@@ -142,9 +144,19 @@ end
 function player_movement(self, dt)
 	local dir_vector = {x = 0, y = 0}
 
+	if self.input_device[2] == "joystick" then
+		joystick = {}
+		j = joysticks[self.input_device[3]]
+		joystick.x = j:getAxis(1)
+		joystick.y = j:getAxis(2)
+	else
+		joystick = nil
+	end
+	local inp = self.input_device
+
 	self.walk_dir = {x=0, y=0}
 	self.is_walking = false
-	if button_down("left", self.n) or (joystick and joystick.x<-joystick_deadzone) then
+	if button_down("left", self.n, inp) or (joystick and joystick.x<-joystick_deadzone) then
 		if (joystick and joystick.x < -joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
@@ -153,7 +165,7 @@ function player_movement(self, dt)
 		self.is_walking = true
 		self.walk_dir.x = self.walk_dir.x - 1
 	end
-	if button_down("right", self.n) or (joystick and joystick.x>joystick_deadzone) then
+	if button_down("right", self.n,inp) or (joystick and joystick.x>joystick_deadzone) then
 		if (joystick and joystick.x > joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
@@ -162,7 +174,7 @@ function player_movement(self, dt)
 		self.is_walking = true
 		self.walk_dir.x = self.walk_dir.x + 1
 	end
-	if button_down("up", self.n) or (joystick and joystick.y<-joystick_deadzone) then
+	if button_down("up", self.n,inp) or (joystick and joystick.y<-joystick_deadzone) then
 		if (joystick and joystick.y<-joystick_deadzone) then 
 			dir_vector.y = dir_vector.y + joystick.y
 		else
@@ -170,7 +182,7 @@ function player_movement(self, dt)
 		end
 		self.is_walking = true
 	end
-	if button_down("down", self.n) or (joystick and joystick.y>joystick_deadzone) then
+	if button_down("down", self.n,inp) or (joystick and joystick.y>joystick_deadzone) then
 		if (joystick and joystick.y>joystick_deadzone) then 
 			dir_vector.y = dir_vector.y + joystick.y
 		else
@@ -199,15 +211,22 @@ function player_movement(self, dt)
 end
 
 function aim_player(self, dt)
-	local mx, my = get_cursor_pos(self, camera)
-	self.cu_x = mx
-	self.cu_y = my
+	--print(self.input_device[2])
+	--love.event.quit()
+	if self.input_device[2] == "keyboard" then --input_device
+		mmx, mmy = get_cursor_pos(self, camera)
+	else
+		mmx, mmy = get_mouse_pos(self.input_device, camera , self)
+	end
 
-	self.rot = math.atan2(my - self.y, mx - self.x)
+	self.cu_x = mmx
+	self.cu_y = mmy
+
+	self.rot = math.atan2(mmy - self.y, mmx - self.x)
 	self.shoot = false
 	if self.gun.cooldown_timer <= 0 then
-		if (not(self.gun.charge) and button_down("fire", self.n)) 
-		or (prevfire and not(button_down("fire", self.n)) 
+		if (not(self.gun.charge) and button_down("fire", self.n,self.input_device)) 
+		or (prevfire and not(button_down("fire", self.n,self.input_device)) 
 		and self.gun.charge) then
 			if self.gun.ammo > 0 then
 
@@ -228,7 +247,7 @@ function aim_player(self, dt)
 				self.gun.dt = 0
 				
 			end
-		elseif button_down("fire", self.n) and self.gun.charge then
+		elseif button_down("fire", self.n,self.input_device) and self.gun.charge then
 			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
 		end
 	end

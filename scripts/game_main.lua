@@ -22,7 +22,13 @@ function init_game_main(self)
 	nb_joueurs = 2
 	player_list = {}
 	for i =1,nb_joueurs do
-		local ply = init_player(i, 90+i*32, 90)
+		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
+			controle = "keyboard+mouse"
+		else
+			controle = "joystick"
+		end
+
+		local ply = init_player(i, 90+i*32, 90,controle)
 		table.insert(player_list, ply)
 	end
 
@@ -37,7 +43,6 @@ function init_game_main(self)
 	bullets = {}
 	_shot = {}
 	
-	prevfire = button_down("fire")
 	particles = init_particles()
 
 	perf = {}
@@ -108,7 +113,7 @@ function udpate_game_main(self, dt)
 	--		table.remove(mobs , i)
 	--	end
 	--end
-	prevfire = button_down("fire")
+	prevfire = false
 	hud:update()
 
 	particles:update(dt)

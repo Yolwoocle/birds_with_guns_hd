@@ -4,8 +4,8 @@ function init_keybinds()
 		right = {{"d"},{"right"}}, 
 		up    = {{"w"},{"up"}},
 		down  = {{"s"},{"down"}},
-		fire  = {{"c"},{","}},
-		alt   = {{"x"},{"m"}},
+		fire  = {{"c"},{"l"}},
+		alt   = {{"x"},{";"}},
 	}
 end
 function init_joystickbinds()
@@ -26,10 +26,10 @@ function init_button_last_state_table()
 end
 
 
-function button_down(command, player_n)
+function button_down(command, player_n, input_device)
 	player_n = player_n or 1
-	if command == "fire" and (love.mouse.isDown(1) or (joystick and joystick.joy:isGamepadDown("rightshoulder"))) then
-		if joystick and joystick.joy:isGamepadDown("rightshoulder") then
+	if command == "fire" and ((input_device[2] == "keyboard+mouse" and love.mouse.isDown(1)) or (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("rightshoulder")))then
+		if joystick and joysticks[input_device[3]]:isGamepadDown("rightshoulder") then
 			keymode = "joystick"
 		else
 			keymode = "keyboard"
@@ -38,30 +38,28 @@ function button_down(command, player_n)
 		
 		return true
 	end
-	if command == "alt" and (love.mouse.isDown(2) or (joystick and joystick.joy:isGamepadDown("leftshoulder"))) then
+	if command == "alt" and ((input_device[2] == "keyboard+mouse" and love.mouse.isDown(2)) or (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("leftshoulder"))) then
 		return true
 	end
 
-	local keys = keybinds[command][player_n]
-	for _,k in pairs(keys) do
-		--if not(k=="c" or k=="x") then joy = joystick.joy:isGamepadDown(keys[#keys]) else joy = joystick.joy:getGamepadAxis(keys[#keys]) end
-		if love.keyboard.isScancodeDown(k) then
-			return true
-		end
-	end
-
-	local dp = joystickbinds[command][player_n]
-	for _,d in pairs(dp) do
-		if not(command == "fire" or command == "alt") then
-			if  joystick and joystick.joy:isGamepadDown(d) then
+	if input_device[2] == "keyboard+mouse" or input_device[2] == "keyboard" then
+		local keys = input_device[1][command][player_n]
+		for _,k in pairs(keys) do
+			if love.keyboard.isScancodeDown(k) then
 				return true
 			end
 		end
-		--else
-			--if joystick.joy:getGamepadAxis(d) then
-			--	return true
-			--end
-		--end
+	end
+
+	if input_device[2] == "joystick" then
+		local dp = joystickbinds[command][1]
+		for _,d in pairs(dp) do
+			if not(command == "fire" or command == "alt") then
+				if  joysticks[input_device[3]]:isGamepadDown(d) then -- joysticks[input_device[3]]:getAxis(1)
+					return true
+				end
+			end
+		end
 	end
 
 	return false
@@ -91,8 +89,8 @@ function get_autoaim(ply)
 	end
 end
 
-function button_pressed(cmd, n)
-	local btnd = button_down(cmd, n)
+function button_pressed(cmd, n , input_device)
+	local btnd = button_down(cmd, n , input_device)
 	local last_btnd = button_last_state[cmd]
 	if btnd then 
 		if not last_btnd then
@@ -107,13 +105,14 @@ end
 
 function updatejoystick()
 	joystick = {x=0,y=0}
-	local joysticks = love.joystick.getJoysticks()
+	joysticks = love.joystick.getJoysticks()
 	if #joysticks > 0 then
-		joystick.x = joysticks[1]:getAxis(1)
-		joystick.y = joysticks[1]:getAxis(2)
-		joystick.x2 = joysticks[1]:getAxis(3)
-		joystick.y2 = joysticks[1]:getAxis(4)
-		joystick.joy = joysticks[1]
+		joystick = joysticks
+		--joystick.x = joysticks[1]:getAxis(1)
+		--joystick.y = joysticks[1]:getAxis(2)
+		--joystick.x2 = joysticks[1]:getAxis(3)
+		--joystick.y2 = joysticks[1]:getAxis(4)
+		--joystick.joy = joysticks[1]
 	else
 		joystick = nil
 	end
@@ -130,13 +129,16 @@ function get_cursor_pos(ply, camera)
 	end ]]
 end
 
-function get_mouse_pos(camera)
-	
-	if joystick and keymode == "joystick" then
-		if (joystick.x2<-joystick_deadzone2 or joystick.x2>joystick_deadzone2 or joystick.y2<-joystick_deadzone2 or joystick.y2>joystick_deadzone2) or not(mx) then
-			mx, my = joystick.x2*10000 + player_list[1].x, joystick.y2*10000 + player_list[1].y
+function get_mouse_pos(input_device , camera , self)
+
+	if input_device[2] == "joystick" then
+		if (joysticks[input_device[3]]:getAxis(3)<-joystick_deadzone2 or joysticks[input_device[3]]:getAxis(3)>joystick_deadzone2 or
+		joysticks[input_device[3]]:getAxis(4)<-joystick_deadzone2 or joysticks[input_device[3]]:getAxis(4)>joystick_deadzone2) or not(mx) then
+			mx, my = joysticks[input_device[3]]:getAxis(3)*10000 + player_list[1].x, joysticks[input_device[3]]:getAxis(4)*10000 + player_list[1].y
+		else 
+			return self.cu_x,self.cu_y
 		end
-	else
+	elseif input_device[2] == "keyboard+mouse" then
 		mx, my = love.mouse.getPosition()
 	end
 	return mx/screen_sx + camera.x, my/screen_sy + camera.y
