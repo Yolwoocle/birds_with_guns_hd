@@ -19,12 +19,14 @@ function init_game_main(self)
 	camera.lock_x = true
 	camera.lock_y = true
 
-	nb_joueurs = 2
+	nb_joueurs = 3
 	player_list = {}
 	for i =1,nb_joueurs do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			controle = "keyboard+mouse"
-		else
+		elseif i == 2 then 
+			controle = "keyboard"
+		elseif i == 3 then 
 			controle = "joystick"
 		end
 
