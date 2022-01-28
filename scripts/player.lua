@@ -6,7 +6,7 @@ require "scripts/gun_list"
 require "scripts/collision"
 require "scripts/settings"
 
-function init_player(n,x,y , controle)
+function init_player(n,x,y , controle,nbcontroller)
 	local player = {
 		n = n,
 		x = x or 32,
@@ -54,7 +54,7 @@ function init_player(n,x,y , controle)
 		max_pickup_cd = 1,
 
 		get_nearest_enemy = get_nearest_enemy,
-		autoaim_max_dist = 128,
+		autoaim_max_dist = 185,
 		cu_x = 0,
 		cu_y = 0,
 		dircux = 0,
@@ -62,7 +62,7 @@ function init_player(n,x,y , controle)
 
 		update = update_player,
 		draw = draw_player,
-		input_device = {keybinds,controle,1}, --"keyboard+mouse" "keyboard" "joystick"
+		input_device = {keybinds,controle,nbcontroller}, --"keyboard+mouse" "keyboard" "joystick"
 		--TODO add keybinds
 	}
 	player.anim_sprs = player.anim_idle

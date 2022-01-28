@@ -19,18 +19,25 @@ function init_game_main(self)
 	camera.lock_x = true
 	camera.lock_y = true
 
-	nb_joueurs = 3
+	nb_joueurs = 4
 	player_list = {}
 	for i =1,nb_joueurs do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			controle = "keyboard+mouse"
-		elseif i == 2 then 
+
+		elseif i == 2 then
 			controle = "keyboard"
+
 		elseif i == 3 then 
 			controle = "joystick"
+			nbcontroller=1
+			
+		elseif i == 4 then 
+			controle = "joystick"
+			nbcontroller=2
 		end
 
-		local ply = init_player(i, 90+i*32, 90,controle)
+		local ply = init_player(i, 90+i*32, 90,controle,nbcontroller)
 		table.insert(player_list, ply)
 	end
 
