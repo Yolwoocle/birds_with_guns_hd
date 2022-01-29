@@ -119,7 +119,7 @@ guns = {
 		--bounce = 1,
 		scale = 1,
 		oscale = 0,
-		nbshot = 1300,
+		nbshot = 100,
 		spread  = pi2,
 		spdslow = .95,
 
