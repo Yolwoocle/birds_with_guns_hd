@@ -8,6 +8,15 @@ ceil = math.ceil
 max = math.max
 min = math.min
 
+red = {1,0,0}
+yellow = {1,1,0}
+green = {0,1,0}
+cyan = {0,1,1}
+blue = {0,0,1}
+magenta = {1,0,1}
+white = {1,1,1}
+black = {0,0,0}
+
 function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 	local w = spr:getWidth() or 0
 	local h = spr:getHeight() or 0

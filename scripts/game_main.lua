@@ -204,7 +204,7 @@ function draw_game_main(self)
 
 	-- Debug
 	debug_y = 30
-	rect_color("line", 158, 128, block_width, block_width, {1,0,0})
+	--rect_color("line", 158, 128, block_width, block_width, {1,0,0})
 
 	debug_print(notification)
 	--debug_print(joystick.x)
