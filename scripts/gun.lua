@@ -28,7 +28,7 @@ function make_gun(a)
 		cooldown      = a.cooldown      or 0.2,
 		ammo	      = a.max_ammo      or 100,
 		max_ammo      = a.max_ammo      or 100,
-		scattering    = a.scattering    or .1,
+		scattering    = a.scattering    or 0,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
 		burst	      = a.burst	    or 1, 
