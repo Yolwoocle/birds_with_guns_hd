@@ -65,3 +65,4 @@
 - Pizza gun, like these mini pizzas for apéritif
   - Peanut gun?
 - Butter gun
+- boulette de papier gun -> corbeille
