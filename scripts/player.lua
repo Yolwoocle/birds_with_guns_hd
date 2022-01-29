@@ -55,8 +55,8 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 
 		get_nearest_enemy = get_nearest_enemy,
 		autoaim_max_dist = 200,
-		cu_x = 0,
-		cu_y = 0,
+		cu_x = x,
+		cu_y = y+10,
 		dircux = 0,
 		dircuy = 0,
 
@@ -230,7 +230,7 @@ function aim_player(self, dt)
 	--	mmx, mmy = get_mouse_pos(self.input_device, camera , self)
 	--end
 
-		mmx, mmy = get_world_cursor_pos(self, self.input_device, camera)
+		mmx, mmy = get_world_cursor_pos(self, self.input_device,dt, camera)
 
 	self.cu_x = mmx or self.cu_x
 	self.cu_y = mmy or self.cu_x

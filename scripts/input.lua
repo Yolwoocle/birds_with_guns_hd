@@ -89,7 +89,7 @@ function get_autoaim(ply)
 	local dt = love.timer.getDelta()
 	x = lerp(ply.cu_x, x, 0.3)
 	y = lerp(ply.cu_y, y, 0.3)
-	return x, y
+	return x-camera.x, y-camera.y
 end
 
 function button_pressed(cmd, n , input_device)
@@ -121,20 +121,20 @@ function updatejoystick()
 	end
 end
 
-function get_cursor_pos(ply, input_device)
+function get_cursor_pos(ply, input_device,dt)
 	-- Abstraction of mouse, autoaim and controller aiming.
 	if input_device[2] == "keyboard+mouse" then
 		return get_mouse_pos()
 	elseif input_device[2] == "keyboard" then
 		return get_autoaim(ply)
 	elseif input_device[2] == "joystick" then 
-		return get_joystick_cursor_pos(input_device,ply)
+		return get_joystick_cursor_pos(input_device,ply,dt)
 	end
 	error("invalid input device")
 end
 
-function get_world_cursor_pos(ply, input_device, camera)
-	local x, y = get_cursor_pos(ply, input_device)
+function get_world_cursor_pos(ply, input_device,dt, camera)
+	local x, y = get_cursor_pos(ply, input_device,dt)
 	return x + camera.x, y + camera.y
 end
 
@@ -144,19 +144,31 @@ function get_mouse_pos()
 	return mx/screen_sx, my/screen_sy
 end
 
-function get_joystick_cursor_pos(input_device,ply)
+function get_joystick_cursor_pos(input_device,ply,dt)
 	--FIXME: no words
 	--if input_device[2] == "joystick" then
 	
 	local joyx = joysticks[input_device[3]]:getAxis(3)
 	local joyy = joysticks[input_device[3]]:getAxis(4)
-		if dist(joyy,joyx,0,0)>joystick_deadzone2 then--(joyx<-joystick_deadzone2 or joyx>joystick_deadzone2) and
+	local qdsf = dist(joyy,joyx,0,0)
+		if qdsf>joystick_deadzone2 then--(joyx<-joystick_deadzone2 or joyx>joystick_deadzone2) and
 		--(joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
+			local a = math.atan2(joyy,joyx)
+			return lerp(ply.cu_x,ply.x+math.cos(a)*200,.2)-camera.x, lerp(ply.cu_y,ply.y+math.sin(a)*200,.2)-camera.y
+			--return ply.x-camera.x+joyx*100,ply.y-camera.y+joyy*100
+			--ply.x + math.cos(dir) * rad
+		elseif dist((ply.cu_x-camera.x)+ply.dx*dt,(ply.cu_y-camera.y)+ply.dy*dt,ply.x-camera.x,ply.y-camera.y)>10 then
+			--return  lerp((ply.cu_x-camera.x)+ply.dx*dt, ply.x-camera.x, .1) ,  lerp((ply.cu_y-camera.y)+ply.dy*dt, ply.y-camera.y,0.1)
+			local x,y = lerp(ply.cu_x+ply.dx*dt, ply.x, .1)-camera.x ,  lerp(ply.cu_y+ply.dy*dt, ply.y,0.1)-camera.y
+			--ply.dircux = x+camera.x
+			--ply.dircuy = y+camera.y
+			return x,y
 
-			return ply.x-camera.x+joyx*100, ply.y-camera.y+joyy*100
-
-		else 
-			return (ply.x-camera.x) , (ply.y-camera.y)
+		else
+			return (ply.cu_x-camera.x)+ply.dx*dt,  (ply.cu_y-camera.y)+ply.dy*dt
+			--ply.dircux = (ply.dircux-camera.x)+ply.dx*dt
+			--ply.dircuy = (ply.dircuy-camera.y)+ply.dy*dt
+			--return lerp(ply.cu_x,ply.dircux,.5)-camera.x ,  lerp(ply.cu_y,ply.dircuy,.5)-camera.x
 		end
 	--end
 	

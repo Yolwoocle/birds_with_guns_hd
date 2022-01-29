@@ -48,14 +48,14 @@ function update_camera(self, dt)
 	end
 
 	-- Aiming offset
-	local mx, my = get_cursor_pos(player_list[1], player_list[1].input_device)
+	local mx, my = get_cursor_pos(player_list[1], player_list[1].input_device,dt,camera)
 	print("mx my", mx, my)
-
+	mx, my = mx,my
 	if not self.lock_x then
-		self.offset_x = (mx - window_w/2) * self.aim_offset
+		self.offset_x =  (mx - window_w/2) * self.aim_offset
 	end
 	if not self.lock_y then
-		self.offset_y = (my - window_h/2) * self.aim_offset
+		self.offset_y =  (my - window_h/2) * self.aim_offset
 	end
 
 	-- Apply screenkick (aka directional screenshake)

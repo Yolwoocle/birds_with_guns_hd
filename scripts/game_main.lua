@@ -28,6 +28,7 @@ function init_game_main(self)
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			--controle = "keyboard+mouse"
 			--controle = "keyboard"
+			--controle = "keyboard+mouse"
 			controle = "joystick"
 			nbcontroller=1
 			--nbcontroller = 1
