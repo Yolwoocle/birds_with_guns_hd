@@ -131,12 +131,9 @@ function udpate_game_main(self, dt)
 	for i = #bullets , 1 , -1 do
 		b = bullets[i]
 		b:update(dt,i)
-	end
-
-	for i = #bullets , 1 , -1 do
-		b = bullets[i]
 		damage_everyone(b,i)
 	end
+
 	--for i,m in ipairs(mobs) do
 	for i = #mobs , 1 , -1 do
 		m = mobs[i]
