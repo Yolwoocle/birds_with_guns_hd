@@ -419,7 +419,6 @@ function checkdeath(self)
 end
 
 function damage_everyone(self, k) -- problemes de remove des bullets avec index
-	
 	-- Collisions between enemies and bullets
 	for i,m in ipairs(mobs) do
 		--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})

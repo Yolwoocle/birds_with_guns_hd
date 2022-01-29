@@ -21,7 +21,7 @@ guns = {
 		spr = spr_assault_rifle,
 		cooldown = 0.4,
 		scattering = 0.2,
-		damage = 3,
+		damage = 2,
 
 		scale = 0.5, 
 
@@ -35,7 +35,7 @@ guns = {
 		spr = spr_fire_extinguisher,
 		bulletspr = spr_empty,
 		nbshot = 10,
-		damage = 0.01,
+		damage = 0.02,
 
 		spdslow = 1,
 		bullet_spd = 200,
@@ -52,7 +52,7 @@ guns = {
 		max_ammo = inf,
 
 		update_option = function(self,dt)
-			table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
+			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 		end
 	}),
 
@@ -81,33 +81,52 @@ guns = {
 		name = "firework launcher",
 		--type = "laser",
 		spr = spr_firework_launcher,
-		--bulletspr = spr_laser,
+		bulletspr = spr_rocket,
 
-		nbshot = 5,
+		nbshot = 1,
 
 		spdslow = 1.3,
 		bullet_spd = 500,
-		scattering    = 1,
+		scattering    = 0,
 
 		screenkick = 20,
 
 		scale = 1,
-		cooldown = 0.2,
+		cooldown = 0.1,
 		burst  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
-		bullet_life = 2,
+		bullet_life = 1.5,
+		ptc_type = "circle",
 
 		on_death = function(self , k)
-			--obj = copy(self.player)
-			--obj.x = self.x
-			--obj.y = self.y
-			--obj.rot = math.atan2(self.dy,self.dx)
-			--obj.gun = copy(guns.jspp)
-			--append_list(_shot, obj.gun:make_shot(obj))
+			obj = copy(self.player)
+			obj.rot = math.atan2(self.dy,self.dx)
+			obj.x = self.x-math.cos(obj.rot)*30
+			obj.y = self.y-math.sin(obj.rot)*30
+			obj.gun = copy(guns.firework_explosion)
+			--table.insert(_shot_, obj.gun:make_shot(obj))
+			append_list(_shot, obj.gun:make_shot(obj))
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 			table.remove(bullets, k)
 	   end
+	}),
+
+	firework_explosion = make_gun({
+		name = "firework_explosion", 
+		type = "bullet",
+		--bounce = 1,
+		scale = 1,
+		oscale = 0,
+		nbshot = 1300,
+		spread  = pi2,
+		spdslow = .95,
+
+		--ptc_type = "circle",
+		cooldown = .5,
+		bullet_spd = 500,
+		bullet_life = .75,
+
 	}),
 
 	fox_revolver = make_gun({

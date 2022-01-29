@@ -14,17 +14,20 @@ end
 function init_game_main(self)
 	spawn_time = inf
 	nbwave = 0
+	_shot_ = {}
 	sp_mark = {}
 	camera = init_camera()
 	camera.lock_x = true
 	camera.lock_y = true
 
+
 	nb_joueurs = 1
+
 	player_list = {}
 	for i =1,nb_joueurs do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			controle = "keyboard+mouse"
-
+			--nbcontroller = 1
 		elseif i == 2 then
 			controle = "keyboard"
 
@@ -35,6 +38,7 @@ function init_game_main(self)
 		elseif i == 4 then 
 			controle = "joystick"
 			nbcontroller=2 --]]
+
 		end
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk,}--TODO: fix
@@ -78,12 +82,22 @@ function udpate_game_main(self, dt)
 	pickups:update()
 	update_waves(dt)
 
+
+	--
+	--for i = #_shot_ , 1 , -1 do
+	--	s = _shot_[i]
+	--	append_list(_shot, s)
+	--	table.remove(_shot_, i)
+	--end
+
+
 	--for i,z in ipairs(zones) do
 	for i = #zones , 1 , -1 do
 		z = zones[i]
 		z:update(dt,i)
 		damageinzone(z,i) 
 	end
+
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
 		if p.shoot then
@@ -95,32 +109,46 @@ function udpate_game_main(self, dt)
 		end
 	end
 	toremove = {}
-	for i,v in ipairs(_shot) do
+	--for i,v in ipairs(_shot) do
+	for i = #_shot , 1 , -1 do
+		v = _shot[i]
 		-- Summon shots
 		if v.time <= 0 then
 			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset,nil,v.spr))
-			table.insert(toremove , i)
+			--table.insert(toremove , i)
+			table.remove(_shot, i)
 		else
 			v.time=v.time-dt
 		end
 	end
-
-	for i,v in ipairs(toremove) do
-		table.remove(_shot, v-i+1)
-	end
+	--for i,v in ipairs(toremove) do
+	--	table.remove(_shot, v-i+1)
+	--end
 	nb_delet = 0
 	--for i,b in ipairs(bullets) do
+
+	for i = #bullets , 1 , -1 do
+		b = bullets[i]
+		damage_everyone(b,i)
+	end
+
 	for i = #bullets , 1 , -1 do
 		b = bullets[i]
 		b:update(dt,i)
-		damage_everyone(b,i)
 	end
 	--for i,m in ipairs(mobs) do
 	for i = #mobs , 1 , -1 do
 		m = mobs[i]
 		m:update(dt)
 	end
-	
+
+	--for i,z in ipairs(zones) do
+	for i = #zones , 1 , -1 do
+		z = zones[i]
+		z:update(dt,i)
+		damageinzone(z,i) 
+	end
+
 	--for i,m in pairs(mobs) do
 	--	if m.life<=0 then
 	--		table.remove(mobs , i)
