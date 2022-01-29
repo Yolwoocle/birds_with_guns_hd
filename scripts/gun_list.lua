@@ -56,7 +56,6 @@ guns = {
 		end
 	}),
 
-	
 
 	knight_gun = make_gun({
 		name = "knight_gun",
