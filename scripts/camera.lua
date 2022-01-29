@@ -39,6 +39,7 @@ end
 
 function update_camera(self, dt)
 	local smoothing = math.min(self.smoothing * dt, 1)
+	-- Move to player
 	if not self.lock_x then 
 		self.fake_x = self.fake_x + (self.target_x - self.fake_x) * smoothing  
 	end
@@ -46,11 +47,9 @@ function update_camera(self, dt)
 		self.fake_y = self.fake_y + (self.target_y - self.fake_y) * smoothing
 	end
 
-	-- Offset
-	--local mx, my = get_mouse_pos(self)
-
-	--mx, my = love.mouse.getPosition()
-	--mx, my = mx/screen_sx + camera.x, my/screen_sy + camera.y
+	-- Aiming offset
+	local mx, my = get_cursor_pos(player_list[1], "keyboard+mouse")
+	print("mx my", mx, my)
 
 	if not self.lock_x then
 		self.offset_x = (mx - window_w/2) * self.aim_offset
@@ -58,11 +57,12 @@ function update_camera(self, dt)
 	if not self.lock_y then
 		self.offset_y = (my - window_h/2) * self.aim_offset
 	end
-	self.fake_x = self.fake_x + self.offset_x
-	self.fake_y = self.fake_y + self.offset_y
 
+	-- Apply screenkick (aka directional screenshake)
 	self.kick_x = self.kick_x * inv_dt(self.kick_fric, dt)
 	self.kick_y = self.kick_y * inv_dt(self.kick_fric, dt)
+	self.kick_x = round_if_near_zero(self.kick_x)
+	self.kick_y = round_if_near_zero(self.kick_y)
 
 	-- Apply shake
 	local rnd_ang = love.math.random() * pi2
@@ -72,8 +72,8 @@ function update_camera(self, dt)
 	self.shake_rad = self.shake_rad * inv_dt(self.shake_fric, dt)
 	self.shake_rad = round_if_near_zero(self.shake_rad) 
 
-	self.x = self.fake_x + self.kick_x + self.shake_x 
-	self.y = self.fake_y + self.kick_y + self.shake_y 
+	self.x = self.fake_x + self.offset_x + self.kick_x + self.shake_x 
+	self.y = self.fake_y + self.offset_y + self.kick_y + self.shake_y 
 	self.x = floor(self.x)
 	self.y = floor(self.y)
 	----------------------------------------------------------------

@@ -17,8 +17,8 @@ function init_game_main(self)
 	_shot_ = {}
 	sp_mark = {}
 	camera = init_camera()
-	camera.lock_x = true
-	camera.lock_y = true
+	camera.lock_x = false
+	camera.lock_y = false
 
 
 	nb_joueurs = 1

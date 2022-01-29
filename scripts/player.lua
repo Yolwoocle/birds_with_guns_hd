@@ -224,11 +224,12 @@ end
 function aim_player(self, dt)
 	--print(self.input_device[2])
 	--love.event.quit()
+	local mmx, mmy
 	if self.input_device[2] == "keyboard" then --input_device
-		mmx, mmy = get_cursor_pos(self, camera)
 	else
 		mmx, mmy = get_mouse_pos(self.input_device, camera , self)
 	end
+		mmx, mmy = get_world_cursor_pos(self, "keyboard+mouse", camera)
 
 	self.cu_x = mmx
 	self.cu_y = mmy

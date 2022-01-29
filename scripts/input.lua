@@ -99,7 +99,7 @@ function button_pressed(cmd, n , input_device)
 			return true
 		end
 	else
-		button_last_state[cmd] = fakse
+		button_last_state[cmd] = false
 	end
 	return false
 end
@@ -119,19 +119,32 @@ function updatejoystick()
 	end
 end
 
-function get_cursor_pos(ply, camera)
-	return get_autoaim(ply)
+function get_cursor_pos(ply, input_device)
+	-- Abstraction of mouse, autoaim and controller aiming.
 
-	--[[TODO: support controllers 
-	if camera then
-		return get_mouse_pos(camera)  
-	else
-		return get_canvas_mouse_pos()
-	end ]]
+	if input_device == "keyboard+mouse" then
+		return get_mouse_pos()
+	elseif input_device == "keyboard" then
+		return get_autoaim(ply)
+	elseif input_device == "joystick" then 
+		return get_joystick_cursor_pos()
+	end
+	error("invalid input device")
 end
 
-function get_mouse_pos(input_device , camera , self)
+function get_world_cursor_pos(ply, input_device, camera)
+	local x, y = get_cursor_pos(ply, input_device)
+	return x + camera.x, y + camera.y
+end
 
+function get_mouse_pos()
+	--FIXME: won't wrok if the screen has borders
+	local mx, my = love.mouse.getPosition()
+	return mx/screen_sx, my/screen_sy
+end
+
+function get_joystick_cursor_pos()
+	--FIXME: no words
 	if input_device[2] == "joystick" then
 		if (joysticks[input_device[3]]:getAxis(3)<-joystick_deadzone2 or joysticks[input_device[3]]:getAxis(3)>joystick_deadzone2 or
 		joysticks[input_device[3]]:getAxis(4)<-joystick_deadzone2 or joysticks[input_device[3]]:getAxis(4)>joystick_deadzone2) or not(mx) then
@@ -139,14 +152,6 @@ function get_mouse_pos(input_device , camera , self)
 		else 
 			return self.cu_x,self.cu_y
 		end
-	elseif input_device[2] == "keyboard+mouse" then
-		mx, my = love.mouse.getPosition()
 	end
-	return mx/screen_sx + camera.x, my/screen_sy + camera.y
-end 
-
-function get_canvas_mouse_pos()
-	-- TODO add screen offset
-	local mx, my = love.mouse.getPosition()
-	return mx/screen_sx, my/screen_sy
+	
 end
