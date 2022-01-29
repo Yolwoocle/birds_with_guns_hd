@@ -121,13 +121,12 @@ end
 
 function get_cursor_pos(ply, input_device)
 	-- Abstraction of mouse, autoaim and controller aiming.
-
-	if input_device == "keyboard+mouse" then
+	if input_device[2] == "keyboard+mouse" then
 		return get_mouse_pos()
-	elseif input_device == "keyboard" then
+	elseif input_device[2] == "keyboard" then
 		return get_autoaim(ply)
-	elseif input_device == "joystick" then 
-		return get_joystick_cursor_pos()
+	elseif input_device[2] == "joystick" then 
+		return get_joystick_cursor_pos(input_device,ply)
 	end
 	error("invalid input device")
 end
@@ -143,15 +142,19 @@ function get_mouse_pos()
 	return mx/screen_sx, my/screen_sy
 end
 
-function get_joystick_cursor_pos()
+function get_joystick_cursor_pos(input_device,ply)
 	--FIXME: no words
-	if input_device[2] == "joystick" then
-		if (joysticks[input_device[3]]:getAxis(3)<-joystick_deadzone2 or joysticks[input_device[3]]:getAxis(3)>joystick_deadzone2 or
-		joysticks[input_device[3]]:getAxis(4)<-joystick_deadzone2 or joysticks[input_device[3]]:getAxis(4)>joystick_deadzone2) or not(mx) then
-			mx, my = joysticks[input_device[3]]:getAxis(3)*10000 + player_list[1].x, joysticks[input_device[3]]:getAxis(4)*10000 + player_list[1].y
+	--if input_device[2] == "joystick" then
+	local joyx = joysticks[input_device[3]]:getAxis(3)
+	local joyy = joysticks[input_device[3]]:getAxis(4)
+		if (joyx<-joystick_deadzone2 or joyx>joystick_deadzone2 or
+		joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
+
+			return ply.x-camera.x+joyx, ply.y-camera.y+joyy
+
 		else 
-			return self.cu_x,self.cu_y
+			return ply.x-camera.x+ply.cu_x,ply.y-camera.y+ply.cu_y
 		end
-	end
+	--end
 	
 end

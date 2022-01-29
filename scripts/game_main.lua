@@ -26,9 +26,10 @@ function init_game_main(self)
 	player_list = {}
 	for i =1,nb_joueurs do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
-			controle = "keyboard+mouse"
-			--controle = "joystick"
-			--nbcontroller=1
+			--controle = "keyboard+mouse"
+			--controle = "keyboard"
+			controle = "joystick"
+			nbcontroller=1
 			--nbcontroller = 1
 		elseif i == 2 then
 			controle = "keyboard"
