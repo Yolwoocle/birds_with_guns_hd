@@ -290,20 +290,6 @@ function update_bullet(self, dt , i)
         	interact_map(self,map,(x  )/ block_width, (y+h)/ block_width)
 		end
 	end
-	
-	if checkdeath(self) then 
-		if self.life <= 0 then
-			self:on_death(i)
-			nb_delet = nb_delet+1
-		end
-		local mapx, mapy = self.x / block_width, self.y / block_width
-		if map:is_solid(mapx, mapy) then
-		interact_map(self, map, mapx, mapy)
-		self:on_death(i)
-		nb_delet = nb_delet+1
-		end
-	end
-
 	-- Particles
 	if self.gun.ptc_type == "circle" and self.ptc_timer <= 0 then
 		local x, y = random_polar(10)
@@ -338,9 +324,6 @@ function update_laser(self, dt , i)
 
 	self.life = self.life - dt 
 
-	if self.life < 0 then
-		self:on_death(i)
-	end
 end
 
 function bouncedir(self)
@@ -419,6 +402,28 @@ function checkdeath(self)
 end
 
 function damage_everyone(self, k) -- problemes de remove des bullets avec index
+	if self.type ==  "bullet" then
+		if checkdeath(self) then 
+			if self.life <= 0 then
+				self:on_death(k)
+				return
+				--nb_delet = nb_delet+1
+			end
+			local mapx, mapy = self.x / block_width, self.y / block_width
+			if map:is_solid(mapx, mapy) then
+			interact_map(self, map, mapx, mapy)
+			self:on_death(k)
+			return
+			--nb_delet = nb_delet+1
+			end
+		end
+	elseif self.type == "laser" then
+		if self.life < 0 then
+			self:on_death(k)
+		return
+		end
+	end
+
 	-- Collisions between enemies and bullets
 	for i,m in ipairs(mobs) do
 		--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})

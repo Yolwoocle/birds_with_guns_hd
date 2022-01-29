@@ -83,12 +83,7 @@ function udpate_game_main(self, dt)
 	update_waves(dt)
 
 
-	--
-	--for i = #_shot_ , 1 , -1 do
-	--	s = _shot_[i]
-	--	append_list(_shot, s)
-	--	table.remove(_shot_, i)
-	--end
+
 
 
 	--for i,z in ipairs(zones) do
@@ -97,6 +92,12 @@ function udpate_game_main(self, dt)
 		z:update(dt,i)
 		damageinzone(z,i) 
 	end
+
+	--for i = #_shot_ , 1 , -1 do
+	--	s = _shot_[i]
+	--	append_list(_shot, s)
+	--	table.remove(_shot_, i)
+	--end
 
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
@@ -108,6 +109,7 @@ function udpate_game_main(self, dt)
 			end
 		end
 	end
+
 	toremove = {}
 	--for i,v in ipairs(_shot) do
 	for i = #_shot , 1 , -1 do
@@ -126,15 +128,14 @@ function udpate_game_main(self, dt)
 	--end
 	nb_delet = 0
 	--for i,b in ipairs(bullets) do
-
 	for i = #bullets , 1 , -1 do
 		b = bullets[i]
-		damage_everyone(b,i)
+		b:update(dt,i)
 	end
 
 	for i = #bullets , 1 , -1 do
 		b = bullets[i]
-		b:update(dt,i)
+		damage_everyone(b,i)
 	end
 	--for i,m in ipairs(mobs) do
 	for i = #mobs , 1 , -1 do
