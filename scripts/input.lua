@@ -1,5 +1,3 @@
-require "scripts/utility"
-
 function init_keybinds() 
 	keybinds = {
 		left  = {{"a"},{"left"}}, 
@@ -98,7 +96,7 @@ function button_pressed(cmd, n , input_device)
 	if btnd then 
 		if not last_btnd then
 			button_last_state[cmd] = true
-			return true
+			return true 
 		end
 	else
 		button_last_state[cmd] = false
@@ -147,9 +145,9 @@ end
 function get_joystick_cursor_pos(input_device,ply,dt)
 	--FIXME: no words
 	--if input_device[2] == "joystick" then
-	
 	local joyx = joysticks[input_device[3]]:getAxis(3)
 	local joyy = joysticks[input_device[3]]:getAxis(4)
+
 	local qdsf = dist(joyy,joyx,0,0)
 		if qdsf>joystick_deadzone2 then--(joyx<-joystick_deadzone2 or joyx>joystick_deadzone2) and
 		--(joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
@@ -169,6 +167,7 @@ function get_joystick_cursor_pos(input_device,ply,dt)
 			--ply.dircux = (ply.dircux-camera.x)+ply.dx*dt
 			--ply.dircuy = (ply.dircuy-camera.y)+ply.dy*dt
 			--return lerp(ply.cu_x,ply.dircux,.5)-camera.x ,  lerp(ply.cu_y,ply.dircuy,.5)-camera.x
+
 		end
 	--end
 	

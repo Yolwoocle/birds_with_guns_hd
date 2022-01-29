@@ -224,7 +224,6 @@ end
 function aim_player(self, dt)
 	--print(self.input_device[2])
 	--love.event.quit()
-	local mmx, mmy
 	--if self.input_device[2] == "keyboard" then --input_device
 	--else
 	--	mmx, mmy = get_mouse_pos(self.input_device, camera , self)
