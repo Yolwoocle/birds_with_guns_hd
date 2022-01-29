@@ -21,7 +21,7 @@ function init_game_main(self)
 	camera.lock_y = false
 
 
-	nb_joueurs = 1
+	nb_joueurs = 4
 
 	player_list = {}
 	for i =1,nb_joueurs do
@@ -30,23 +30,23 @@ function init_game_main(self)
 			--controle = "keyboard"
 
 			--controle = "keyboard+mouse"
-			controle = "joystick"
+			controle = "keyboard+mouse"
 			nbcontroller=1
 			--nbcontroller = 1
 		elseif i == 2 then
 			controle = "keyboard"
 
-		--[[elseif i == 3 then 
+		elseif i == 3 then 
 			controle = "joystick"
 			nbcontroller=1
 			
 		elseif i == 4 then 
 			controle = "joystick"
-			nbcontroller=2 --]]
+			nbcontroller=2
 
 		end
 
-		birds_spr = {anim_pigeon_walk, anim_duck_walk,}--TODO: fix
+		birds_spr = {anim_pigeon_walk, anim_duck_walk,anim_pigeon_walk, anim_duck_walk,}--TODO: fix
 		local ply = init_player(i, 90+i*32, 90, birds_spr[i],controle,nbcontroller)
 		table.insert(player_list, ply)
 		player_list[i].anim_walk = birds_spr[i]

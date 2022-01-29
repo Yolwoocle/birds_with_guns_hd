@@ -73,20 +73,23 @@ function get_autoaim(ply)
 		y = ne.y 
 		ply.show_cu = true
 	else 
-		if math.abs(ply.dx) + math.abs(ply.dy) > 0.5 then 
+
+		if dist(math.abs(ply.dx),math.abs(ply.dy),0,0)>.001 then
 			ply.dircux, ply.dircuy = ply.dx, ply.dy
 			ply.show_cu = true
+			local dir = math.atan2(ply.dircuy, ply.dircux)
+			local rad = 64
+			x = ply.x + ply.dircux/1.5--math.cos(dir) * rad
+			y = ply.y + ply.dircuy/1.5--math.sin(dir) * rad
 		else 
 			ply.show_cu = false
+			x = ply.cu_x
+			y = ply.cu_y
 		end
-		local dir = math.atan2(ply.dircuy, ply.dircux)
-		local rad = 64
-		x = ply.x + math.cos(dir) * rad
-		y = ply.y + math.sin(dir) * rad
 	end
 	local dt = love.timer.getDelta()
-	x = lerp(ply.cu_x, x, 0.3)
-	y = lerp(ply.cu_y, y, 0.3)
+	x = lerp(ply.cu_x, x, 0.1)
+	y = lerp(ply.cu_y, y, 0.1)
 	return x-camera.x, y-camera.y
 end
 
@@ -152,7 +155,7 @@ function get_joystick_cursor_pos(input_device,ply,dt)
 		if qdsf>joystick_deadzone2 then--(joyx<-joystick_deadzone2 or joyx>joystick_deadzone2) and
 		--(joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
 			local a = math.atan2(joyy,joyx)
-			return lerp(ply.cu_x,ply.x+math.cos(a)*200,.2)-camera.x, lerp(ply.cu_y,ply.y+math.sin(a)*200,.2)-camera.y
+			return lerp(ply.cu_x,ply.x+math.cos(a)*220,.2)-camera.x, lerp(ply.cu_y,ply.y+math.sin(a)*220,.2)-camera.y
 			--return ply.x-camera.x+joyx*100,ply.y-camera.y+joyy*100
 			--ply.x + math.cos(dir) * rad
 		elseif dist((ply.cu_x-camera.x)+ply.dx*dt,(ply.cu_y-camera.y)+ply.dy*dt,ply.x-camera.x,ply.y-camera.y)>10 then

@@ -139,9 +139,9 @@ function draw_player(self)
 	end
 	love.graphics.setColor(1,1,1)
 
-	--if self.show_cu then 
+	if self.show_cu then 
 		draw_centered(spr_cursor, self.cu_x, self.cu_y)
-	--end
+	end
 	
 	love.graphics.print(tostr(self.is_coll),self.x, self.y-16)
 	love.graphics.draw(self.debugcanvas, 0,0)
