@@ -70,7 +70,7 @@ guns = {
 		spawn_x = 20,
 		
 		scale = 1.25,
-		cooldown = 1,
+		cooldown = 4,
 		burst  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
@@ -92,7 +92,7 @@ guns = {
 		screenkick = 20,
 
 		scale = 1,
-		cooldown = 0.1,
+		cooldown = 0.4,
 		burst  = 1,
 		max_ammo = inf,
 		make_shot = default_shoot,
@@ -115,9 +115,9 @@ guns = {
 		name = "firework_explosion", 
 		type = "bullet",
 		--bounce = 1,
-		scale = 1,
+		scale = .75,
 		oscale = 0,
-		nbshot = 100,
+		nbshot = 10,
 		spread  = pi2,
 		spdslow = .95,
 
@@ -128,6 +128,43 @@ guns = {
 
 	}),
 
+	death_explosion = make_gun({
+		name = "death_explosion", 
+		type = "bullet",
+		--bounce = 1,
+		scale = .85,
+		oscale = 0,
+		nbshot = 10,
+		spread  = pi2,
+		spdslow = .95,
+
+		--ptc_type = "circle",
+		cooldown = .5,
+		bullet_spd = 110,
+		bullet_life = 1,
+
+	}),
+
+	shotgunregular = make_gun{
+		name = "shotgunregular",
+		spr = spr_shotgun,
+		nbshot = 5,
+		spread  = pi/1.5,
+		cooldown = 2,
+		bullet_spd = 110,
+	},
+
+	shotgunregular2 = make_gun{
+		name = "shotgunregular",
+		spr = spr_shotgun,
+		nbshot = 6,
+		spread  = pi/1.3,
+		cooldown = 2,
+		bullet_spd = 125,
+		burst  = 2,
+		burstdt  = .4,
+	},
+
 	fox_revolver = make_gun({
 		name = "Fox revolver",
 		type = "bullet",
@@ -135,7 +172,7 @@ guns = {
 		bullet_spd = 100,
 		
 		scale = 1,
-		cooldown = 0.8,
+		cooldown = 1.5,
 		make_shot = default_shoot,
 	}),
 

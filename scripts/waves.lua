@@ -11,11 +11,28 @@ waves = {
     },
 
     {
-        {mob_list.fox,8},
+        {mob_list.shotgunboy,1},
     },
 
     {
-        {mob_list.knight,1},
+        {mob_list.fox,2},
+        {mob_list.shotgunboy,2},
+    },
+
+    {
+        {mob_list.fox,4},
+        {mob_list.shotgunboy2,1},
+    },
+
+    {
+        {mob_list.shotgunboy,2},
+        {mob_list.shotgunboy2,2},
+    },
+
+    {
+        {mob_list.fox,4},
+        {mob_list.shotgunboy,1},
+        {mob_list.shotgunboy2,3},
     },
 
     {
@@ -119,8 +136,8 @@ function update_waves(dt)
             for w = 1,k[2] do
                 local x=5*16+math.random(300)
                 local y=4*16+math.random(160)
-                --table.insert(spawn_location, {x=x,y=y})
-                --table.insert(sp_mark,{x=x,y=y})
+                table.insert(spawn_location, {x=x,y=y})
+                table.insert(sp_mark,{x=x,y=y})
             end
         end
         
@@ -132,7 +149,7 @@ function update_waves(dt)
         for _,k in pairs(waves[nbwave]) do 
             for w = 1,k[2] do
                 nb_iteration = nb_iteration+1 --spawn_location
-                --table.insert(mobs, k[1]:spawn(spawn_location[nb_iteration].x,spawn_location[nb_iteration].y))
+                table.insert(mobs, k[1]:spawn(spawn_location[nb_iteration].x,spawn_location[nb_iteration].y))
             end
         end
         spawn_location = {}

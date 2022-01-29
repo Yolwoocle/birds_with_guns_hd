@@ -38,7 +38,7 @@ function make_mob(a)
 
 		spawn = spawn_mob,
 		shoot = shoot_gun,
-		kill = kill_mob,
+		kill = a.kill_mob or kill_mob,
 		damage = damage_mob,
 		loot = loot_mob,
 
@@ -106,7 +106,7 @@ function update_mob(self, dt)
 		rayc.hit = false
 	end
 
-	if rayc.hit then
+	if rayc.hit and self.gun.cooldown_timer <= 0 then --
 		if self.distplayer> self.far_p then
 			self.dx =  self.dxplayer * self.spd
 			self.dy =  self.dyplayer * self.spd
@@ -131,6 +131,10 @@ function update_mob(self, dt)
 			self.gun:shoot()
 			self.gun.dt = 0
 			append_list(_shot, self.gun:make_shot(self))
+			self.dtmouvement = self.mv_mouvement --+ self.mv_pause --
+			local of = random_float(-pi/2, pi/2)
+			self.dx_idle = -math.cos(self.rot+of)*self.spd
+			self.dy_idle = -math.sin(self.rot+of)*self.spd
 		end
 
 		if not(mv or self.close_mv) then
