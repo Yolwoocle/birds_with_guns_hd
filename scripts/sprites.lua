@@ -61,11 +61,12 @@ spr_pick_ammo = load_image("pickups/ammo")
 spr_pick_life = load_image("pickups/life")
 
 -- Projectiles
-spr_bullet = load_image("bullet_flat_1")
-spr_bullet_pink = load_image("bullet_flat_pink_1")
-spr_bullet_red = load_image("bullet_flat_red_1")
+spr_bullet = load_image("projectiles/bullet_flat_1")
+spr_bullet_pink = load_image("projectiles/bullet_flat_pink_1")
+spr_bullet_red = load_image("projectiles/bullet_flat_red_1")
 spr_laser = load_image("laser")
 spr_rocket = load_image("projectiles/rocket")
+spr_paper_plane = load_image("projectiles/paper_plane")
 
 -- Guns
 spr_revolver = load_image("guns/gun_revolver_small")
@@ -73,6 +74,8 @@ spr_shotgun = load_image("guns/shotgun")
 spr_firework_launcher = load_image("guns/firework_launcher")
 spr_fire_extinguisher = load_image("guns/fire_extinguisher")
 spr_assault_rifle = load_image("guns/assault_rifle")
+spr_paper_plane_gun = load_image("guns/paper_plane_gun")
+spr_water_gun = load_image("guns/water_gun")
 
 spr_revolver_big = load_image("guns/gun_revolver")
 spr_firework_launcher_big = load_image("guns/firework_launcher_big")
