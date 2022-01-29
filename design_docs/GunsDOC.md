@@ -60,6 +60,11 @@
 | `screenshake`          | number | `6` | value of screenshake; unline screenkick, is not directional |
 | `camera_offset`        | number | `0.3` | how far the camera is offset when moving the mouse around. 1 means that the camera will follow exactly the cursor. |
 
+### Particles
+```
+		ptc_type = a.ptc_type or "none", 
+		ptc_size = a.ptc_size or 10,
+```
 
 ### Charge
 The following variables are similar to above, except they represent the maximum value when a "chargable" gun is max charged. 
