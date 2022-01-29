@@ -64,6 +64,8 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 		draw = draw_player,
 		input_device = {keybinds,controle,nbcontroller}, --"keyboard+mouse" "keyboard" "joystick"
 		--TODO add keybinds
+
+		debugcanvas = love.graphics.newCanvas(),
 	}
 	player.anim_sprs = player.anim_idle
 
@@ -79,7 +81,7 @@ function update_player(self, dt)
 	--self.dx = round_if_near_zero(self.dx)
 	--self.dy = round_if_near_zero(self.dy)
 	--collide_object(self,.2)
-	collision_response(self, map)
+	--collision_response(self, map)
 	-- Apply movement 
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt
@@ -142,9 +144,11 @@ function draw_player(self)
 	end
 	
 	love.graphics.print(tostr(self.is_coll),self.x, self.y-16)
+	love.graphics.draw(self.debugcanvas, 0,0)
 
-	--collision_response(self, map)
+	collision_response(self, map)
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
+	--collision_response(self, map)
 end
 
 function player_movement(self, dt)

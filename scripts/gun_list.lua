@@ -56,6 +56,8 @@ guns = {
 		end
 	}),
 
+	
+
 	knight_gun = make_gun({
 		name = "knight_gun",
 		spr = spr_fire_extinguisher,

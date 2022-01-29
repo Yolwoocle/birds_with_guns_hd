@@ -4,7 +4,7 @@ require "scripts/utility"
 function collision_response(obj, map)
 	-- Reference: https://www.amanotes.com/post/using-swept-aabb-to-detect-and-process-collision
 	-- Other helpful article: https://www.gamedev.net/tutorials/programming/general-and-gameplay-programming/swept-aabb-collision-detection-and-response-r3084/
-	
+
 	-- We convert from centered to corner
 	local dt = love.timer.getDelta()
 	local o = {
@@ -22,16 +22,21 @@ function collision_response(obj, map)
 	local bw = block_width
 	local sgn_x = sign(x2-x1)
 	local sgn_y = sign(y2-y1)
-	
+
 	rect_color("line", o.x, o.y, o.w, o.h, {0,1,0})
-	for iy = y1, y2+(bw*sgn_y), bw*sgn_y do
-	for ix = x1, x2+(bw*sgn_x), bw*sgn_x do
+	--print("iy", y1, y2, bw*sgn_y)
+	--print("ix", x1, x2, bw*sgn_x)
+	for iy = y1, y2, bw*sgn_y do
+	for ix = x1, x2, bw*sgn_x do
+		--print("", "loop", ix, iy)
 		if map:is_solid(ix/bw, iy/bw) then
 			local b = {
 				x = floor(ix/bw)*bw, 
 				y = floor(iy/bw)*bw,
 				w = bw, h = bw,
 			}
+
+			rect_color("line",b.x,b.y,b.w,b.h, {1,0,0})
 			local entry_time, normal_x, normal_y = swept_aabb(o,b)
 			if entry_time then
 				if math.abs(normal_x) > 0 then
