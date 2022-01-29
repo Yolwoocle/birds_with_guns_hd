@@ -24,22 +24,22 @@ function make_gun(a)
 		category	  = a.category		or "instant",
 		bounce 		  = a.bounce		or 0,
 		bullet_spd    = a.bullet_spd    or 600,
-		offset_spd    = a.ospd	        or 0,
+		offset_spd    = a.offset_spd	or 0,
 		cooldown      = a.cooldown      or 0.2,
 		ammo	      = a.max_ammo      or 100,
 		max_ammo      = a.max_ammo      or 100,
 		scattering    = a.scattering    or .1,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
-		burst	      = a.burst	    or 1, --FIXME: burst pas burst
-		burstdt      = a.burstdt	    or .5, --FIXME: burst_spd ou jsp quoi
+		burst	      = a.burst	    or 1, 
+		burstdt      = a.burstdt	    or .5, 
 		bullet_life	  = a.bullet_life   or 2,	--bullet_life
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1,
 		
-		scale 		  = a.scale			or 0.5,
+		scale 		  = a.scale			or 1,
 		oscale 		  = a.oscale        or 0,
 		on_death 	  = a.on_death		or kill,
 
