@@ -111,7 +111,6 @@ guns = {
 			table.remove(bullets, k)
 	   end
 	}),
-
 	firework_explosion = make_gun({
 		name = "firework_explosion", 
 		type = "bullet",
