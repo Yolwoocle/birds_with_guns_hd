@@ -28,7 +28,7 @@ function init_game_main(self)
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			--controle = "keyboard+mouse"
 			--controle = "keyboard"
-			controle = "joystick"
+			controle = "keyboard"--"joystick"
 			nbcontroller=1
 			--nbcontroller = 1
 		elseif i == 2 then
@@ -84,10 +84,6 @@ function udpate_game_main(self, dt)
 	map:update()
 	pickups:update()
 	update_waves(dt)
-
-
-
-
 
 	--for i,z in ipairs(zones) do
 	for i = #zones , 1 , -1 do
