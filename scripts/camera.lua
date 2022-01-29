@@ -48,7 +48,7 @@ function update_camera(self, dt)
 	end
 
 	-- Aiming offset
-	local mx, my = get_cursor_pos(player_list[1], "keyboard+mouse")
+	local mx, my = get_cursor_pos(player_list[1], player_list[1].input_device)
 	print("mx my", mx, my)
 
 	if not self.lock_x then

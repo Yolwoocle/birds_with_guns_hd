@@ -139,9 +139,9 @@ function draw_player(self)
 	end
 	love.graphics.setColor(1,1,1)
 
-	if self.show_cu then 
+	--if self.show_cu then 
 		draw_centered(spr_cursor, self.cu_x, self.cu_y)
-	end
+	--end
 	
 	love.graphics.print(tostr(self.is_coll),self.x, self.y-16)
 	love.graphics.draw(self.debugcanvas, 0,0)
@@ -225,11 +225,12 @@ function aim_player(self, dt)
 	--print(self.input_device[2])
 	--love.event.quit()
 	local mmx, mmy
-	if self.input_device[2] == "keyboard" then --input_device
-	else
-		mmx, mmy = get_mouse_pos(self.input_device, camera , self)
-	end
-		mmx, mmy = get_world_cursor_pos(self, "keyboard+mouse", camera)
+	--if self.input_device[2] == "keyboard" then --input_device
+	--else
+	--	mmx, mmy = get_mouse_pos(self.input_device, camera , self)
+	--end
+
+		mmx, mmy = get_world_cursor_pos(self, self.input_device, camera)
 
 	self.cu_x = mmx
 	self.cu_y = mmy
