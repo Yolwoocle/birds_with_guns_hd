@@ -62,6 +62,8 @@ spr_pick_life = load_image("pickups/life")
 
 -- Projectiles
 spr_bullet = load_image("bullet_flat_1")
+spr_bullet_pink = load_image("bullet_flat_pink_1")
+spr_bullet_red = load_image("bullet_flat_red_1")
 spr_laser = load_image("laser")
 spr_rocket = load_image("projectiles/rocket")
 

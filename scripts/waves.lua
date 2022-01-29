@@ -3,7 +3,8 @@ require "scripts/utility"
 
 waves = {
     {
-        {mob_list.fox,1},
+        {mob_list.fox,25},
+        {mob_list.shotgunboy,25},
     },
 
     {
@@ -134,8 +135,8 @@ function update_waves(dt)
         nbwave = nbwave+1
         for _,k in pairs(waves[nbwave]) do 
             for w = 1,k[2] do
-                local x=5*16+math.random(300)
-                local y=4*16+math.random(160)
+                local x=16+math.random(16*46)
+                local y=16+math.random(16*33)
                 table.insert(spawn_location, {x=x,y=y})
                 table.insert(sp_mark,{x=x,y=y})
             end

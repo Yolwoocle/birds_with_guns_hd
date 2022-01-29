@@ -76,6 +76,9 @@ function update_camera(self, dt)
 	self.y = self.fake_y + self.kick_y + self.shake_y 
 	self.x = floor(self.x)
 	self.y = floor(self.y)
+	----------------------------------------------------------------
+	self.x = player_list[1].x-16*15
+	self.y = player_list[1].y-16*8.5
 end
 
 function draw_camera(self, dt)

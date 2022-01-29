@@ -62,7 +62,7 @@ guns = {
 		name = "knight_gun",
 		spr = spr_fire_extinguisher,
 		nbshot = 10,
-		bulletspr = spr_bullet,
+		bulletspr = spr_bullet_red,
 		bullet_life = 5,
 
 		--spdslow = 1,
@@ -133,6 +133,7 @@ guns = {
 	death_explosion = make_gun({
 		name = "death_explosion", 
 		type = "bullet",
+		bulletspr = spr_bullet_pink,
 		--bounce = 1,
 		scale = .85,
 		oscale = 0,
@@ -142,14 +143,15 @@ guns = {
 
 		--ptc_type = "circle",
 		cooldown = .5,
-		bullet_spd = 110,
-		bullet_life = 1,
+		bullet_spd = 150,
+		bullet_life = 1.5,
 
 	}),
 
 	shotgunregular = make_gun{
 		name = "shotgunregular",
 		spr = spr_shotgun,
+		bulletspr = spr_bullet_red,
 		nbshot = 5,
 		spread  = pi/1.5,
 		cooldown = 2,
@@ -159,6 +161,7 @@ guns = {
 	shotgunregular2 = make_gun{
 		name = "shotgunregular",
 		spr = spr_shotgun,
+		bulletspr = spr_bullet_red,
 		nbshot = 6,
 		spread  = pi/1.3,
 		cooldown = 2,
@@ -170,6 +173,7 @@ guns = {
 	fox_revolver = make_gun({
 		name = "Fox revolver",
 		type = "bullet",
+		bulletspr = spr_bullet_red,
 		spr = spr_revolver,
 		bullet_spd = 100,
 		

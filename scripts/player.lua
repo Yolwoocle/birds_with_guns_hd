@@ -80,7 +80,7 @@ function update_player(self, dt)
 	-- Collisions
 	--self.dx = round_if_near_zero(self.dx)
 	--self.dy = round_if_near_zero(self.dy)
-	--collide_object(self,.2)
+	collide_object(self,.2)
 	--collision_response(self, map)
 	-- Apply movement 
 	self.x = self.x + self.dx * dt

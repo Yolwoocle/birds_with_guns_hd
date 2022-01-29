@@ -7,7 +7,7 @@ mob_list = {
 		name = "place_older",
 		spr = spr_fox[1],
 		life = 10,	
-		spd = 50,
+		spd = 40,--50,
 		w = 4,
 		h = 4,
 		hit_x = 8,
@@ -20,8 +20,8 @@ mob_list = {
 		mv_mouvement = 3,
 		gun_dist = 14,
 		close_mv = false,
-		shoot_dist = 150,
-		see_dist = 310,
+		shoot_dist = 110,
+		see_dist = 120,
 
 		closest_p = 100,
 		far_p	  = 80,
@@ -45,7 +45,7 @@ mob_list = {
 		mv_mouvement = 3,
 		gun_dist = 14,
 		close_mv = false,
-		shoot_dist = 1000,
+		shoot_dist = 150,
 		see_dist = 310,
 
 		closest_p = 30,
@@ -104,7 +104,7 @@ mob_list = {
 			obj.rot = math.atan2(self.dy,self.dx)
 			obj.x = self.x
 			obj.y = self.y
-			obj.gun = copy(guns.firework_explosion)
+			obj.gun = copy(guns.death_explosion)
 			--table.insert(_shot_, obj.gun:make_shot(obj))
 			append_list(_shot, obj.gun:make_shot(obj))
 
