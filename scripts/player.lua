@@ -231,8 +231,8 @@ function aim_player(self, dt)
 
 	local mmx, mmy = get_cursor_pos(self, self.input_device, camera)
 
-	self.cu_x = mmx
-	self.cu_y = mmy
+	self.cu_x = mmx or self.cu_x
+	self.cu_y = mmy or self.cu_x
 
 	self.rot = math.atan2(mmy - self.y, mmx - self.x)
 	self.shoot = false

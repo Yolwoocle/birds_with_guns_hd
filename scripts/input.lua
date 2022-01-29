@@ -1,3 +1,5 @@
+require "scripts/utility"
+
 function init_keybinds() 
 	keybinds = {
 		left  = {{"a"},{"left"}}, 
@@ -145,15 +147,16 @@ end
 function get_joystick_cursor_pos(input_device,ply)
 	--FIXME: no words
 	--if input_device[2] == "joystick" then
+	
 	local joyx = joysticks[input_device[3]]:getAxis(3)
 	local joyy = joysticks[input_device[3]]:getAxis(4)
-		if (joyx<-joystick_deadzone2 or joyx>joystick_deadzone2 or
-		joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
+		if dist(joyy,joyx,0,0)>joystick_deadzone2 then--(joyx<-joystick_deadzone2 or joyx>joystick_deadzone2) and
+		--(joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
 
-			return ply.x-camera.x+joyx, ply.y-camera.y+joyy
+			return ply.x-camera.x+joyx*100, ply.y-camera.y+joyy*100
 
 		else 
-			return ply.x-camera.x+ply.cu_x,ply.y-camera.y+ply.cu_y
+			return (ply.x-camera.x) , (ply.y-camera.y)
 		end
 	--end
 	
