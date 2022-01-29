@@ -33,7 +33,7 @@ guns = {
 	fire_extinguisher = make_gun({
 		name = "fire extinguisher",
 		spr = spr_fire_extinguisher,
-		bulletspr = spr_empty,
+		spr_bullet = spr_empty,
 		nbshot = 10,
 		damage = 0.02,
 
@@ -61,7 +61,7 @@ guns = {
 		name = "knight_gun",
 		spr = spr_fire_extinguisher,
 		nbshot = 10,
-		bulletspr = spr_bullet_red,
+		spr_bullet = spr_bullet_red,
 		bullet_life = 5,
 
 		--spdslow = 1,
@@ -82,7 +82,7 @@ guns = {
 		name = "firework launcher",
 		--type = "laser",
 		spr = spr_firework_launcher,
-		bulletspr = spr_rocket,
+		spr_bullet = spr_rocket,
 
 		nbshot = 1,
 
@@ -128,11 +128,31 @@ guns = {
 		bullet_life = .75,
 
 	}),
+	paper_plane_gun = make_gun{
+		name = "paper plane gun",
+		type = "bullet",
+		spr = spr_paper_plane_gun,
+		spr_bullet = spr_paper_plane,
+
+		cooldown = 0.33,
+		bullet_spd = 500,
+		spdslow = 0.99,
+		bounce = math.huge,
+	
+		update_option = function(self,dt)
+			if self.turn_dir == nil then
+				self.turn_dir = 1
+			end
+			--
+		end,
+	},
+
+	------------------------------------
 
 	death_explosion = make_gun({
 		name = "death_explosion", 
 		type = "bullet",
-		bulletspr = spr_bullet_pink,
+		spr_bullet = spr_bullet_pink,
 		--bounce = 1,
 		scale = .85,
 		oscale = 0,
@@ -150,7 +170,7 @@ guns = {
 	shotgunregular = make_gun{
 		name = "shotgunregular",
 		spr = spr_shotgun,
-		bulletspr = spr_bullet_red,
+		spr_bullet = spr_bullet_red,
 		nbshot = 5,
 		spread  = pi/1.5,
 		cooldown = 2,
@@ -160,7 +180,7 @@ guns = {
 	shotgunregular2 = make_gun{
 		name = "shotgunregular",
 		spr = spr_shotgun,
-		bulletspr = spr_bullet_red,
+		spr_bullet = spr_bullet_red,
 		nbshot = 6,
 		spread  = pi/1.3,
 		cooldown = 2,
@@ -172,7 +192,7 @@ guns = {
 	fox_revolver = make_gun({
 		name = "Fox revolver",
 		type = "bullet",
-		bulletspr = spr_bullet_red,
+		spr_bullet = spr_bullet_red,
 		spr = spr_revolver,
 		bullet_spd = 100,
 		
@@ -311,10 +331,10 @@ guns = {
 		name = "jsp", 
 
 		--type = "laser",
-		--bulletspr = spr_laser,
+		--spr_bullet = spr_laser,
 
 		type = "bullet",
-		bulletspr = spr_bullet,
+		spr_bullet = spr_bullet,
 		--category = "instent",
 		bounce = 0,
 		max_ammo = 400,
@@ -346,6 +366,7 @@ guns = {
 		end
 
 	}),
+	
 }
 
 

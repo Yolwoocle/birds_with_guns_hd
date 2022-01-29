@@ -45,7 +45,7 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 
 		gun = nil,
 		gun_dist = 14,
-		guns = {copy(guns.firework_launcher), copy(guns.fire_extinguisher)},
+		guns = {copy(guns.paper_plane_gun), copy(guns.fire_extinguisher)},
 		gun_n = 1,
 
 		damage = damage_player,

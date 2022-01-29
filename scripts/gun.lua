@@ -15,7 +15,7 @@ function make_gun(a)
 		dir = 0,
 		flip = 1,
 		spr = a.spr or spr_revolver,
-		bulletspr = a.bulletspr or spr_bullet,
+		spr_bullet = a.spr_bullet or spr_bullet,
 		--spr_bullet
 		--spr_laser 
 		--spr_rocket
@@ -160,7 +160,7 @@ function make_bullet(self, p, angle, spread, type, spr)
 		category	  = self.category,
 		type = self.type,
 		gun = self,
-		spr = self.bulletspr or spr_bullet,
+		spr = self.spr_bullet or spr_bullet,
 		player = p,
 		offsetangle = offsetangle,
 		dist = dist,
