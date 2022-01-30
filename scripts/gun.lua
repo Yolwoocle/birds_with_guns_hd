@@ -431,7 +431,7 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 			-- Bullet
 			local coll = coll_rect(m.x, m.y, m.w*3, m.h*3, self.x, self.y, self.scale*3, self.scale*3)
 			if not self.is_enemy and coll then
-				m:damage(self.damage)
+				m:damage(self.damage,self.dx,self.dy)
 				self:on_death(k)
 
 				if m.life<=0 then
@@ -447,7 +447,7 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 				if self.active then
 					local dist = dist_to_segment({x=m.x, y=m.y}, {x=v.x1, y=v.y1}, {x=v.x, y=v.y})
 					if dist < self.scale*25 and not self.is_enemy then
-						m:damage(self.damage)
+						m:damage(self.damage,self.dx,self.dy)
 						--table.remove(bullets, k)
 
 						if m.life<=0 then

@@ -39,7 +39,7 @@ function make_mob(a)
 		spawn = spawn_mob,
 		shoot = shoot_gun,
 		kill = a.kill_mob or kill_mob,
-		damage = damage_mob,
+		damage = a.damage_mob or damage_mob,
 		loot = loot_mob,
 
 		update = update_mob,
@@ -64,7 +64,7 @@ function spawn_mob(self, x, y)
 	return c
 end
 
-function damage_mob(self, dmg)
+function damage_mob(self, dmg , dx,dy)
 	self.life = self.life - dmg
 end
 

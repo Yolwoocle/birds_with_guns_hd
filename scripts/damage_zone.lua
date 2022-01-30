@@ -63,7 +63,7 @@ function damageinzone(self,l)
 
             if dist(self.x,self.y,m.x,m.y) < self.rayon+5 then
 
-                m.life = m.life - self.damage
+                m:damage(self.damage,self.dx,self.dy)
 
                 if self.ondamage then
                     self.ondamage(m)
