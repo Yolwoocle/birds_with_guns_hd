@@ -181,8 +181,8 @@ function make_bullet(self, p, angle, spread, type, spr)
 
 		update_option = self.update_option,
 
-		w=0,--(self.scale + oscale ),
-		h=0,--(self.scale + oscale ),
+		w=1,--(self.scale + oscale ),
+		h=1,--(self.scale + oscale ),
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
@@ -418,7 +418,7 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 			end
 		end
 	elseif self.type == "laser" then
-		if self.life < 0 then
+		if self.life <= 0 then
 			self:on_death(k)
 		return
 		end
