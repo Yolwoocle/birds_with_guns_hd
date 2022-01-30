@@ -27,6 +27,7 @@ function make_mob(a)
 		far_p		 = a.far_p			or 60,
 		shoot_dist	 = a.shoot_dist		or 60,
 		see_dist 	 = a.see_dist 		or 80,
+		escape_aftershoot = a.escape_aftershoot or false,
 		
 		hit_w = a.hit_w or 12,
 		hit_h = a.hit_h or 12,
@@ -106,7 +107,7 @@ function update_mob(self, dt)
 		rayc.hit = false
 	end
 
-	if rayc.hit and self.gun.cooldown_timer <= 0 then --
+	if rayc.hit and (self.gun.cooldown_timer <= 0 or not(self.escape_aftershoot)) then --
 		if self.distplayer> self.far_p then
 			self.dx =  self.dxplayer * self.spd
 			self.dy =  self.dyplayer * self.spd
@@ -131,10 +132,12 @@ function update_mob(self, dt)
 			self.gun:shoot()
 			self.gun.dt = 0
 			append_list(_shot, self.gun:make_shot(self))
-			self.dtmouvement = self.mv_mouvement --+ self.mv_pause --
-			local of = random_float(-pi/2, pi/2)
-			self.dx_idle = -math.cos(self.rot+of)*self.spd
-			self.dy_idle = -math.sin(self.rot+of)*self.spd
+			if self.escape_aftershoot then
+				self.dtmouvement = self.mv_mouvement --+ self.mv_pause --
+				local of = random_float(-pi/2, pi/2)
+				self.dx_idle = -math.cos(self.rot+of)*self.spd
+				self.dy_idle = -math.sin(self.rot+of)*self.spd
+			end
 		end
 
 		if not(mv or self.close_mv) then

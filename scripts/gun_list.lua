@@ -133,6 +133,8 @@ guns = {
 		type = "bullet",
 		spr = spr_paper_plane_gun,
 		spr_bullet = spr_paper_plane,
+		scale = 1.5,
+		damage = 4,
 
 		cooldown = 0.33,
 		max_ammo = 100,
@@ -144,6 +146,13 @@ guns = {
 			if self.turn_dir == nil then
 				self.turn_dir = 1
 			end
+			local angle = math.atan2(self.dy,self.dx)
+
+			angle = angle + math.cos((self.maxlife-self.life+pi/9.25)*10)/5
+			self.dx=math.cos(angle)*self.spd
+			self.dy=math.sin(angle)*self.spd
+			--self.dx=self.dx+math.cos(self.life*10%pi2)*5000*dt
+			--self.dy=self.dy+math.sin(self.life*10%pi2)*5000*dt
 			--
 		end,
 	},
