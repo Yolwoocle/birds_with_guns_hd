@@ -156,10 +156,14 @@ function player_movement(self, dt)
 
 	local j
 	if self.input_device[2] == "joystick" then
-		joystick = {}
 		j = joysticks[self.input_device[3]]
+		if j then
+		joystick = {}
 		joystick.x = j:getAxis(1)
 		joystick.y = j:getAxis(2)
+		else
+			joystick = nil
+		end
 	else
 		joystick = nil
 	end

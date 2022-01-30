@@ -135,6 +135,7 @@ guns = {
 		spr_bullet = spr_paper_plane,
 
 		cooldown = 0.33,
+		max_ammo = 100,
 		bullet_spd = 500,
 		spdslow = 0.99,
 		bounce = math.huge,

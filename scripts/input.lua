@@ -27,6 +27,7 @@ end
 
 
 function button_down(command, player_n, input_device)
+	if not(input_device[2] == "joystick" and not(joysticks[input_device[3]])) then
 	player_n = player_n or 1
 	if command == "fire" and ((input_device[2] == "keyboard+mouse" and love.mouse.isDown(1)) or (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("rightshoulder")))then
 		if joystick and joysticks[input_device[3]]:isGamepadDown("rightshoulder") then
@@ -63,6 +64,7 @@ function button_down(command, player_n, input_device)
 	end
 
 	return false
+end
 end
 
 function get_autoaim(ply)
@@ -136,6 +138,7 @@ end
 
 function get_world_cursor_pos(ply, input_device,dt, camera)
 	local x, y = get_cursor_pos(ply, input_device,dt)
+	if  not(x) then  x, y = ply.x-camera.x , ply.y-camera.y end
 	return x + camera.x, y + camera.y
 end
 
@@ -146,12 +149,13 @@ function get_mouse_pos()
 end
 
 function get_joystick_cursor_pos(input_device,ply,dt)
+	if not(input_device[2] == "joystick" and not(joysticks[input_device[3]])) then
 	--FIXME: no words
-	--if input_device[2] == "joystick" then
-	local joyx = joysticks[input_device[3]]:getAxis(3)
-	local joyy = joysticks[input_device[3]]:getAxis(4)
+		--if input_device[2] == "joystick" then
+		local joyx = joysticks[input_device[3]]:getAxis(3)
+		local joyy = joysticks[input_device[3]]:getAxis(4)
 
-	local qdsf = dist(joyy,joyx,0,0)
+		local qdsf = dist(joyy,joyx,0,0)
 		if qdsf>joystick_deadzone2 then--(joyx<-joystick_deadzone2 or joyx>joystick_deadzone2) and
 		--(joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
 			local a = math.atan2(joyy,joyx)
@@ -172,6 +176,6 @@ function get_joystick_cursor_pos(input_device,ply,dt)
 			--return lerp(ply.cu_x,ply.dircux,.5)-camera.x ,  lerp(ply.cu_y,ply.dircuy,.5)-camera.x
 
 		end
-	--end
+	end
 	
 end

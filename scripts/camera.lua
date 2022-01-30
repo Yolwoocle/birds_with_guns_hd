@@ -50,7 +50,10 @@ function update_camera(self, dt)
 	-- Aiming offset
 
 	local mx, my = get_cursor_pos(player_list[1], player_list[1].input_device,dt,camera)
-	print("mx my", mx, my)
+	--for i = 1,100 do
+	--	ghj = ghj+1
+	-- print("mx my", mx, my,ghj)
+	--end
 	mx, my = mx,my
 
 	if not self.lock_x then

@@ -3,9 +3,8 @@ require "scripts/utility"
 
 waves = {
     {--
-        --{mob_list.fox,25},
-        --{mob_list.shotgunboy,25},
-        {mob_list.fox,1},
+       {mob_list.fox,10},
+       {mob_list.shotgunboy,10},
     },
 
     {
