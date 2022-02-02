@@ -59,7 +59,6 @@ function init_game_main(self)
 	
 	map = init_map(600, 100)
 	map:generate_map(love.math.random()*40000)
-	map:update_sprite_map()
 
 	bullets = {}
 	_shot = {}
@@ -82,7 +81,9 @@ end
 function udpate_game_main(self, dt)
 	gf = 0
 	
-    camera.aim_offset = player_list[1].gun.camera_offset
+    camera.aim_offset = 0--player_list[1].gun.camera_offset
+	--camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
+    camera:set_target(0,0)
 	map:update()
 	pickups:update()
 	update_waves(dt)

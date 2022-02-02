@@ -68,7 +68,7 @@ function make_gun(a)
 
 		update_option = a.update_option,
 		
-		screenkick = a.screenkick or 6,
+		screenkick = a.screenkick or 8,
 		screenkick_shake = a.screenkick_shake or 1,
 		screenshake = a.screenshake or 6,
 		camera_offset = a.camera_offset or 0.3,

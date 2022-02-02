@@ -42,7 +42,7 @@ guns = {
 		screenkick = 7,
 
 		spawn_x = 40,
-		spread = pi2ds,
+		spread = pi2,
 
 		bullet_spr = spr_empty,
 		scale = 1,
@@ -141,6 +141,8 @@ guns = {
 		bullet_spd = 500,
 		spdslow = 0.99,
 		bounce = math.huge,
+
+		screenkick = nil,
 	
 		update_option = function(self,dt)
 			if self.turn_dir == nil then

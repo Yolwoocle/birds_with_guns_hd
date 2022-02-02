@@ -80,7 +80,8 @@ function update_player(self, dt)
 	-- Collisions
 	--self.dx = round_if_near_zero(self.dx)
 	--self.dy = round_if_near_zero(self.dy)
-	collide_object(self,.2)
+	collide_object(self,.01)
+	--collision_response(self, map)
 	--collision_response(self, map)
 	-- Apply movement 
 	self.x = self.x + self.dx * dt
@@ -142,11 +143,7 @@ function draw_player(self)
 	if self.show_cu then 
 		draw_centered(spr_cursor, self.cu_x, self.cu_y)
 	end
-	
-	love.graphics.print(tostr(self.is_coll),self.x, self.y-16)
-	love.graphics.draw(self.debugcanvas, 0,0)
 
-	collision_response(self, map)
 	--circ_color("fill", self.x, self.y, 3, {1,0,0})
 	--collision_response(self, map)
 end

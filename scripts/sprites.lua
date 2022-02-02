@@ -4,6 +4,7 @@ function load_image(name)
 	return img 
 end
 function load_image_table(name, n, w, h)
+	if not n then  error("number of images `n` not defined")  end
 	local t = {}
 	for i=1,n do 
 		t[i] = load_image(name..tostr(i))
@@ -64,7 +65,7 @@ spr_pick_life = load_image("pickups/life")
 spr_bullet = load_image("projectiles/bullet_flat_1")
 spr_bullet_pink = load_image("projectiles/bullet_flat_pink_1")
 spr_bullet_red = load_image("projectiles/bullet_flat_red_1")
-spr_laser = load_image("laser")
+spr_laser = load_image("projectiles/laser")
 spr_rocket = load_image("projectiles/rocket")
 spr_paper_plane = load_image("projectiles/paper_plane")
 
@@ -84,10 +85,10 @@ spr_firework_launcher_big = load_image("guns/firework_launcher_big")
 spr_ground_dum = load_image("dummy_ground")
 spr_wall_1 = load_image("wall_dummy")
 sprs_floor_wood = {
-	load_image("floor_wood_1"),
-	load_image("floor_wood_2"),
-	load_image("floor_wood_3"),
-	load_image("floor_wood_4"),
+	load_image("tiles/floor_wood_1"),
+	load_image("tiles/floor_wood_2"),
+	load_image("tiles/floor_wood_3"),
+	load_image("tiles/floor_wood_4"),
 	w = 2, h = 2,
 }
 
@@ -101,13 +102,7 @@ sprs_floor_wood_detail = {
 	w = 2, h = 2,
 }
 spr_wall_dum = load_image("dummy_wall")
-spr_wall_dum = {
-	load_image("walls_sample1"),
-	load_image("walls_sample1"),
-	load_image("walls_sample1"),
-	load_image("walls_sample1"),
-	w = 2, h = 2,
-}
-spr_box = load_image("tiles/box_1")
-spr_chain = load_image("chain")
-spr_floor_metal = load_image("floor_metal")
+sprs_box = load_image_table("tiles/box_", 3)
+
+spr_chain = load_image("tiles/chain")
+spr_floor_metal = load_image("tiles/floor_metal")

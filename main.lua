@@ -30,7 +30,7 @@ function love.load()
 	res_1080p_4 = 480, 270
 	res_1080p_3 = 640, 360
 
-	window_w, window_h = 640, 360 --rename to canvas_w, canvas_h
+	window_w, window_h = 480, 270 --rename to canvas_w, canvas_h
 	screen_sx = screen_w/window_w or screen_w
 	screen_sy = screen_h/window_h or screen_h
 	screen_scale = min(screen_sx, screen_sy)
@@ -77,7 +77,6 @@ function love.load()
 	
 	map = init_map(600, 100)
 	map:generate_map(love.math.random()*40000)
-	map:update_sprite_map()
 
 	bullets = {}
 	_shot = {}
@@ -89,19 +88,13 @@ function love.load()
 	g = 0
 
 	game = make_game_main()
-	set_debug_canvas(map)
 end
 
 function love.update(dt)
-
 	updatejoystick()
     --TODO: camera for all players
-
-    camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
-    camera:update(dt)
-
+	camera:update(dt)
     game:update(dt)
-
     table.insert(perf, dt)
 end
 

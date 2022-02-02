@@ -12,21 +12,7 @@ function generate_map(self, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	self:write_room(self.lvl_arena[1], 0, 0)
-
-	--[[self:generate_path(rng, self.lvl1_main_rooms, 0, 16, 10, 15)
-	local params = {
-		{y=0, room=self.lvl1_branch_rooms}, 
-		{y=32, room=self.lvl1_branch_rooms}
-	}
-	for _,p in ipairs(params) do 
-		local ix = 0
-		for j=1,rng:random(3,10) do
-			ix = ix + rng:random(4,32)
-			local res = self:generate_path(rng, p.room, ix, p.y, 1,5)
-			ix = res.x
-		end
-	end --]]
+	self:write_room(self.lvl1_main_rooms[1], 0, 0)
 end
 
 function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
@@ -66,7 +52,8 @@ function write_room(self, room, x, y, rng)
 	y = y or 0
 	for iy = 0, #room do
 		for ix = 0, #room[0] do
-			self:set_tile(x+ix, y+iy, self:get_room_tile(room,ix,iy))
+			local tile = self:get_room_tile(room,ix,iy)
+			self:set_tile(x+ix, y+iy, tile[1], tile[2])
 			if rng then
 				self:spawn_mob(rng, x+ix, y+iy)
 			end
@@ -82,9 +69,8 @@ function get_room_height(self, room)
 end
 
 function load_from_file(self, file)
-	-- . ground
-	-- # wall
-	-- b box 
+	-- . ground   # wall
+	-- b box      c chain
 	--[[ example:
 		# # # # # # # # #
 		# . . . b b . . #
@@ -105,6 +91,10 @@ function load_from_file(self, file)
 			for i=1, #line, 2 do
 				local chr = string.sub(line, i, i)
 				local tile = 0
+				local var = tonumber(string.sub(line, i+1, i+1))
+
+				if not var then  var = 1  end
+
 				if	 chr == "`" then tile = 0
 				elseif chr == "." then tile = 1
 				elseif chr == "#" then tile = 2
@@ -113,7 +103,7 @@ function load_from_file(self, file)
 				elseif chr == "," then tile = 5
 				end
 				
-				rooms[room][y][x] = tile
+				rooms[room][y][x] = {tile, var}
 				x = x + 1
 			end
 			y = y + 1
