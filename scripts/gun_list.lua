@@ -14,7 +14,10 @@ guns = {
 		name = "shotgun",
 		spr = spr_shotgun,
 		nbshot = 10,
-		offset_spd = 5,
+		offset_spd = 300,
+		scattering    = 1,
+		cooldown = 0.5,
+		bullet_life = .3,
 	},
 	assault_rifle = make_gun{
 		name = "assault rifle",
@@ -36,6 +39,7 @@ guns = {
 		spr_bullet = spr_empty,
 		nbshot = 10,
 		damage = 0.02,
+		bullet_life = .75,
 
 		spdslow = 1,
 		bullet_spd = 200,
@@ -142,19 +146,36 @@ guns = {
 		spdslow = 0.99,
 		bounce = math.huge,
 
-		screenkick = nil,
+		screenkick = 300,
+		bounce = 1,
 	
 		update_option = function(self,dt)
 			if self.turn_dir == nil then
-				self.turn_dir = 1
+				self.turn_dir = math.random(8)
 			end
 			local angle = math.atan2(self.dy,self.dx)
 
-			angle = angle + math.cos((self.maxlife-self.life+pi/9.25)*10)/5
+			local angleoffset = pi/60
+			local timetoturn = 7
+			local toadd = 1+self.turn_dir--+math.random()
+
+			if self.turn_dir<=timetoturn then
+
+				angle = (angle + angleoffset)*60*dt
+				self.turn_dir= toadd
+
+			elseif self.turn_dir<=timetoturn*2 then
+
+				angle = (angle - angleoffset)*60*dt
+				self.turn_dir= toadd
+
+			else
+				self.turn_dir= 0
+			end
+
+			--angle = angle + math.cos((self.maxlife-self.life+.5)*7)/10
 			self.dx=math.cos(angle)*self.spd
 			self.dy=math.sin(angle)*self.spd
-			--self.dx=self.dx+math.cos(self.life*10%pi2)*5000*dt
-			--self.dy=self.dy+math.sin(self.life*10%pi2)*5000*dt
 			--
 		end,
 	},
@@ -186,7 +207,9 @@ guns = {
 		nbshot = 5,
 		spread  = pi/1.5,
 		cooldown = 2,
-		bullet_spd = 110,
+		bullet_spd = 60,
+		bullet_life = 5,
+		scale = 1.5,
 	},
 
 	shotgunregular2 = make_gun{
@@ -196,9 +219,11 @@ guns = {
 		nbshot = 6,
 		spread  = pi/1.3,
 		cooldown = 2,
-		bullet_spd = 125,
+		bullet_spd = 60,
 		burst  = 2,
 		burstdt  = .4,
+		bullet_life = 5,
+		scale = 1.5,
 	},
 
 	fox_revolver = make_gun({
@@ -209,8 +234,9 @@ guns = {
 		bullet_spd = 100,
 		
 		scale = 1,
-		cooldown = 1.5,
+		cooldown = 3,
 		make_shot = default_shoot,
+		scale = 1.5,
 	}),
 
 	test = make_gun({

@@ -54,7 +54,7 @@ function update_camera(self, dt)
 	--	ghj = ghj+1
 	-- print("mx my", mx, my,ghj)
 	--end
-	mx, my = mx,my
+	--mx, my = mx,my
 
 	if not self.lock_x then
 		self.offset_x =  (mx - window_w/2) * self.aim_offset
@@ -77,8 +77,8 @@ function update_camera(self, dt)
 	self.shake_rad = self.shake_rad * inv_dt(self.shake_fric, dt)
 	self.shake_rad = round_if_near_zero(self.shake_rad) 
 
-	self.x = self.fake_x + self.offset_x + self.kick_x + self.shake_x 
-	self.y = self.fake_y + self.offset_y + self.kick_y + self.shake_y 
+	self.x = self.fake_x + self.offset_x + self.kick_x + self.shake_x
+	self.y = self.fake_y + self.offset_y + self.kick_y + self.shake_y
 	self.x = floor(self.x)
 	self.y = floor(self.y)
 	----------------------------------------------------------------

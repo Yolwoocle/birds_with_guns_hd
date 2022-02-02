@@ -46,16 +46,15 @@ anim_duck_walk = {
 	load_image("duck/duck_1"),
 	--load_image("pigeon_walk_2"),
 }
+spr_penguin = load_image("penguin_1")
+spr_crow = load_image("crow_walk_1")
 
-spr_crow = {
-	load_image("crow_walk_1"),
-	load_image("crow_walk_1"),
-}
 
 -- Enemies
 spr_fox = {
 	load_image("fox_1")
 }
+spr_fox_hit = load_image("enemies/fox_1_hit")
 
 -- Pickups
 spr_pick_ammo = load_image("pickups/ammo")

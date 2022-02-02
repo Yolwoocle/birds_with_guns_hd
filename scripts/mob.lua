@@ -3,9 +3,10 @@ require "scripts/utility"
 function make_mob(a)
 	spr 	   = a.spr or spr_revolver
 	local mob = {
-		name           		= a.name       		or "enemy",
-		spr 	       		= a.spr        		or spr_revolver,
-		life	       		= a.life			or 2,	
+		name = a.name or "enemy",
+		spr = a.spr or spr_revolver,
+		spr_hit = a.spr_hit or spr_fox_hit,
+		life = a.life or 2,	
 		is_enemy = true,
 
 		spd 	= a.spd	or 10,

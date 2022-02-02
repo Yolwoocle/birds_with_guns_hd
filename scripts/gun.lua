@@ -68,7 +68,7 @@ function make_gun(a)
 
 		update_option = a.update_option,
 		
-		screenkick = a.screenkick or 8,
+		screenkick = a.screenkick or 60,
 		screenkick_shake = a.screenkick_shake or 1,
 		screenshake = a.screenshake or 6,
 		camera_offset = a.camera_offset or 0.3,
@@ -249,20 +249,17 @@ function init_laser(self)
 end
 
 function update_bullet(self, dt , i)
+	self.rot = math.atan2(self.dy, self.dx)
 	if (self.dx * self.spdslow)^2 + (self.dy * self.spdslow)^2 < self.speed_max^2 then
 		self.dx = self.dx * self.spdslow
 		self.dy = self.dy * self.spdslow
 	end
-
 	if self.update_option then self:update_option(dt) end
-
-	self.life = self.life - dt
 	self.life = self.life - dt
 	
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 
 	
-	self.rot = math.atan2(self.dy, self.dx)
 
 	if self.bounce>0 then
 		local coll = collide_object(self,1)

@@ -45,7 +45,7 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 
 		gun = nil,
 		gun_dist = 14,
-		guns = {copy(guns.paper_plane_gun), copy(guns.fire_extinguisher)},
+		guns = {copy(guns.paper_plane_gun), copy(guns.fire_extinguisher) , copy(guns.shotgun) , copy(guns.assault_rifle) , copy(guns.firework_launcher)},
 		gun_n = 1,
 
 		damage = damage_player,
@@ -257,6 +257,7 @@ function aim_player(self, dt)
 				self.shoot = true
 				self.gun:shoot()
 				camera:kick(self.rot + pi, self.gun.screenkick)
+				--kick_camera(self, dir, dist, offset_ang)
 				self.gun.dt = 0
 				
 			end
