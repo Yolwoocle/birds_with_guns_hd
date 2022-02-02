@@ -93,7 +93,7 @@ function love.load()
 end
 
 function love.update(dt)
-
+	
 	updatejoystick()
     --TODO: camera for all players
 

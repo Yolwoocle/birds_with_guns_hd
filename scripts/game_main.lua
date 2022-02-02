@@ -21,7 +21,7 @@ function init_game_main(self)
 	camera.lock_y = false
 
 
-	nb_joueurs = 4
+	nb_joueurs = 1
 
 	player_list = {}
 	for i =1,nb_joueurs do
@@ -47,7 +47,7 @@ function init_game_main(self)
 		end
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk,anim_pigeon_walk, anim_duck_walk,}--TODO: fix
-		local ply = init_player(i, 90+i*32, 90, birds_spr[i],controle,nbcontroller)
+		local ply = init_player(i, 90+i*32, 200, birds_spr[i],controle,nbcontroller)
 		table.insert(player_list, ply)
 		player_list[i].anim_walk = birds_spr[i]
 		player_list[i].anim_idle = birds_spr[i]

@@ -20,10 +20,10 @@ mob_list = {
 		mv_mouvement = 3,
 		gun_dist = 14,
 		close_mv = false,
-		shoot_dist = 110,
-		see_dist = 150,
+		shoot_dist = 200,
+		see_dist = 300,
 
-		closest_p = 100,
+		closest_p = 250,
 		far_p	  = 150,
 	}),
 
@@ -69,11 +69,11 @@ mob_list = {
 		mv_mouvement = 3,
 		gun_dist = 14,
 		close_mv = false,
-		shoot_dist = 100,
+		shoot_dist = 200,
 		see_dist = 310,
 
-		closest_p = 70,
-		far_p	  = 80,
+		closest_p = 190,
+		far_p	  = 200,
 	}),
 
 	shotgunboy2 = make_mob({

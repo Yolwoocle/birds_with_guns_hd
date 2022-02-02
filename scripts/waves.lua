@@ -3,7 +3,7 @@ require "scripts/utility"
 
 waves = {
     {--
-       {mob_list.fox,10},
+       {mob_list.fox,20},
        {mob_list.shotgunboy,10},
     },
 
@@ -128,15 +128,19 @@ waves = {
 }
 
 function update_waves(dt)
-
+    bw = block_width
     spawn_time = max(spawn_time - dt,0)
     if #mobs == 0 and spawn_time==inf then
         spawn_time = 3
         nbwave = nbwave+1
         for _,k in pairs(waves[nbwave]) do 
             for w = 1,k[2] do
-                local x=16+math.random(16*46)
-                local y=16+math.random(16*33)
+                local x=100+math.random(16*60)
+                local y=100+math.random(16*60)
+                while  map:is_solid(x/bw, y/bw) do
+                    x=100+math.random(16*50) 
+                    y=100+math.random(16*50)
+                end
                 table.insert(spawn_location, {x=x,y=y})
                 table.insert(sp_mark,{x=x,y=y})
             end
