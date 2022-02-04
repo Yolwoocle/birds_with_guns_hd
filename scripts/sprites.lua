@@ -90,6 +90,7 @@ sprs_floor_wood = {
 	load_image("tiles/floor_wood_4"),
 	w = 2, h = 2,
 }
+spr_ground_1 = load_image("tiles/floor_plain_1")
 
 sprs_test = load_image_table("test_", 4, 2, 2) 
 

@@ -28,7 +28,6 @@ function make_gun(a)
 		cooldown      = a.cooldown      or 0.2,
 		ammo	      = a.max_ammo      or 100,
 		max_ammo      = a.max_ammo      or 100,
-		scattering    = a.scattering    or 0,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
 		burst	      = a.burst	    or 1, 
@@ -36,6 +35,7 @@ function make_gun(a)
 		bullet_life	  = a.bullet_life   or 2,	--bullet_life
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????
+		scattering    = a.scattering    or pi/5,
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1,
 		
@@ -151,13 +151,15 @@ function make_bullet(self, p, angle, spread, type, spr)
 		spr = spr,
 		dx = math.cos(angle+scatter+spread) * spd,
 		dy = math.sin(angle+scatter+spread) * spd,
+		sx = 1, 
+		sy = 1,
 		rot = angle+scatter+spread,
 
 		spdslow = self.spdslow,
 		life = self.bullet_life,
 		maxlife = self.bullet_life,
 		delete = false,
-		category	  = self.category,
+		category = self.category,
 		type = self.type,
 		gun = self,
 		spr = self.spr_bullet or spr_bullet,
@@ -259,7 +261,8 @@ function update_bullet(self, dt , i)
 	
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt 
-	
+
+	self.sx = (sqr(self.dx) + sqr(self.dy)) / sqr(self.spd)
 
 	if self.bounce>0 then
 		local coll = collide_object(self,1)
@@ -349,7 +352,7 @@ function bouncedir(self)
 end
 
 function draw_bullet(self)
-	draw_centered(self.spr, self.x, self.y, self.rot, self.scale, self.scale)
+	draw_centered(self.spr, self.x, self.y, self.rot, self.scale*self.sx, self.scale*self.sy)
 	--rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
 	--love.graphics.pr int(self.scale,self.x+10,self.y+10)
 end

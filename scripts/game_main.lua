@@ -21,10 +21,10 @@ function init_game_main(self)
 	camera.lock_y = false
 
 
-	nb_joueurs = 1
+	number_of_players = 2
 
 	player_list = {}
-	for i =1,nb_joueurs do
+	for i =1,number_of_players do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			--controle = "keyboard+mouse"
 			--controle = "keyboard"
@@ -82,8 +82,17 @@ function udpate_game_main(self, dt)
 	gf = 0
 	
     camera.aim_offset = 0--player_list[1].gun.camera_offset
-	--camera:set_target(player_list[1].x-window_w/2, player_list[1].y-window_h/2)
-    camera:set_target(0,0)
+	camera:update(dt)
+	--Set camera target
+    local avg_pos = {x=0, y=0}
+	for _,p in pairs(player_list)do
+		avg_pos.x = avg_pos.x + p.x
+		avg_pos.y = avg_pos.y + p.y
+	end
+	avg_pos.x = avg_pos.x / number_of_players
+	avg_pos.y = avg_pos.y / number_of_players
+	camera:set_target(avg_pos.x - window_w/2, avg_pos.y - window_h/2)
+
 	map:update()
 	pickups:update()
 	update_waves(dt)

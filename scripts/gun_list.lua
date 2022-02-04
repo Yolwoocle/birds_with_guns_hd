@@ -122,13 +122,15 @@ guns = {
 		--bounce = 1,
 		scale = .75,
 		oscale = 0,
-		nbshot = 10,
+		nbshot = 40,
 		spread  = pi2,
+		scattering = pi2,
 		spdslow = .95,
 
 		--ptc_type = "circle",
 		cooldown = .5,
 		bullet_spd = 500,
+		offset_spd = 100,
 		bullet_life = .75,
 
 	}),
@@ -146,7 +148,7 @@ guns = {
 		spdslow = 0.99,
 		bounce = math.huge,
 
-		screenkick = 300,
+		screenkick = 9,
 		bounce = 1,
 	
 		update_option = function(self,dt)
@@ -396,6 +398,7 @@ guns = {
 		spdslow = 1.1,
 
 		bullet_spd = 100,
+
 		on_death = function(self , k)
 			
 			 table.remove(bullets, k)

@@ -92,8 +92,7 @@ end
 
 function love.update(dt)
 	updatejoystick()
-    --TODO: camera for all players
-	camera:update(dt)
+    --TODO: camera for all
     game:update(dt)
     table.insert(perf, dt)
 end

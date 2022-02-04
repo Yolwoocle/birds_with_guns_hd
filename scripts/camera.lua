@@ -18,7 +18,7 @@ function init_camera()
 		shake_fric = 50,
 
 		kick = kick_camera,
-		kick_fric = 60,
+		kick_fric = 50,
 		kick_x = 0,
 		kick_y = 0,
 		
@@ -50,11 +50,6 @@ function update_camera(self, dt)
 	-- Aiming offset
 
 	local mx, my = get_cursor_pos(player_list[1], player_list[1].input_device,dt,camera)
-	--for i = 1,100 do
-	--	ghj = ghj+1
-	-- print("mx my", mx, my,ghj)
-	--end
-	--mx, my = mx,my
 
 	if not self.lock_x then
 		self.offset_x =  (mx - window_w/2) * self.aim_offset
@@ -66,8 +61,8 @@ function update_camera(self, dt)
 	-- Apply screenkick (aka directional screenshake)
 	self.kick_x = self.kick_x * inv_dt(self.kick_fric, dt)
 	self.kick_y = self.kick_y * inv_dt(self.kick_fric, dt)
-	self.kick_x = round_if_near_zero(self.kick_x)
-	self.kick_y = round_if_near_zero(self.kick_y)
+	--self.kick_x = round_if_near_zero(self.kick_x)
+	--self.kick_y = round_if_near_zero(self.kick_y)
 
 	-- Apply shake
 	local rnd_ang = love.math.random() * pi2
@@ -81,6 +76,9 @@ function update_camera(self, dt)
 	self.y = self.fake_y + self.offset_y + self.kick_y + self.shake_y
 	self.x = floor(self.x)
 	self.y = floor(self.y)
+
+	self.lock_x = false
+	self.lock_y = false
 	----------------------------------------------------------------
 	--self.x = player_list[1].x-16*15
 	--self.y = player_list[1].y-16*8.5

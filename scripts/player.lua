@@ -16,6 +16,7 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 		dx = 0,
 		dy = 0,
 		walk_dir = {x=0, y=0},
+		alive = true,
 
 		speed = 64,
 		friction = 20, --FIXME player glides more when FPS low
@@ -82,7 +83,6 @@ function update_player(self, dt)
 	--self.dy = round_if_near_zero(self.dy)
 	collide_object(self,.01)
 	--collision_response(self, map)
-	--collision_response(self, map)
 	-- Apply movement 
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt
@@ -114,7 +114,10 @@ function update_player(self, dt)
 	hud.elements.life_bar.max_val = self.max_life
 	hud.elements.ammo_bar.val = self.gun.ammo
 	hud.elements.ammo_bar.max_val = self.gun.max_ammo
-
+	if self.life < 0 then
+		self.alive = false
+	end
+	
 	hud.elements.gun_1.spr = self.guns[1].spr
 	hud.elements.gun_2.spr = self.guns[2].spr
 	local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6

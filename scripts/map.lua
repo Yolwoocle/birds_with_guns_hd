@@ -20,7 +20,7 @@ function init_map(w, h)
 		[0] = make_tile(0, spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
 		}),
-		make_tile(1, sprs_floor_wood, {
+		make_tile(1, spr_ground_1, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
 			type="multi_tile", 
 		}),
@@ -79,7 +79,6 @@ function draw_map(self)
 			local tile = self.grid[y][x][1]
 			local var  = self.grid[y][x][2]
 			
-			print(tile, var)
 			tile = self.palette[tile]
 			if tile then
 				tile:draw(x, y, var)
