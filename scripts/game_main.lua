@@ -74,6 +74,7 @@ function init_game_main(self)
 	hud:make_bar("ammo_bar", 6,26,nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
 	hud:make_img("gun_1", 78,6, spr_missing)
 	hud:make_img("gun_2", 78,6, spr_missing)
+	hud:make_imgs("gun_list", 78,40, {spr_missing})
 	spawn_location = {}
 	
 end

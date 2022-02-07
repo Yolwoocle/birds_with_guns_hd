@@ -38,7 +38,7 @@ guns = {
 		spr = spr_fire_extinguisher,
 		spr_bullet = spr_empty,
 		nbshot = 10,
-		damage = 0.02,
+		damage = 0.1,
 		bullet_life = .75,
 
 		spdslow = 1,
@@ -46,7 +46,8 @@ guns = {
 		screenkick = 7,
 
 		spawn_x = 40,
-		spread = pi2,
+		spread = 0.3,
+		scattering = 0.3,
 
 		bullet_spr = spr_empty,
 		scale = 1,

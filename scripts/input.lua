@@ -76,7 +76,7 @@ function get_autoaim(ply)
 		ply.show_cu = true
 	else 
 
-		if dist(math.abs(ply.dx),math.abs(ply.dy),0,0)>.001 then
+		if dist_sq(0,0, math.abs(ply.dx), math.abs(ply.dy)) > sqr(4) then
 			ply.dircux, ply.dircuy = ply.dx, ply.dy
 			ply.show_cu = true
 			local dir = math.atan2(ply.dircuy, ply.dircux)

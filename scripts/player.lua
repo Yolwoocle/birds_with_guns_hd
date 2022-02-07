@@ -6,7 +6,7 @@ require "scripts/gun_list"
 require "scripts/collision"
 require "scripts/settings"
 
-function init_player(n,x,y,spr, controle,nbcontroller)
+function init_player(n,x,y, spr, controle,nbcontroller)
 	local player = {
 		n = n,
 		x = x or 32,
@@ -33,6 +33,7 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 		hit_h = 12,
 
 		spr = spr,
+		spr_dead = spr_pigeon_dead,
 		rot = 0,
 		looking_up = false,
 		flip = -1,
@@ -63,8 +64,10 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 
 		update = update_player,
 		draw = draw_player,
-		input_device = {keybinds,controle,nbcontroller}, --"keyboard+mouse" "keyboard" "joystick"
+
 		--TODO add keybinds
+		input_device = {keybinds,controle,nbcontroller}, --"keyboard+mouse" "keyboard" "joystick"
+		show_cu = true,
 
 		debugcanvas = love.graphics.newCanvas(),
 	}
@@ -76,54 +79,60 @@ function init_player(n,x,y,spr, controle,nbcontroller)
 end
 
 function update_player(self, dt)
-	-- Movement
-	player_movement(self,dt)
-	-- Collisions
-	--self.dx = round_if_near_zero(self.dx)
-	--self.dy = round_if_near_zero(self.dy)
-	collide_object(self,.01)
-	--collision_response(self, map)
-	-- Apply movement 
-	self.x = self.x + self.dx * dt
-	self.y = self.y + self.dy * dt
+	if self.alive then 
+		-- Movement
+		player_movement(self,dt)
+		-- Collisions
+		--self.dx = round_if_near_zero(self.dx)
+		--self.dy = round_if_near_zero(self.dy)
+		collide_object(self,.01)
+		--collision_response(self, map)
+		-- Apply movement 
+		self.x = self.x + self.dx * dt
+		self.y = self.y + self.dy * dt
 
-	-- Aiming
-	aim_player(self, dt)
-	self.rot = self.rot % pi2
-	self.looking_up = self.rot > pi
+		-- Aiming
+		aim_player(self, dt)
+		self.rot = self.rot % pi2
+		self.looking_up = self.rot > pi
 
-	-- Update gun
-	if button_pressed("alt", self.n,self.input_device) then
-		self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
-		self.gun = self.guns[self.gun_n]
+		-- Update gun
+		if button_pressed("alt", self.n,self.input_device) then
+			self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
+			self.gun = self.guns[self.gun_n]
+		end
+		self.gun:update(dt, self)
+
+		-- Pickups
+		self.pickup_cd = max(0, self.pickup_cd - dt)
+		if self.pickup_cd <= 0 then
+			self:get_pickups()
+		end
+
+		-- Life, damage
+		self.iframes_timer = self.iframes_timer - dt
+		self.invincible = self.iframes_timer > 0 
+		self.life = clamp(0, self.life, self.max_life)
+		self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
+		hud.elements.life_bar.val = self.life
+		hud.elements.life_bar.max_val = self.max_life
+		hud.elements.ammo_bar.val = self.gun.ammo
+		hud.elements.ammo_bar.max_val = self.gun.max_ammo
+		if self.life <= 0 then
+			self.alive = false
+		end
+		
+		hud.elements.gun_1.spr = self.guns[1].spr
+		hud.elements.gun_2.spr = self.guns[2].spr
+		hud.elements.gun_list.sprs = self.guns
+		local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6
+		hud.elements.gun_2.x = x
+		
+		self:animate()
+	else -- if the player is dead
+		self.spr = self.spr_dead
 	end
-	self.gun:update(dt, self)
 
-	-- Pickups
-	self.pickup_cd = max(0, self.pickup_cd - dt)
-	if self.pickup_cd <= 0 then
-		self:get_pickups()
-	end
-
-	-- Life, damage
-	self.iframes_timer = self.iframes_timer - dt
-	self.invincible = self.iframes_timer > 0 
-	self.life = clamp(0, self.life, self.max_life)
-	self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
-	hud.elements.life_bar.val = self.life
-	hud.elements.life_bar.max_val = self.max_life
-	hud.elements.ammo_bar.val = self.gun.ammo
-	hud.elements.ammo_bar.max_val = self.gun.max_ammo
-	if self.life < 0 then
-		self.alive = false
-	end
-	
-	hud.elements.gun_1.spr = self.guns[1].spr
-	hud.elements.gun_2.spr = self.guns[2].spr
-	local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6
-	hud.elements.gun_2.x = x
-
-	self:animate()
 end
 
 function draw_player(self)

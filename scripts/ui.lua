@@ -12,6 +12,7 @@ function make_hud()
 		make_bar = make_bar,
 		make_button = make_button,
 		make_img = make_img,
+		make_imgs = make_imgs,
 	}
 end
 function update_hud(self)
@@ -132,8 +133,33 @@ function make_img(self, name, x, y, spr)
 	self:insert_element(img, name)
 end
 function update_img(self)
-
 end
 function draw_img(self)
 	love.graphics.draw(self.spr, camera.x+self.x, camera.y+self.y, self.rot)
+end
+
+function make_imgs(self, name, x, y, sprs)
+	local imgs = {
+		type = "image_list",
+		x = x, 
+		y = y, 
+		rot = 0, 
+		spr = sprs, 
+		margin = 10,
+
+		update = update_imgs,
+		draw = draw_imgs,
+	}
+	self:insert_element(imgs, name)
+end
+function update_imgs(self)
+
+end
+function draw_imgs(self)
+	local ix = self.x
+	for i,o in ipairs(self.sprs) do
+		local spr = o.spr --TODO: just o instead of o.spr
+		love.graphics.draw(spr, camera.x+ix, camera.y+self.y)  
+		ix = ix + self.margin + spr:getWidth()
+	end
 end

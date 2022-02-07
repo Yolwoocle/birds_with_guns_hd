@@ -42,6 +42,7 @@ anim_pigeon_walk = {
 	load_image("pigeon/pigeon_walk_10"),
 	--load_image("pigeon_walk_2"),
 }
+spr_pigeon_dead = load_image("pigeon/pigeon_dead")
 anim_duck_walk = {
 	load_image("duck/duck_1"),
 	--load_image("pigeon_walk_2"),
@@ -82,7 +83,7 @@ spr_firework_launcher_big = load_image("guns/firework_launcher_big")
 
 -- Tiles
 spr_ground_dum = load_image("dummy_ground")
-spr_wall_1 = load_image("wall_dummy")
+spr_wall_1 = load_image("tiles/wall_1")
 sprs_floor_wood = {
 	load_image("tiles/floor_wood_1"),
 	load_image("tiles/floor_wood_2"),

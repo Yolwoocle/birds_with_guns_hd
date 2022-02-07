@@ -29,7 +29,6 @@ function love.load()
 
 	res_1080p_4 = 480, 270
 	res_1080p_3 = 640, 360
-
 	window_w, window_h = 480, 270 --rename to canvas_w, canvas_h
 	screen_sx = screen_w/window_w or screen_w
 	screen_sy = screen_h/window_h or screen_h
@@ -49,6 +48,8 @@ function love.load()
 	font_futile = love.graphics.newFont("assets/fonts/somepx/FutilePro.ttf", 16) 
 	font_matchup = love.graphics.newFont("assets/fonts/somepx/MatchupPro.ttf", 16)
 	love.graphics.setFont(font_thick)
+
+	love.mouse.setVisible(mouse_visible)
 
 	notification = ""
 	

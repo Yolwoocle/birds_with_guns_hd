@@ -26,7 +26,7 @@ function init_map(w, h)
 		}),
 		make_tile(2, spr_wall_1, {
 			is_solid=true, is_destructible=false, is_transparent=false, 
-			oy=44-16
+			oy =10,
 		}),
 		make_tile(3, sprs_box, {
 			is_solid=true, is_destructible=true, is_transparent=true,
@@ -113,7 +113,7 @@ function draw_tile(self, x, y, var)
 	if spr == nil then  spr = spr_missing  end
 	
 	-- TODO: optimise map by baking into canvas & update on change
-	love.graphics.draw(spr, x*block_width, y*block_width)
+	love.graphics.draw(spr, x*block_width, y*block_width, 0,1,1,self.ox,self.oy)
 end
 function set_tile(self, x, y, elt, var)
 	self.grid[floor(y)][floor(x)][1] = elt
