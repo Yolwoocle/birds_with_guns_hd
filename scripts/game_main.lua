@@ -57,7 +57,7 @@ function init_game_main(self)
 	mobs = {}
 	pickups = make_pickups()
 	
-	map = init_map(600, 100)
+	map = init_map(600, 300)
 	map:generate_map(love.math.random()*40000)
 
 	bullets = {}
@@ -82,7 +82,19 @@ end
 function udpate_game_main(self, dt)
 	gf = 0
 	
-    camera.aim_offset = 0--player_list[1].gun.camera_offset
+	local ox, oy = 0, 0
+	for i,p in ipairs(player_list) do
+		local o = p.gun.camera_offset or 0
+		local cx = p.cu_x - p.x
+		local cy = p.cu_y - p.y
+		ox = ox + cx * o
+		oy = oy + cy * o
+	end
+	ox = ox/#player_list
+	oy = oy/#player_list
+    camera.offset_x = ox
+    camera.offset_y = oy
+	
 	camera:update(dt)
 	--Set camera target
     local avg_pos = {x=0, y=0}

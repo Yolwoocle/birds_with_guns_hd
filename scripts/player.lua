@@ -56,7 +56,7 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		max_pickup_cd = 1,
 
 		get_nearest_enemy = get_nearest_enemy,
-		autoaim_max_dist = 200,
+		autoaim_max_dist = 256,
 		cu_x = x,
 		cu_y = y+10,
 		dircux = 0,
@@ -324,9 +324,11 @@ function get_nearest_enemy(self)
 	local nearest = nil
 	local min_dist = math.huge
 	for i,m in ipairs(mobs) do
-		local d = dist(self.x, self.y, m.x, m.y)
+		local d = dist_sq(self.x, self.y, m.x, m.y)
+
 		local a = math.atan2(m.y-self.y, m.x-self.x)
-		local r = raycast(self.x,self.y,math.cos(a),math.sin(a),d,3)
+		local r = raycast(self.x, self.y, math.cos(a), math.sin(a), math.sqrt(d), 3)
+
 		if d <= sqr(self.autoaim_max_dist) and d < min_dist and r.hit then
 			nearest = m
 			min_dist = d

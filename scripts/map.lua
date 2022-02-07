@@ -26,11 +26,11 @@ function init_map(w, h)
 		}),
 		make_tile(2, spr_wall_1, {
 			is_solid=true, is_destructible=false, is_transparent=false, 
-			oy =10,
+			oy = 9,
 		}),
 		make_tile(3, sprs_box, {
 			is_solid=true, is_destructible=true, is_transparent=true,
-			ox=1, oy=1, type="variation",
+			type="variation",
 		}),
 		make_tile(4, spr_chain, {
 			is_solid=false, is_destructible=false, is_transparent=false

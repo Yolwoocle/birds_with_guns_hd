@@ -12,7 +12,7 @@ function generate_map(self, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	self:write_room(self.lvl1_main_rooms[1], 0, 0)
+	self:write_room(self.lvl_arena[1], 0, 0)
 end
 
 function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
@@ -88,14 +88,13 @@ function load_from_file(self, file)
 		else
 			rooms[room][y] = {}
 			local x = 0
-			for i=1, #line, 2 do
+			for i=1, self.width*2, 2 do
 				local chr = string.sub(line, i, i)
-				local tile = 0
 				local var = tonumber(string.sub(line, i+1, i+1))
-
 				if not var then  var = 1  end
 
-				if	 chr == "`" then tile = 0
+				local tile = 0
+				if	 chr == " " then tile = 0
 				elseif chr == "." then tile = 1
 				elseif chr == "#" then tile = 2
 				elseif chr == "b" then tile = 3
