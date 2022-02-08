@@ -8,8 +8,19 @@ guns = {
 		spr = spr_revolver,
 		screenkick = 10,
 		bullet_spd = 500,
-		make_shot = default_shoot
+		make_shot = default_shoot,
+		scale = 0.5,
 	}),
+	laser = make_gun{
+		name = "laser pistol",
+		type = "laser",
+		bullet_spr = spr_laser,
+		spr = spr_revolver,
+		screenkick = 10,
+		bullet_spd = 500,
+		make_shot = default_shoot,
+		scale = 0.5,
+	},
 	shotgun = make_gun{
 		name = "shotgun",
 		spr = spr_shotgun,
@@ -54,7 +65,7 @@ guns = {
 		cooldown = 0.01,
 
 		ptc_type = "circle",
-		max_ammo = inf,
+		max_ammo = 300,
 
 		update_option = function(self,dt)
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
@@ -78,7 +89,7 @@ guns = {
 		scale = 1.25,
 		cooldown = 4,
 		burst  = 1,
-		max_ammo = inf,
+		max_ammo = 300,
 		make_shot = default_shoot,
 		spread  = pi,
 	}),
@@ -100,7 +111,7 @@ guns = {
 		scale = 1,
 		cooldown = 0.4,
 		burst  = 1,
-		max_ammo = inf,
+		max_ammo = 300,
 		make_shot = default_shoot,
 		bullet_life = 1.5,
 		ptc_type = "circle",
@@ -143,7 +154,7 @@ guns = {
 		scale = 1.5,
 		damage = 4,
 
-		cooldown = 0.33,
+		cooldown = 0,
 		max_ammo = 100,
 		bullet_spd = 500,
 		spdslow = 0.99,
@@ -241,61 +252,6 @@ guns = {
 		make_shot = default_shoot,
 		scale = 1.5,
 	}),
-
-	test = make_gun({
-		type = "bullet",			--"bullet" "laser"
-		category = "instant",	--"persistent" "instant"
-		bounce = 0,
-		
-		charge = true,
-		charge_time = 1,
-		charge_nbburst = 10,
-		charge_bullet_spd = 1,
-		charge_laser_length = 30000,
-		charge_nbshot = 10,
-		charge_spread = 0,
-		charge_scattering = -.6, --difference between scattering and spread?
-		charge_scale = 2,
-		charge_ospd = 0,
-		charge_life = 0,
-		charge_burstdt = 0,
-		charge_spdslow = .002,
-		charge_damage = 10,
-		charge_oscale = 10,
-
-		spr = spr_revolver, 
-
-		bullet_spd = 100,
-		ospd = 0,
-		cooldown = .1,
-
-		scale = .25,
-		oscale = 0,
-
-		max_ammo = inf,
-		scattering = 1,
-
-		damage = 1,
-
-		spawn_x = nil,
-		spawn_y = 0,
-
-		bullet_life	= 10,
-
-		laser_length = 300,
-
-		burst  = 1,
-		burstdt  = .1,
-
-		nbshot = 5,
-		spread  = pi/2,
-
-		spdslow = 1,
-
-		screenkick = 3,
-
-		make_shot = default_shoot
-	}),
 	
 	pistolet = make_gun({
 		name = "pistolet", 
@@ -322,7 +278,7 @@ guns = {
 
 		spawn_y =  0,
 
-		max_ammo = inf,
+		max_ammo = 300,
 	}),
 
 	jsp = make_gun({

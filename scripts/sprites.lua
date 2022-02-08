@@ -22,8 +22,15 @@ spr_cursor = load_image("cursor")
 spr_hp_bar = load_image("hp_bar")
 spr_ammo_bar = load_image("ammo_bar")
 spr_hp_bar_empty = load_image("hp_bar_empty")
+spr_heart = load_image("ui/heart_small_1")
+spr_heart_empty = load_image("ui/heart_small_1_empty")
+spr_ammo = load_image("ui/ammo_small_1")
 spr_icon_heart = load_image("icon_heart")
 spr_icon_ammo = load_image("icon_ammo")
+
+spr_bar_small_ammo = load_image("ui/small_ammo_bar") 
+spr_bar_small_life = load_image("ui/small_life_bar") 
+spr_bar_small_empty = load_image("ui/small_empty_bar") 
 
 -- Players
 anim_pigeon_idle = {

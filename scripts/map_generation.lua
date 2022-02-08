@@ -12,7 +12,7 @@ function generate_map(self, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	self:write_room(self.lvl_arena[1], 0, 0)
+	self:write_room(self.lvl_arena[1], 0, 0, rng)
 end
 
 function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
@@ -37,10 +37,10 @@ function generate_path(self, rng, rooms, x, y, n_room_min, n_room_max)
 	return {x=ix}
 end
 
-function tile_spawn_mob(self, rnd, x, y)
+function tile_spawn_mob(self, rng, x, y)
 	local bw = block_width 
-	if not self:get_tile(x, y).is_solid and rnd:random(50)==1 then
-		table.insert(mobs, mob_list.jspr:spawn(x*bw + bw/2, y*bw + bw/2))
+	if not self:get_tile(x, y).is_solid and rng:random(100)==1 then
+		table.insert(mobs, mob_list.shotgunboy:spawn(x*bw + bw/2, y*bw + bw/2))
 		table.insert(mobs, mob_list.fox:spawn(x*bw + bw/2, y*bw + bw/2))
 	end
 end
@@ -55,7 +55,7 @@ function write_room(self, room, x, y, rng)
 			local tile = self:get_room_tile(room,ix,iy)
 			self:set_tile(x+ix, y+iy, tile[1], tile[2])
 			if rng then
-				self:spawn_mob(rng, x+ix, y+iy)
+				--self:spawn_mob(rng, x+ix, y+iy)
 			end
 		end
 	end

@@ -100,8 +100,8 @@ function draw_bar(self)
 
 	local fonth = love.graphics.getFont():getHeight()
 	x = floor(x+5)
-	icon_y = floor(y + h/2 - self.spr_icon:getHeight()/2)
 	if self.spr_icon then
+		icon_y = floor(y + h/2 - self.spr_icon:getHeight()/2)
 		love.graphics.draw(self.spr_icon, x, icon_y, 0, 1, 1)
 		x = x + self.spr_icon:getWidth() + 3
 	end
@@ -137,6 +137,8 @@ end
 function draw_img(self)
 	love.graphics.draw(self.spr, camera.x+self.x, camera.y+self.y, self.rot)
 end
+
+------------
 
 function make_imgs(self, name, x, y, sprs)
 	local imgs = {

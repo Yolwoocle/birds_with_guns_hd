@@ -135,11 +135,13 @@ function update_waves(dt)
         nbwave = nbwave+1
         for _,k in pairs(waves[nbwave]) do 
             for w = 1,k[2] do
-                local x=100+math.random(16*60)
+                local x=300+math.random(16*60)
                 local y=100+math.random(16*60)
-                while  map:is_solid(x/bw, y/bw) do
-                    x=100+math.random(16*50) 
+                local i=0
+                while  map:is_solid(x/bw, y/bw) or i>100000 do
+                    x=300+math.random(16*50) 
                     y=100+math.random(16*50)
+                    i=i+1
                 end
                 table.insert(spawn_location, {x=x,y=y})
                 table.insert(sp_mark,{x=x,y=y})

@@ -19,7 +19,8 @@ function screenshot()
 	local imgdata = buffer_canvas:newImageData()
 	local imgpng = imgdata:encode("png", filename)
 	local filepath = love.filesystem.getSaveDirectory().."/"..filename
-	notification = "Image saved at: "..filepathsd
+	notification = "Screenshot path pasted to clipboard"
+	love.system.setClipboardText(filepath)
 	print(notification)
 
 	return filepath, imgdata, imgpng

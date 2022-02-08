@@ -4,8 +4,8 @@ function init_keybinds()
 		right = {{"d"},{"right"}}, 
 		up    = {{"w"},{"up"}},
 		down  = {{"s"},{"down"}},
-		fire  = {{"c"},{"l"}},
-		alt   = {{"x"},{";"}},
+		fire  = {{"c"},{"m"}},
+		alt   = {{"v"},{","}},
 	}
 end
 function init_joystickbinds()

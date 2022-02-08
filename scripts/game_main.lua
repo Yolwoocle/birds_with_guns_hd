@@ -26,11 +26,7 @@ function init_game_main(self)
 	player_list = {}
 	for i =1,number_of_players do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
-			--controle = "keyboard+mouse"
-			--controle = "keyboard"
-
-			--controle = "keyboard+mouse"
-			controle = "keyboard+mouse"
+			controle = "keyboard"
 			nbcontroller=1
 			--nbcontroller = 1
 		elseif i == 2 then
@@ -43,7 +39,6 @@ function init_game_main(self)
 		elseif i == 4 then 
 			controle = "joystick"
 			nbcontroller=2
-
 		end
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk,anim_pigeon_walk, anim_duck_walk,}--TODO: fix
@@ -222,19 +217,17 @@ function draw_game_main(self)
 		p:draw()
 	end
 
-	hud:draw()
+	--hud:draw()
 
 	-- Debug
-	debug_y = 30
-	--rect_color("line", 158, 128, block_width, block_width, {1,0,0})
-
+	debug_y = 0
+	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	debug_print(notification)
 	--debug_print(joystick.x)
 	--debug_print(joystick.joy:getGamepadAxis("triggerleft"))
 	--debug_print(spawn_time)
 	--debug_print(#_shot)
 	--if prevray.dist then debug_print(prevray.dist,1,1) end
-	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	--circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
 	--map:debug_draw(camera.x+5, camera.y+30)
 end

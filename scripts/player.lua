@@ -16,7 +16,6 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		dx = 0,
 		dy = 0,
 		walk_dir = {x=0, y=0},
-		alive = true,
 
 		speed = 64,
 		friction = 20, --FIXME player glides more when FPS low
@@ -24,13 +23,17 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		is_walking = false,
 		is_enemy = false,
 
-		life = 10,
-		max_life = 10,
+		life = 5,
+		alive = true, 
+		max_life = 5,
 		iframes = 2,
 		iframes_timer = 0,
 		iframes_flashing_time = 0.1,
 		hit_w = 12,
 		hit_h = 12,
+		revive_timer = 0,
+		max_revive_timer = 3,
+		revive_radius = 64,
 
 		spr = spr,
 		spr_dead = spr_pigeon_dead,
@@ -47,7 +50,7 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 
 		gun = nil,
 		gun_dist = 14,
-		guns = {copy(guns.paper_plane_gun), copy(guns.fire_extinguisher) , copy(guns.shotgun) , copy(guns.assault_rifle) , copy(guns.firework_launcher)},
+		guns = {copy(guns.laser), copy(guns.paper_plane_gun), copy(guns.fire_extinguisher) , copy(guns.shotgun) , copy(guns.assault_rifle) , copy(guns.firework_launcher)},
 		gun_n = 1,
 
 		damage = damage_player,
@@ -61,6 +64,7 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		cu_y = y+10,
 		dircux = 0,
 		dircuy = 0,
+		draw_hud = draw_player_hud,
 
 		update = update_player,
 		draw = draw_player,
@@ -108,31 +112,54 @@ function update_player(self, dt)
 		if self.pickup_cd <= 0 then
 			self:get_pickups()
 		end
-
-		-- Life, damage
-		self.iframes_timer = self.iframes_timer - dt
-		self.invincible = self.iframes_timer > 0 
-		self.life = clamp(0, self.life, self.max_life)
-		self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
-		hud.elements.life_bar.val = self.life
-		hud.elements.life_bar.max_val = self.max_life
-		hud.elements.ammo_bar.val = self.gun.ammo
-		hud.elements.ammo_bar.max_val = self.gun.max_ammo
-		if self.life <= 0 then
-			self.alive = false
-		end
-		
-		hud.elements.gun_1.spr = self.guns[1].spr
-		hud.elements.gun_2.spr = self.guns[2].spr
-		hud.elements.gun_list.sprs = self.guns
-		local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6
-		hud.elements.gun_2.x = x
 		
 		self:animate()
 	else -- if the player is dead
 		self.spr = self.spr_dead
+
+		-- Reviving
+		--- Get all near players
+		local n = 0
+		for _,p in pairs(player_list) do
+			local near = dist_sq(self.x, self.y, p.x, p.y) <= sqr(self.revive_radius) 
+			if near and p.n ~= self.n then
+				n = n + 1
+			end
+		end
+		print(n)
+		if n > 0 then
+			self.revive_timer = self.revive_timer + dt*n
+		else
+			self.revive_timer = max(self.revive_timer - dt, 0)
+		end
+		
+		if self.revive_timer > self.max_revive_timer then
+			self.alive = true
+			self.life = 1
+			self.revive_timer = 0
+		end
 	end
 
+	-- Default bahviour that will always be executed
+	-- Life, damage
+	self.iframes_timer = self.iframes_timer - dt
+	self.invincible = self.iframes_timer > 0 
+	self.life = clamp(0, self.life, self.max_life)
+	self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
+
+	hud.elements.life_bar.val = self.life
+	hud.elements.life_bar.max_val = self.max_life
+	hud.elements.ammo_bar.val = self.gun.ammo
+	hud.elements.ammo_bar.max_val = self.gun.max_ammo
+	if self.life <= 0 then
+		self.alive = false
+	end
+	
+	hud.elements.gun_1.spr = self.guns[1].spr
+	hud.elements.gun_2.spr = self.guns[2].spr
+	hud.elements.gun_list.sprs = self.guns
+	local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6
+	hud.elements.gun_2.x = x
 end
 
 function draw_player(self)
@@ -156,8 +183,34 @@ function draw_player(self)
 		draw_centered(spr_cursor, self.cu_x, self.cu_y)
 	end
 
-	--circ_color("fill", self.x, self.y, 3, {1,0,0})
-	--collision_response(self, map)
+	self:draw_hud()
+end
+
+function draw_player_hud(self)
+	-- HUD
+	local s = 8
+	--- Health bar
+
+	for i=1, self.max_life do
+		local spr = (i <= self.life) and spr_heart or spr_heart_empty
+		
+		local w = (self.max_life*s)/2
+		local x = self.x - w + (i-1)*s + s/2
+		draw_centered(spr, floor(x), floor(self.y-32))
+	end
+
+	--- Ammo bar
+	local spr = spr_bar_small_empty
+	local h = spr:getHeight()
+	local x,y = floor(self.x - 10), floor(self.y - 24)
+	local sprw = spr:getWidth() - 4
+	local w = floor((self.gun.ammo / self.gun.max_ammo) * sprw)
+
+	love.graphics.draw(spr_ammo, x-11, y)
+	love.graphics.draw(spr, x, y)
+	local buffer_quad = love.graphics.newQuad(2, 0, w, h, spr:getDimensions())
+	love.graphics.draw(spr_bar_small_ammo, buffer_quad, x+2, y)
+	love.graphics.print(self.gun.ammo, x+32, y)
 end
 
 function player_movement(self, dt)

@@ -66,3 +66,4 @@
   - Peanut gun?
 - Butter gun
 - boulette de papier gun -> corbeille
+- cheese gun / raclette gun
