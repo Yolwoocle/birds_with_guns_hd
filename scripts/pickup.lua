@@ -22,18 +22,8 @@ function is_picked(self, obj)
 		self.delete = true
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
-		obj.gun, self.gun = self.gun, obj.gun
-		self.spr = self.gun.spr
-		toremove = {}
 
-		for k,v in ipairs(_shot) do
-			if v.player == obj then
-				table.insert(toremove , k)
-			end
-		end
-		for i,v in ipairs(toremove) do
-			table.remove(_shot, v-i+1)
-		end
+		switch_weapon(self , obj)
 
 	end
 end
@@ -73,7 +63,7 @@ function spawn_random_loot(self, x, y)
 		self:spawn("ammo", 0.25, x, y)
 	elseif love.math.random() <= 0.03 then
 		self:spawn("life", 2, x, y)
-	elseif love.math.random() <= 0.01 then
+	elseif 0.01 <= 0.01 then
 		self:spawn("gun", guns.revolver, x, y)
 	end
 end

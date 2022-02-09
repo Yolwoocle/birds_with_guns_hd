@@ -76,6 +76,7 @@ function make_gun(a)
 		ptc_type = a.ptc_type or "none", 
 		ptc_size = a.ptc_size or 10,
 
+		toshot = {},
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,

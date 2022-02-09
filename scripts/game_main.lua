@@ -129,8 +129,6 @@ function udpate_game_main(self, dt)
 		end
 	end
 
-	toremove = {}
-	--for i,v in ipairs(_shot) do
 	for i = #_shot , 1 , -1 do
 		v = _shot[i]
 		-- Summon shots
