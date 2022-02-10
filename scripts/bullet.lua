@@ -26,8 +26,8 @@ function update_bullet(self, dt, i)
 
 			local x = self.x
 			local y = self.y
-			local h = 3
-			local w = 3
+			local h = 7
+			local w = 7
 
 			-- Destroy crates, etc
 			--- Destroy at current location
@@ -35,7 +35,7 @@ function update_bullet(self, dt, i)
 			if map:is_solid(mapx, mapy) then
 				interact_map(self, map, mapx, mapy)
 			end
-
+			--FIXME: avoir le block a delet et pas delet tout les trucs autour comme un canard
 			--- Destroy at corners
 			interact_map(self, map,(x-w)/ block_width, (y-h)/ block_width)
 			interact_map(self, map,(x+w)/ block_width, (y-h)/ block_width)
@@ -143,7 +143,11 @@ function draw_laser(self)
 
 
 		local scmax = (-(-self.maxlife/-2)^2)+(-self.maxlife/-2)*self.maxlife
-		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*((-(self.life^2)+self.life*self.maxlife)/scmax))
+		local scaleof = ((-(self.life^2)+self.life*self.maxlife)/scmax)
+
+		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*scaleof)
+		circ_color("fill",v.x1,v.y1,self.scale*7*scaleof,white)
+		circ_color("fill",v.x,v.y,self.scale*7*scaleof,white)
 
 		--love.graphics.print(v.bounce, v.x, v.y-10)
 	end
@@ -234,7 +238,7 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 	end
 
 	for _,p in ipairs(player_list) do
-		local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)
+		local coll = coll_rect(p.x, p.y, p.w*1.3, p.h*1.3, self.x, self.y, self.scale, self.scale)
 		if self.type ==  "bullet" then
 			if self.is_enemy and coll then
 

@@ -118,7 +118,7 @@ function update_player(self, dt)
 		if button_pressed("alt", self.n,self.input_device) then
 			self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
 			self.gun = self.guns[self.gun_n]
-			--self.gun.cooldown_timer = math.min(self.gun.cooldown_timer + 0.05,self.gun.cooldown)
+			self.gun.cooldown_timer = math.min(self.gun.cooldown_timer + 0.05,self.gun.cooldown)
 
 			for k = #_shot , 1 , -1 do
 				v = _shot[k]
@@ -392,12 +392,15 @@ function ply_set_gun(self, gun)
 	self.guns[self.gun_n] = gun
 	self:update_gun()
 end
+
 function ply_update_gun(self)
 	self.gun = self.guns[self.gun_n]
 end
+
 function ply_get_gun(self)
 	return self.gun
 end
+
 function set_iframes(self, n)
 	if n then
 		self.iframes_timer = n
