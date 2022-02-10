@@ -23,12 +23,6 @@ function is_picked(self, obj)
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
 
-		obj.guns[obj.gun_n], self.gun = self.gun, obj.guns[obj.gun_n]
-		obj:update_gun()
-
-		self.spr = self.gun.spr
-		toremove = {}
-
 
 		switch_weapon(self , obj)
 	end
