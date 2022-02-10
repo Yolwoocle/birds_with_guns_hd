@@ -117,6 +117,15 @@ function update_player(self, dt)
 		if button_pressed("alt", self.n,self.input_device) then
 			self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
 			self.gun = self.guns[self.gun_n]
+			--self.gun.cooldown_timer = math.min(self.gun.cooldown_timer + 0.05,self.gun.cooldown)
+
+			for k = #_shot , 1 , -1 do
+				v = _shot[k]
+				if v.player == self then
+					table.remove(_shot , k)
+				end
+			end
+
 		end
 		self.gun:update(dt, self)
 
