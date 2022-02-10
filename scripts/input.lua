@@ -153,31 +153,19 @@ end
 
 function get_joystick_cursor_pos(input_device,ply,dt)
 	if not(input_device[2] == "joystick" and not(joysticks[input_device[3]])) then
-	--FIXME: no words
-		--if input_device[2] == "joystick" then
 		local joyx = joysticks[input_device[3]]:getAxis(3)
 		local joyy = joysticks[input_device[3]]:getAxis(4)
 
 		local qdsf = dist(joyy,joyx,0,0)
-		if qdsf>joystick_deadzone2 then--(joyx<-joystick_deadzone2 or joyx>joystick_deadzone2) and
-		--(joyy<-joystick_deadzone2 or joyy>joystick_deadzone2) or not(mx) then
+		if qdsf>joystick_deadzone2 then
 			local a = math.atan2(joyy,joyx)
 			return lerp(ply.cu_x,ply.x+math.cos(a)*220,.2)-camera.x, lerp(ply.cu_y,ply.y+math.sin(a)*220,.2)-camera.y
-			--return ply.x-camera.x+joyx*100,ply.y-camera.y+joyy*100
-			--ply.x + math.cos(dir) * rad
 		elseif dist((ply.cu_x-camera.x)+ply.dx*dt,(ply.cu_y-camera.y)+ply.dy*dt,ply.x-camera.x,ply.y-camera.y)>10 then
-			--return  lerp((ply.cu_x-camera.x)+ply.dx*dt, ply.x-camera.x, .1) ,  lerp((ply.cu_y-camera.y)+ply.dy*dt, ply.y-camera.y,0.1)
 			local x,y = lerp(ply.cu_x+ply.dx*dt, ply.x, .1)-camera.x ,  lerp(ply.cu_y+ply.dy*dt, ply.y,0.1)-camera.y
-			--ply.dircux = x+camera.x
-			--ply.dircuy = y+camera.y
 			return x,y
 
 		else
 			return (ply.cu_x-camera.x)+ply.dx*dt,  (ply.cu_y-camera.y)+ply.dy*dt
-			--ply.dircux = (ply.dircux-camera.x)+ply.dx*dt
-			--ply.dircuy = (ply.dircuy-camera.y)+ply.dy*dt
-			--return lerp(ply.cu_x,ply.dircux,.5)-camera.x ,  lerp(ply.cu_y,ply.dircuy,.5)-camera.x
-
 		end
 	end
 	

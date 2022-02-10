@@ -141,6 +141,7 @@ end
 ------------
 
 function make_imgs(self, name, x, y, sprs)
+	--DEPRECATED
 	local imgs = {
 		type = "image_list",
 		x = x, 
@@ -158,9 +159,10 @@ function update_imgs(self)
 
 end
 function draw_imgs(self)
+	--DEPRECATED
 	local ix = self.x
 	for i,o in ipairs(self.sprs) do
-		local spr = o.spr --TODO: just o instead of o.spr
+		local spr = o.spr 
 		love.graphics.draw(spr, camera.x+ix, camera.y+self.y)  
 		ix = ix + self.margin + spr:getWidth()
 	end

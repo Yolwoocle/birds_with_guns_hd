@@ -110,11 +110,11 @@ function update_mob(self, dt)
 	self.dxplayer = math.cos(self.rot)
 	self.dyplayer = math.sin(self.rot)
 
-	-- Raycast to player --TODO: put a in method instead
+	-- Raycast to player 
 	local rayc = {}
 	if self.see_dist >= self.distplayer then
 		rayc = raycast(self.x,self.y,
-		self.dxplayer, self.dyplayer,  self.distplayer,3)
+		self.dxplayer, self.dyplayer, self.distplayer, 3)
 	else
 		rayc.hit = false
 	end
@@ -186,7 +186,7 @@ function update_mob(self, dt)
 	-- Apply knockback
 	self.dx = self.dx + self.knockback_x
 	self.dy = self.dy + self.knockback_y
-	self.knockback_x = self.knockback_x * 0.9
+	self.knockback_x = self.knockback_x * 0.9 --FIXME: dt mob kb
 	self.knockback_y = self.knockback_y * 0.9
 
 

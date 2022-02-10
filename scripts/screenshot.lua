@@ -3,8 +3,6 @@ require "scripts/settings"
 local ffi = require "ffi"
 
 function screenshot()
-	--TODO: option to use love.graphics.captureScreenshot( filename )
-	--TODO: paste screenshot into pastebin
 	--TODO: capture GIFs: https://love2d.org/forums/viewtopic.php?t=81543 + lua-gd lib
 	--These features are important as it provides an easy way 
 	--for players to share the game with others (GIF especially)

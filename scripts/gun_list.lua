@@ -17,7 +17,7 @@ guns = {
 		spr_bullet = spr_laser,
 		laser_length = 300,
 		spr = spr_revolver,
-		screenkick = 10,
+		screenkick = 5,
 		bullet_life = .1,
 		cooldown = .33,
 		scale = 1,
@@ -44,7 +44,7 @@ guns = {
 		burst = 5,
 		burstdt = 0.05,
 
-		screenkick = 10,		
+		screenkick = 5,		
 	},
 	fire_extinguisher = make_gun({
 		name = "fire extinguisher",
@@ -56,7 +56,7 @@ guns = {
 
 		spdslow = 1,
 		bullet_spd = 200,
-		screenkick = -2,
+		screenkick = -0.2,
 
 		spawn_x = 40,
 		spread = 0.3,
@@ -108,7 +108,7 @@ guns = {
 		bullet_spd = 500,
 		scattering    = 0,
 
-		screenkick = 20,
+		screenkick = 5,
 
 		scale = 1,
 		cooldown = 0.4,
@@ -140,6 +140,7 @@ guns = {
 		spread  = pi2,
 		scattering = pi2,
 		spdslow = .95,
+		screenkick = 0.2,
 
 		--ptc_type = "circle",
 		cooldown = .5,
@@ -258,7 +259,7 @@ guns = {
 	pistolet = make_gun({
 		name = "pistolet", 
 		type = "bullet",
-		category = "instent",--FIXME "instant" not INSTENT GODDAMNIT
+		category = "instant",--FIXME "instant" not INSTENT GODDAMNIT
 		charge = true,
 		charge_time = .1,
 		bounce = 1,

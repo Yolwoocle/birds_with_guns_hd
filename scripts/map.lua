@@ -8,7 +8,7 @@ function init_map(w, h)
 	for i=0, h-1 do
 		map.grid[i] = {}
 		for j=0, w-1 do
-			map.grid[i][j] = {0, 0}--TODO that probably uses a lot of memory? idk tbh
+			map.grid[i][j] = {0, 0}
 		end
 	end
 	map.width = w
@@ -63,7 +63,6 @@ function init_map(w, h)
 	return map
 end
 function draw_map(self)
-	--TODO y sorting
 	local x1 = floor(camera.x / block_width)
 	local x2 = floor((camera.x + window_w) / block_width )
 	local y1 = floor(camera.y / block_width)

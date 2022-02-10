@@ -18,7 +18,7 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		walk_dir = {x=0, y=0},
 
 		speed = 64,
-		friction = 20, --FIXME player glides more when FPS low
+		friction = 20, --FIXME:dt ply fric
 		bounce = 0.6,
 		is_walking = false,
 		is_enemy = false,
@@ -83,7 +83,7 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		update = update_player,
 		draw = draw_player,
 
-		--TODO add keybinds
+		--TODO: add keybinds
 		input_device = {keybinds,controle,nbcontroller}, --"keyboard+mouse" "keyboard" "joystick"
 		show_cu = true,
 
@@ -437,7 +437,6 @@ end
 
 function save_gun_stats(self)
 	-- WHY IS THIS A METHOD OF PLAYER
-	-- TODO: move it to gun ?????????? 
 	self.gun.save_rafale 	 	= self.gun.rafale
 	self.gun.save_bullet_spd  	= self.gun.bullet_spd
 	self.gun.save_laser_length 	= self.gun.laser_length
