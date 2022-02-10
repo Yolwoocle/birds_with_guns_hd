@@ -143,6 +143,9 @@ function udpate_game_main(self, dt)
 		if v.time <= 0 then
 			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset,nil,v.spr))
 			--table.insert(toremove , i)
+			if not v.player.is_enemy then
+				camera:kick(v.player.rot + pi, v.gun.screenkick)
+			end
 			table.remove(_shot, i)
 		else
 			v.time=v.time-dt

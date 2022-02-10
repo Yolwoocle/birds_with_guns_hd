@@ -21,7 +21,10 @@ end
 function init_button_last_state_table()
 	button_last_state = {}
 	for key,_ in pairs(keybinds) do
-		button_last_state[key] = false
+		button_last_state[key] = {}
+		for i=1,4 do
+			button_last_state[key][i] = false
+		end
 	end
 end
 
@@ -95,16 +98,16 @@ function get_autoaim(ply)
 	return x-camera.x, y-camera.y
 end
 
-function button_pressed(cmd, n , input_device)
-	local btnd = button_down(cmd, n , input_device)
-	local last_btnd = button_last_state[cmd]
+function button_pressed(cmd, n, input_device)
+	local btnd = button_down(cmd, n, input_device)
+	local last_btnd = button_last_state[cmd][n]
 	if btnd then 
 		if not last_btnd then
-			button_last_state[cmd] = true
+			button_last_state[cmd][n] = true
 			return true 
 		end
 	else
-		button_last_state[cmd] = false
+		button_last_state[cmd][n] = false
 	end
 	return false
 end

@@ -6,10 +6,10 @@ guns = {
 	revolver = make_gun({
 		name = "revolver",
 		spr = spr_revolver,
-		screenkick = 10,
+		screenkick = 5,
 		bullet_spd = 500,
 		make_shot = default_shoot,
-		scale = 0.5,
+		scale = 1,
 	}),
 	laser = make_gun{
 		name = "laser pistol",
@@ -40,7 +40,7 @@ guns = {
 		scattering = 0.2,
 		damage = 2,
 
-		scale = 0.5, 
+		scale = 1, 
 
 		burst = 5,
 		burstdt = 0.05,
