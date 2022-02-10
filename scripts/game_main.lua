@@ -118,6 +118,7 @@ function udpate_game_main(self, dt)
 	--	table.remove(_shot_, i)
 	--end
 
+	local number_alive_players = 0
 	for _,p in ipairs(player_list) do
 		p:update(dt, camera)
 		if p.shoot then
@@ -127,6 +128,13 @@ function udpate_game_main(self, dt)
 				append_list(_shot, bullet)
 			end
 		end
+
+		if p.alive then
+			number_alive_players = number_alive_players + 1
+		end
+	end
+	if number_alive_players == 0 then
+		notification = "Game over lololololol"
 	end
 
 	toremove = {}

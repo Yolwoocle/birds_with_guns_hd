@@ -26,7 +26,7 @@ guns = {
 		spr = spr_shotgun,
 		nbshot = 10,
 		offset_spd = 300,
-		scattering    = 1,
+		scattering = 1,
 		cooldown = 0.5,
 		bullet_life = .3,
 	},
@@ -54,7 +54,7 @@ guns = {
 
 		spdslow = 1,
 		bullet_spd = 200,
-		screenkick = 7,
+		screenkick = -2,
 
 		spawn_x = 40,
 		spread = 0.3,
@@ -65,7 +65,7 @@ guns = {
 		cooldown = 0.01,
 
 		ptc_type = "circle",
-		max_ammo = 300,
+		max_ammo = 3000,
 
 		update_option = function(self,dt)
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
@@ -154,13 +154,13 @@ guns = {
 		scale = 1.5,
 		damage = 4,
 
-		cooldown = 0,
+		cooldown = 0.2,
 		max_ammo = 100,
 		bullet_spd = 500,
 		spdslow = 0.99,
 		bounce = math.huge,
 
-		screenkick = 9,
+		screenkick = 5,
 		bounce = 1,
 	
 		update_option = function(self,dt)

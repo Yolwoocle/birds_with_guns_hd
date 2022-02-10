@@ -40,7 +40,6 @@ end
 function tile_spawn_mob(self, rng, x, y)
 	local bw = block_width 
 	if not self:get_tile(x, y).is_solid and rng:random(100)==1 then
-		table.insert(mobs, mob_list.shotgunboy:spawn(x*bw + bw/2, y*bw + bw/2))
 		table.insert(mobs, mob_list.fox:spawn(x*bw + bw/2, y*bw + bw/2))
 	end
 end
@@ -55,7 +54,7 @@ function write_room(self, room, x, y, rng)
 			local tile = self:get_room_tile(room,ix,iy)
 			self:set_tile(x+ix, y+iy, tile[1], tile[2])
 			if rng then
-				--self:spawn_mob(rng, x+ix, y+iy)
+				self:spawn_mob(rng, x+ix, y+iy)
 			end
 		end
 	end

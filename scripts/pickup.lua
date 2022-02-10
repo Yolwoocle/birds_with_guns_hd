@@ -22,7 +22,9 @@ function is_picked(self, obj)
 		self.delete = true
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
-		obj.gun, self.gun = self.gun, obj.gun
+		obj.guns[obj.gun_n], self.gun = self.gun, obj.guns[obj.gun_n]
+		obj:update_gun()
+
 		self.spr = self.gun.spr
 		toremove = {}
 
@@ -69,11 +71,11 @@ function spawn_pickup(self, type, q, x, y)
 end
 
 function spawn_random_loot(self, x, y)
-	if love.math.random() <= 0.03 then
+	if love.math.random() <= 0.1 then
 		self:spawn("ammo", 0.25, x, y)
-	elseif love.math.random() <= 0.03 then
+	elseif love.math.random() <= 0.1 then
 		self:spawn("life", 2, x, y)
-	elseif love.math.random() <= 0.01 then
+	elseif love.math.random() <= 0.1 then
 		self:spawn("gun", guns.revolver, x, y)
 	end
 end

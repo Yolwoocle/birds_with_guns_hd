@@ -35,7 +35,7 @@ function make_gun(a)
 		bullet_life	  = a.bullet_life   or 2,	--bullet_life
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????
-		scattering    = a.scattering    or pi/5,
+		scattering    = a.scattering    or 0.3,
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1,
 		
@@ -68,7 +68,7 @@ function make_gun(a)
 
 		update_option = a.update_option,
 		
-		screenkick = a.screenkick or 60,
+		screenkick = a.screenkick or 5,
 		screenkick_shake = a.screenkick_shake or 1,
 		screenshake = a.screenshake or 6,
 		camera_offset = a.camera_offset or 0.3,

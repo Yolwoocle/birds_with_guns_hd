@@ -5,8 +5,9 @@ require "scripts/gun_list"
 mob_list = {
 	fox = make_mob({
 		name = "place_older",
-		spr = spr_fox[1],
-		life = 10,	
+		anim_idle = spr_fox,
+		spr_hit = spr_fox_hit,
+		life = 3,	
 		spd = 40,--50,
 		w = 4,
 		h = 4,

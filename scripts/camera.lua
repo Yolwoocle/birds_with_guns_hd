@@ -18,7 +18,7 @@ function init_camera()
 		shake_fric = 50,
 
 		kick = kick_camera,
-		kick_fric = 50,
+		kick_fric = 0.9,
 		kick_x = 0,
 		kick_y = 0,
 		
@@ -26,7 +26,7 @@ function init_camera()
 		lock_y = false,
 
 		smoothing = 10,
-		aim_offset = 0.2,
+		aim_offset = 0.8,
 
 		update = update_camera,
 		draw = draw_camera,
@@ -56,16 +56,16 @@ function update_camera(self, dt)
 	end
 
 	-- Apply screenkick (aka directional screenshake)
-	self.kick_x = self.kick_x * inv_dt(self.kick_fric, dt)
-	self.kick_y = self.kick_y * inv_dt(self.kick_fric, dt)
+	self.kick_x = self.kick_x * self.kick_fric--inv_dt(self.kick_fric, dt)
+	self.kick_y = self.kick_y * self.kick_fric--inv_dt(self.kick_fric, dt)
 	
 	-- Apply shake
 	local rnd_ang = love.math.random() * pi2
 	local rnd_rad = love.math.random() * self.shake_rad
 	self.shake_x = math.cos(rnd_ang) * rnd_rad
 	self.shake_y = math.sin(rnd_ang) * rnd_rad
-	self.shake_rad = self.shake_rad * inv_dt(self.shake_fric, dt)
-	self.shake_rad = round_if_near_zero(self.shake_rad) 
+	self.shake_rad = self.shake_rad * self.kick_fric--inv_dt(self.shake_fric, dt)
+	--self.shake_rad = round_if_near_zero(self.shake_rad) 
 
 	self.x = self.fake_x + self.offset_x + self.kick_x + self.shake_x
 	self.y = self.fake_y + self.offset_y + self.kick_y + self.shake_y

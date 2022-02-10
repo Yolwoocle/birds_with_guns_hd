@@ -81,8 +81,8 @@ function get_autoaim(ply)
 			ply.show_cu = true
 			local dir = math.atan2(ply.dircuy, ply.dircux)
 			local rad = 64
-			x = ply.x + ply.dircux/1.5--math.cos(dir) * rad
-			y = ply.y + ply.dircuy/1.5--math.sin(dir) * rad
+			x = ply.x + ply.dircux*0.6--math.cos(dir) * rad
+			y = ply.y + ply.dircuy*0.6--math.sin(dir) * rad
 		else 
 			ply.show_cu = false
 			x = ply.cu_x

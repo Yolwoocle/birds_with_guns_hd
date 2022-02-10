@@ -4,8 +4,13 @@ function make_mob(a)
 	spr 	   = a.spr or spr_revolver
 	local mob = {
 		name = a.name or "enemy",
-		spr = a.spr or spr_revolver,
+		state = "walk",
+
+		anim_idle = a.anim_idle or {spr_missing},
+		anim_walk = spr_fox,
 		spr_hit = a.spr_hit or spr_fox_hit,
+		hit_flash_timer = 0,
+		
 		life = a.life or 2,	
 		is_enemy = true,
 
@@ -48,6 +53,7 @@ function make_mob(a)
 		draw = draw_mob,
 		gun = a.gun or guns.boum,
 	}
+	mob.spr = mob.anim_idle[1]
 
 	return mob
 end
@@ -68,6 +74,7 @@ end
 
 function damage_mob(self, dmg , dx,dy)
 	self.life = self.life - dmg
+	self.hit_flash_timer = 0.05
 end
 
 function kill_mob(self, mobs, i)
@@ -98,12 +105,11 @@ function update_mob(self, dt)
 	self.dxplayer = math.cos(self.rot)
 	self.dyplayer = math.sin(self.rot)
 
+	-- Raycast to player --TODO: put a in method instead
 	local rayc = {}
-
-
 	if self.see_dist >= self.distplayer then
 		rayc = raycast(self.x,self.y,
-		self.dxplayer, self.dyplayer, self.distplayer,3)
+		self.dxplayer, self.dyplayer,  self.distplayer,3)
 	else
 		rayc.hit = false
 	end
@@ -184,15 +190,20 @@ function update_mob(self, dt)
 
 	self.x = self.x + self.dx * dt
 	self.y = self.y + self.dy * dt
+
+	-- Sprite
+	if self.state == "walk" then
+		self.spr = self.anim_walk[1]
+	end
+	if self.hit_flash_timer > 0 then
+		self.spr = self.spr_hit
+	end
+	self.hit_flash_timer = self.hit_flash_timer - dt
 end
 
 function draw_mob(self)
-	local jump_of = math.sin(love.timer.getTime()*10)
-	local y = self.y - math.abs(jump_of*20)
-	local a = jump_of * 0.2
-
 	if     self.looking_up then self.gun:draw(self) end
-	draw_centered(self.spr, self.x, y, a, pixel_scale*self.gun.flip, pixel_scale)
+	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end
 	
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})

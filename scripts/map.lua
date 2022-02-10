@@ -20,7 +20,7 @@ function init_map(w, h)
 		[0] = make_tile(0, spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
 		}),
-		make_tile(1, spr_ground_1, {
+		make_tile(1, spr_ground_wood, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
 			type="multi_tile", 
 		}),

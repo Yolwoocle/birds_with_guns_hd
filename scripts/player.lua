@@ -29,6 +29,8 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		iframes = 2,
 		iframes_timer = 0,
 		iframes_flashing_time = 0.1,
+		set_iframes = set_iframes,
+
 		hit_w = 12,
 		hit_h = 12,
 		revive_timer = 0,
@@ -50,8 +52,18 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 
 		gun = nil,
 		gun_dist = 14,
-		guns = {copy(guns.laser), copy(guns.paper_plane_gun), copy(guns.fire_extinguisher) , copy(guns.shotgun) , copy(guns.assault_rifle) , copy(guns.firework_launcher)},
+		guns = {
+			copy(guns.paper_plane_gun), 
+			copy(guns.fire_extinguisher), 
+			copy(guns.shotgun), 
+			copy(guns.assault_rifle), 
+			copy(guns.firework_launcher), 
+			copy(guns.laser)
+		},
 		gun_n = 1,
+		set_gun = ply_set_gun,
+		update_gun = ply_update_gun,
+		set_gun = ply_get_gun,
 
 		damage = damage_player,
 		get_pickups = player_get_pickups,
@@ -59,7 +71,8 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		max_pickup_cd = 1,
 
 		get_nearest_enemy = get_nearest_enemy,
-		autoaim_max_dist = 256,
+		autoaim_max_dist = 360,
+		last_autoaim_dist = math.huge,
 		cu_x = x,
 		cu_y = y+10,
 		dircux = 0,
@@ -122,7 +135,7 @@ function update_player(self, dt)
 		local n = 0
 		for _,p in pairs(player_list) do
 			local near = dist_sq(self.x, self.y, p.x, p.y) <= sqr(self.revive_radius) 
-			if near and p.n ~= self.n then
+			if near and p.n ~= self.n and p.alive then
 				n = n + 1
 			end
 		end
@@ -136,16 +149,18 @@ function update_player(self, dt)
 		if self.revive_timer > self.max_revive_timer then
 			self.alive = true
 			self.life = 1
+			self:set_iframes()
 			self.revive_timer = 0
 		end
 	end
 
 	-- Default bahviour that will always be executed
 	-- Life, damage
-	self.iframes_timer = self.iframes_timer - dt
-	self.invincible = self.iframes_timer > 0 
 	self.life = clamp(0, self.life, self.max_life)
 	self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
+
+	self.iframes_timer = self.iframes_timer - dt
+	self.invincible = self.iframes_timer > 0 
 
 	hud.elements.life_bar.val = self.life
 	hud.elements.life_bar.max_val = self.max_life
@@ -167,9 +182,8 @@ function draw_player(self)
 	-- Flashing
 	local is_drawn = true
 	if self.invincible then
-		is_drawn = self.iframes_timer % (2*ft) <= ft
+		is_drawn = (self.iframes_timer % (2*ft)) <= ft
 	end
-	local is_drawn = true
 
 	-- Draw player
 	if is_drawn then
@@ -190,7 +204,6 @@ function draw_player_hud(self)
 	-- HUD
 	local s = 8
 	--- Health bar
-
 	for i=1, self.max_life do
 		local spr = (i <= self.life) and spr_heart or spr_heart_empty
 		
@@ -210,7 +223,10 @@ function draw_player_hud(self)
 	love.graphics.draw(spr, x, y)
 	local buffer_quad = love.graphics.newQuad(2, 0, w, h, spr:getDimensions())
 	love.graphics.draw(spr_bar_small_ammo, buffer_quad, x+2, y)
-	love.graphics.print(self.gun.ammo, x+32, y)
+	
+	love.graphics.setFont(font_small)
+	love.graphics.print(self.gun.ammo, x+5, y-1)
+	love.graphics.setFont(font_default)
 end
 
 function player_movement(self, dt)
@@ -356,7 +372,26 @@ end
 
 function damage_player(self, dmg)
 	if self.iframes_timer <= 0 then
+		camera:shake(5)
 		self.life = self.life - dmg
+		self.iframes_timer = self.iframes
+	end
+end
+
+function ply_set_gun(self, gun)
+	self.guns[self.gun_n] = gun
+	self:update_gun()
+end
+function ply_update_gun(self)
+	self.gun = self.guns[self.gun_n]
+end
+function ply_get_gun(self)
+	return self.gun
+end
+function set_iframes(self, n)
+	if n then
+		self.iframes_timer = n
+	else
 		self.iframes_timer = self.iframes
 	end
 end
@@ -384,7 +419,7 @@ function get_nearest_enemy(self)
 
 		if d <= sqr(self.autoaim_max_dist) and d < min_dist and r.hit then
 			nearest = m
-			min_dist = d
+			min_dist = d 
 		end
 	end
 	return nearest
