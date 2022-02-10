@@ -48,8 +48,10 @@ function love.load()
 	font_futile = love.graphics.newFont("assets/fonts/somepx/FutilePro.ttf", 16) 
 	font_matchup = love.graphics.newFont("assets/fonts/somepx/MatchupPro.ttf", 16)
 	
-	font_default = font_normal
-	love.graphics.setFont(font_normal)
+	font_4x4 = love.graphics.newFont("assets/fonts/4x4_mono.ttf", 16)
+
+	font_default = font_matchup
+	love.graphics.setFont(font_default)
 
 	love.mouse.setVisible(mouse_visible)
 

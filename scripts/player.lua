@@ -53,9 +53,10 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		gun = nil,
 		gun_dist = 14,
 		guns = {
+			copy(guns.revolver), 
+			copy(guns.shotgun), 
 			copy(guns.paper_plane_gun), 
 			copy(guns.fire_extinguisher), 
-			copy(guns.shotgun), 
 			copy(guns.assault_rifle), 
 			copy(guns.firework_launcher), 
 			copy(guns.laser)

@@ -38,6 +38,10 @@ function make_mob(a)
 		hit_w = a.hit_w or 12,
 		hit_h = a.hit_h or 12,
 
+		knockback = knockback_mob,
+		knockback_x = 0,
+		knockback_y = 0,
+
 		gun_dist 			= a.gun_dist 		or 14,
 		close_mv			= a.close_mv		or false,
 
@@ -74,7 +78,7 @@ end
 
 function damage_mob(self, dmg , dx,dy)
 	self.life = self.life - dmg
-	self.hit_flash_timer = 0.05
+	self.hit_flash_timer = 0.1
 end
 
 function kill_mob(self, mobs, i)
@@ -98,6 +102,7 @@ function update_mob(self, dt)
 
 	self.rot = math.atan2(self.player.y-self.y, self.player.x-self.x)
 
+	-- Update gun
 	self.gun:update(dt, self)
 
 	self.looking_up = self.rot > pi
@@ -114,8 +119,9 @@ function update_mob(self, dt)
 		rayc.hit = false
 	end
 
-	if rayc.hit and (self.gun.cooldown_timer <= 0 or not(self.escape_aftershoot)) then --
-		if self.distplayer> self.far_p then
+	local can_shoot = self.gun.cooldown_timer <= 0 or (not self.escape_aftershoot)
+	if rayc.hit and can_shoot then --
+		if self.distplayer > self.far_p then
 			self.dx =  self.dxplayer * self.spd
 			self.dy =  self.dyplayer * self.spd
 
@@ -168,15 +174,20 @@ function update_mob(self, dt)
 		end
 	end
 
+	-- Collision between enemies
 	for i,m in ipairs(mobs) do
-		if not(m==self) and dist(m.x,m.y,self.x,self.y) < 15 then
+		if m~=self and dist(m.x,m.y,self.x,self.y) < 15 then
 			local anglecol = math.atan2(m.y-self.y, m.x-self.x)
 			self.dx = self.dx + -math.cos(anglecol)*100
 			self.dy = self.dy + -math.sin(anglecol)*100
 		end
 	end
-	--self.dx = self.dx + self.dx_col
-	--self.dy = self.dy + self.dy_col
+
+	-- Apply knockback
+	self.dx = self.dx + self.knockback_x
+	self.dy = self.dy + self.knockback_y
+	self.knockback_x = self.knockback_x * 0.9
+	self.knockback_y = self.knockback_y * 0.9
 
 
 	if collide_object(self,1) then
@@ -220,4 +231,11 @@ function rndmouvement(self,spd)
 	local angle = random_float(0,pi2)
 	self.dx_idle = math.cos(angle)*spd
 	self.dy_idle = math.sin(angle)*spd
+end
+
+function knockback_mob(self, x, y, val)
+	local a = math.atan2(y,x)
+	local kx, ky = math.cos(a), math.sin(a)
+	self.knockback_x = self.knockback_x + kx * val
+	self.knockback_y = self.knockback_y + ky * val
 end

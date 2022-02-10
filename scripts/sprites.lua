@@ -69,6 +69,7 @@ spr_pick_ammo = load_image("pickups/ammo")
 spr_pick_life = load_image("pickups/life")
 
 -- Projectiles
+spr_muzzle_flash = load_image("projectiles/muzzle_flash_1")
 spr_bullet = load_image("projectiles/bullet_flat_1")
 spr_bullet_pink = load_image("projectiles/bullet_flat_pink_1")
 spr_bullet_red = load_image("projectiles/bullet_flat_red_1")
