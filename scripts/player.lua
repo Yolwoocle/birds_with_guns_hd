@@ -31,8 +31,8 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		iframes_flashing_time = 0.1,
 		set_iframes = set_iframes,
 
-		hit_w = 12,
-		hit_h = 12,
+		hit_w = 4,
+		hit_h = 4,
 		revive_timer = 0,
 		max_revive_timer = 3,
 		revive_radius = 64,

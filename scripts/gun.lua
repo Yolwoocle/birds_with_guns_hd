@@ -272,8 +272,8 @@ function update_bullet(self, dt , i)
 
 			local x = self.x
 			local y = self.y
-			local h = 3
-			local w = 3
+			local h = 6
+			local w = 6
 
 			local mapx, mapy = self.x / block_width, self.y / block_width
 			if map:is_solid(mapx, mapy) then
@@ -373,8 +373,11 @@ function draw_laser(self)
 
 
 		local scmax = (-(-self.maxlife/-2)^2)+(-self.maxlife/-2)*self.maxlife
-		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*((-(self.life^2)+self.life*self.maxlife)/scmax))
+		local scaleof = ((-(self.life^2)+self.life*self.maxlife)/scmax)
 
+		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*scaleof)
+		circ_color("fill",v.x1,v.y1,self.scale*7*scaleof,white)
+		circ_color("fill",v.x,v.y,self.scale*7*scaleof,white)
 		--love.graphics.print(v.bounce, v.x, v.y-10)
 	end
 end
@@ -462,7 +465,7 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 	end
 
 	for _,p in ipairs(player_list) do
-		local coll = coll_rect(p.x, p.y, p.w*3, p.h*3, self.x, self.y, self.scale*3, self.scale*3)
+		local coll = coll_rect(p.x, p.y, p.w*1.5, p.h*1.5, self.x, self.y, self.scale, self.scale)
 		if self.type ==  "bullet" then
 			if self.is_enemy and coll then
 
