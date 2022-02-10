@@ -22,6 +22,8 @@ function is_picked(self, obj)
 		self.delete = true
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
+
+
 		switch_weapon(self , obj)
 	end
 end

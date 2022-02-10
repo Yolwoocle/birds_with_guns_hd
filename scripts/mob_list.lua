@@ -20,7 +20,7 @@ mob_list = {
 		mv_pause = 1,
 		mv_mouvement = 3,
 		gun_dist = 14,
-		close_mv = false,
+		close_mv = true,
 		shoot_dist = 200,
 		see_dist = 300,
 

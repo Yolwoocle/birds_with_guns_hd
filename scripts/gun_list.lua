@@ -22,6 +22,7 @@ guns = {
 		cooldown = .33,
 		scale = 1,
 		scattering    = 0.1,
+		bounce = 10,
 	},
 	shotgun = make_gun{
 		name = "shotgun",
@@ -154,7 +155,7 @@ guns = {
 		type = "bullet",
 		spr = spr_paper_plane_gun,
 		spr_bullet = spr_paper_plane,
-		scale = 1.5,
+		scale = 1.30,
 		damage = 4,
 
 		cooldown = 0.2,
