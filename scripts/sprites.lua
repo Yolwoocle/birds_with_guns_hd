@@ -101,18 +101,16 @@ sprs_floor_wood = {
 }
 spr_ground_1 = load_image("tiles/floor_plain_1")
 spr_ground_wood = load_image("tiles/floor_wood_single")
-
-sprs_test = load_image_table("test_", 4, 2, 2) 
-
 sprs_floor_wood_detail = {
 	load_image("floor_wood_detail1"),
 	load_image("floor_wood_detail2"),
-	load_image("floor_wood_detail3"),
-	load_image("floor_wood_detail4"),
+	load_image("floor_wood_detail3"), 
+	load_image("floor_wood_detail4"), 
 	w = 2, h = 2,
 }
 spr_wall_dum = load_image("dummy_wall")
 sprs_box = load_image_table("tiles/box_", 3)
+sprs_floor_concrete = load_image_table("tiles/")
 
 spr_chain = load_image("tiles/chain")
 spr_floor_metal = load_image("tiles/floor_metal")

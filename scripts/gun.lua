@@ -16,6 +16,7 @@ function make_gun(a)
 		flip = 1,
 		spr = a.spr or spr_revolver,
 		spr_bullet = a.spr_bullet or spr_bullet,
+		is_auto = a.is_auto,
 		--spr_bullet
 		--spr_laser 
 		--spr_rocket

@@ -7,8 +7,9 @@ Léo Bernard
 Guillaume Tran
 
 # Special thanks
-Joseph White for creating PICO-8
-LÖVE developers
+Azure
+Simon T.
+The lovely PICO-8 community
 
 # Assets
 Kenney assets: https://www.kenney.nl/

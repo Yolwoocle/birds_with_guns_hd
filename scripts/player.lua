@@ -329,9 +329,16 @@ function aim_player(self, dt)
 	self.rot = math.atan2(mmy - self.y, mmx - self.x)
 	self.shoot = false
 	if self.gun.cooldown_timer <= 0 then
-		if (not(self.gun.charge) and button_down("fire", self.n,self.input_device)) 
-		or (prevfire and not(button_down("fire", self.n,self.input_device)) 
-		and self.gun.charge) then
+
+		local button_active = false
+		if self.gun.is_auto then
+			button_active = button_down("fire", self.n,self.input_device)
+		else
+			button_active = button_pressed("fire", self.n,self.input_device)
+		end
+
+		if (not self.gun.charge and button_active) 
+		or ((prevfire and not button_active) and self.gun.charge) then
 			if self.gun.ammo > 0 then
 
 				if self.gun.charge then

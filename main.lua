@@ -18,6 +18,7 @@ require "scripts/game_menu_main"
 require "scripts/pickup"
 require "scripts/particles"
 require "scripts/waves"
+require "scripts/level_editor/main"
 
 function love.load()
 	keymode = "keyboard"
@@ -99,6 +100,8 @@ function love.update(dt)
 	updatejoystick()
     game:update(dt)
     table.insert(perf, dt)
+	
+	update_map_edit(dt)
 end
 
 function love.draw()
@@ -114,16 +117,7 @@ function love.draw()
     love.graphics.scale(1, 1)
     love.graphics.draw(canvas, screen_ox, screen_oy, 0, screen_scale, screen_scale)
 
-    love.graphics.setColor({1,0,0})
-    for i=2,#perf do
-        --love.graphics.line(i, perf[i-1]*10000, i+1, perf[i]*10000)
-    end
-    love.graphics.setColor({1,1,1})
-
-	--local joysticks = love.joystick.getJoysticks()
-    --for i, jo in ipairs(joysticks) do
-    --    love.graphics.print(jo:getName(), 10, i * 20 + 1000)
-    --end
+	draw_map_edit()
 end
 
 function love.keypressed(key)
@@ -143,6 +137,8 @@ function love.keypressed(key)
 		end
 	elseif key == "f3" then
 		screenshot_clip()
+	elseif key == "f6" then
+		toggle_map_edit()
 	end
 end
 
