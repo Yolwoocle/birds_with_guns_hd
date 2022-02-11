@@ -39,6 +39,7 @@ function make_gun(a)
 		scattering    = a.scattering    or 0.3,
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1,
+		damge_tick    = a.damge_tick 	or .1,
 		
 		scale 		  = a.scale			or 1,
 		oscale 		  = a.oscale        or 0,
@@ -162,6 +163,7 @@ function make_bullet(self, p, angle, spread, type, spr)
 		rot = angle+scatter+spread,
 		delete = false,
 		time_since_creation = 0,
+		damge_tick = self.damge_tick,
 
 		spdslow = self.spdslow,
 		life = self.bullet_life,

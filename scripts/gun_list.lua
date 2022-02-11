@@ -15,13 +15,18 @@ guns = {
 	laser = make_gun{
 		name = "laser pistol",
 		type = "laser",
+		category = "persistent",
 		spr_bullet = spr_laser,
 		laser_length = 300,
 		spr = spr_revolver,
 		screenkick = 5,
 		bullet_life = .1,
-		cooldown = .33,
+		cooldown = 1,
 		scale = 1,
+		max_ammo = 1000,
+		damge_tick = 0.2,
+		damage = .34,
+		
 		scattering    = 0.1,
 		bounce = 10,
 	},
@@ -71,6 +76,8 @@ guns = {
 
 		ptc_type = "circle",
 		max_ammo = 3000,
+
+		bullet_life = 10,
 
 		update_option = function(self,dt)
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
@@ -158,35 +165,35 @@ guns = {
 		spr = spr_paper_plane_gun,
 		spr_bullet = spr_paper_plane,
 		scale = 1.30,
-		damage = 4,
+		damage = 2,
 
 		cooldown = 0.2,
 		max_ammo = 100,
 		bullet_spd = 500,
 		spdslow = 0.99,
-		bounce = math.huge,
+		bounce = 1,
 
 		screenkick = 5,
-		bounce = 1,
 	
 		update_option = function(self,dt)
 			if self.turn_dir == nil then
 				self.turn_dir = math.random(8)
 			end
+
 			local angle = math.atan2(self.dy,self.dx)
 
-			local angleoffset = pi/60
+			local angleoffset = pi/2
 			local timetoturn = 7
-			local toadd = 1+self.turn_dir--+math.random()
+			local toadd = dt*30+self.turn_dir--+math.random()
 
 			if self.turn_dir<=timetoturn then
 
-				angle = (angle + angleoffset)*60*dt
+				angle = (angle + angleoffset*dt)
 				self.turn_dir= toadd
 
 			elseif self.turn_dir<=timetoturn*2 then
 
-				angle = (angle - angleoffset)*60*dt
+				angle = (angle - angleoffset*dt)
 				self.turn_dir= toadd
 
 			else

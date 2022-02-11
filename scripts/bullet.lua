@@ -20,32 +20,14 @@ function update_bullet(self, dt, i)
 	self.sx = (sqr(self.dx) + sqr(self.dy)) / sqr(self.spd)
 
 	if self.bounce>0 then
-		local coll = collide_object(self,1)
+		local coll,todestroy = collide_object(self,1)
 		if coll then
 			self.bounce = self.bounce-1
 
-			local x = self.x
-			local y = self.y
-			local h = 7
-			local w = 7
-
-			-- Destroy crates, etc
-			--- Destroy at current location
-			local mapx, mapy = self.x / block_width, self.y / block_width
-			if map:is_solid(mapx, mapy) then
-				interact_map(self, map, mapx, mapy)
+			for _,k in pairs(todestroy) do 
+				interact_map(self, map,(k.x), (k.y))
 			end
-			--FIXME: avoir le block a delet et pas delet tout les trucs autour comme un canard
-			--- Destroy at corners
-			interact_map(self, map,(x-w)/ block_width, (y-h)/ block_width)
-			interact_map(self, map,(x+w)/ block_width, (y-h)/ block_width)
-			interact_map(self, map,(x-w)/ block_width, (y+h)/ block_width)
-			interact_map(self, map,(x+w)/ block_width, (y+h)/ block_width)
-
-			interact_map(self,map,(x  )/ block_width, (y-h)/ block_width)
-        	interact_map(self,map,(x-w)/ block_width, (y  )/ block_width)
-       	 	interact_map(self,map,(x+w)/ block_width, (y  )/ block_width)
-        	interact_map(self,map,(x  )/ block_width, (y+h)/ block_width)
+			
 		end
 	end
 
@@ -63,12 +45,13 @@ end
 
 function update_laser(self, dt , i)
 	self.active = false
+	self.time_since_creation = self.time_since_creation + dt
 	if self.init then
 		self.init = false
 		init_laser(self)
 	end
 
-	if self.category == "persistent" and button_down("fire") then
+	if self.category == "persistent" and button_down("fire", self.player.n,self.player.input_device) and self.gun.ammo>0 and self.gun == self.player.gun then
 		self.bounce = self.maxbounce
 		self.length = {}
 		self.life = self.life + dt
@@ -80,6 +63,11 @@ function update_laser(self, dt , i)
 		self.rot = self.player.rot + self.scatter + self.spread
 
 		init_laser(self)
+		self.active = false
+		if self.time_since_creation >= self.damge_tick then
+			self.time_since_creation = 0
+			self.active = true
+		end
 
 		shoot_gun(self.gun)
 	end
@@ -144,6 +132,9 @@ function draw_laser(self)
 
 		local scmax = (-(-self.maxlife/-2)^2)+(-self.maxlife/-2)*self.maxlife
 		local scaleof = ((-(self.life^2)+self.life*self.maxlife)/scmax)
+		if self.category == "persistent" then
+			scaleof = 1
+		end
 
 		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*scaleof)
 		circ_color("fill",v.x1,v.y1,self.scale*7*scaleof,white)
@@ -200,7 +191,8 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 	end
 
 	-- Collisions between enemies and bullets
-	for i,m in ipairs(mobs) do
+	for i = #mobs , 1 , -1 do
+		m = mobs[i]
 		--rect_color("line", floor(self.x-self.w*8), floor(self.y-self.h*8), floor(2*self.w*8), floor(2*self.h*8), {1,0,0})
 		if self.type ==  "bullet" then
 			-- Bullet
@@ -220,7 +212,7 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 
 		elseif self.type == "laser" then
 			-- Laser
-			for i,v in ipairs(self.length) do
+			for l,v in ipairs(self.length) do
 				if self.active then
 					local dist = dist_to_segment({x=m.x, y=m.y}, {x=v.x1, y=v.y1}, {x=v.x, y=v.y})
 					if dist < self.scale*25 and not self.is_enemy then
@@ -237,7 +229,8 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 		end
 	end
 
-	for _,p in ipairs(player_list) do
+	for pi = #player_list , 1 , -1 do
+		p = player_list[pi]
 		local coll = coll_rect(p.x, p.y, p.w*1.3, p.h*1.3, self.x, self.y, self.scale, self.scale)
 		if self.type ==  "bullet" then
 			if self.is_enemy and coll then
