@@ -30,7 +30,6 @@ mob_list = {
 
 
 	knight = make_mob({
-		name = "knight",
 		spr = spr_crow,
 		life = 30,	
 		spd = 10,

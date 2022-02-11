@@ -263,16 +263,16 @@ function is_solid_rect(map, x, y, w, h)
 	h = h / blk_w
 
     return 
-        map:is_solid(x-w, y-h) or --A
-        map:is_solid(x+w, y-h) or --B
-        map:is_solid(x-w, y+h) or --C
-        map:is_solid(x+w, y+h) or --D
+        map:is_solid(x-w, y-h),{x=floor(x-w), y=floor(y-h)} or --A
+        map:is_solid(x+w, y-h),{x=floor(x+w), y=floor(y-h)} or --B
+        map:is_solid(x-w, y+h),{x=floor(x-w), y=floor(y+h)} or --C
+        map:is_solid(x+w, y+h),{x=floor(x+w), y=floor(y+h)} or --D
 
 		-- Remove lower half if optimisation needed
-        map:is_solid(x,   y-h) or --i
-        map:is_solid(x-w, y) or   --j
-        map:is_solid(x+w, y) or   --k
-        map:is_solid(x,   y+h)    --l
+        map:is_solid(x,   y-h),{x=floor(x  ), y=floor(y-h)} or --i
+        map:is_solid(x-w, y  ),{x=floor(x-w), y=floor(y  )} or   --j
+        map:is_solid(x+w, y  ),{x=floor(x+w), y=floor(y  )} or   --k
+        map:is_solid(x,   y+h),{x=floor(x  ), y=floor(y+h)}   --l
 end
 
 function collide_object(o,bounce)
@@ -289,9 +289,9 @@ function collide_object(o,bounce)
 	end
 
 	local bw = block_width
-	local coll_x = is_solid_rect(map, nextx, o.y, o.w, o.h)
-	local coll_y = is_solid_rect(map, o.x, nexty, o.w, o.h)
-	local coll_xy = is_solid_rect(map, nextx, nexty, o.w, o.h)
+	local coll_x,x_block = is_solid_rect(map, nextx, o.y, o.w, o.h)
+	local coll_y,y_block = is_solid_rect(map, o.x, nexty, o.w, o.h)
+	local coll_xy,xy_block = is_solid_rect(map, nextx, nexty, o.w, o.h)
 	
 	if coll_x then 
 		o.dx = -o.dx * bounce 
@@ -303,7 +303,7 @@ function collide_object(o,bounce)
 		o.dx = -o.dx * bounce
 		o.dy = -o.dy * bounce
 	end
-	return coll_x or coll_y or coll_xy
+	return coll_x or coll_y or coll_xy, {x_block,y_block,xy_block}
 end
 
 function raycast_coll(x, y, dx, dy)

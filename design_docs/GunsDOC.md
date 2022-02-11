@@ -51,6 +51,7 @@
 | ---------------------- | ------- | - | - |
 | `category`             | string  | `"instant"` | used ONLY for **lasers**: `"instant"`: fires immediately; `"persistent"`: a laser fires continuously from your weapon. TODO: rename to `laser_catergory` |
 | `laser_length`         | integer | `100` | length of the laser |
+| `damge_tick`         | float | `.1` | time between each tick of damage |
 
 ### Screenshake & Camera effects
 | name                   | type    | default value | description |
