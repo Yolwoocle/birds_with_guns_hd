@@ -20,12 +20,12 @@ mob_list = {
 		mv_pause = 1,
 		mv_mouvement = 3,
 		gun_dist = 14,
-		close_mv = true,
+		close_mv = false,
 		shoot_dist = 200,
 		see_dist = 300,
 
-		closest_p = 250,
-		far_p	  = 150,
+		closest_p = 0,
+		far_p	  = 200,
 	}),
 
 
