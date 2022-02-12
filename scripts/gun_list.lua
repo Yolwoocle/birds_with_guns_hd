@@ -22,12 +22,12 @@ guns = {
 		bullet_life = .1,
 		cooldown = 1,
 		scale = 1,
-		max_ammo = 1000,
+		max_ammo = inf,
 		damge_tick = 0.2,
 		damage = .34,
 		
 		scattering    = 0.1,
-		bounce = 10,
+		--bounce = 10,
 	},
 	shotgun = make_gun{
 		name = "shotgun",

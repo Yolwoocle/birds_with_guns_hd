@@ -208,6 +208,7 @@ function draw_player(self)
 	end
 
 	self:draw_hud()
+	love.graphics.print(self.rot , self.x,self.y)
 end
 
 function draw_player_hud(self)
