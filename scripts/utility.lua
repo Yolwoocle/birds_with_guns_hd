@@ -157,6 +157,52 @@ function raycast(x,y,dx,dy,distmax,pas)
 
 	return {dist = dist - pas,hit = hit,y = nexty,x = nextx}
 end
+--FIXME: AdD GoOd RaYcASt !
+--[[function raycast(x,y,dx,dy,distmax,pas)
+	local angle = math.atan2(dy,dx)
+	local invangle = -1/math.tan(angle)
+	local ry
+	local rx
+	local y0
+	local x0
+	local dof
+	local mx
+	local my
+	local mp
+	local dof = 0
+
+	if angle>pi then
+		ry = (y/64) * 64 -.0001
+		rx = (y-ry)*invangle+x
+		y0 = -64
+		x0 = -y0*invangle
+	end
+	if angle<pi then
+		ry = (y/64) * 64 + 64
+		rx = (y-ry)*invangle+x
+		y0 = 64
+		x0 = -y0*invangle
+	end
+	if angle==0 or angle == pi then
+		rx = x
+		ry = y
+		dof = 8
+	end
+	while dof<8 do
+		mx = rx / 64
+		my = ry / 64
+		mp = my * block_width + mx
+		if mp < block_width*block_width and  map:is_solid(mx, my) then
+			dof = 8
+			return {dist = dist(x,y,rx,ry) , hit = dist(x,y,rx,ry)>=distmax , y = ry , x = rx}
+		else
+			rx = rx+x0
+			ry = ry+y0
+			dof = dof + 1
+		end
+		return {dist = dist(x,y,rx,ry) , hit = dist(x,y,rx,ry)>=distmax , y = ry , x = rx}
+	end
+end]]
 
 function debug_print(txt)
 	love.graphics.print(tostr(txt), camera.x + 10, camera.y + debug_y)
