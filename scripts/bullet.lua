@@ -106,7 +106,7 @@ function draw_bullet(self)
 	local sy = self.scale*self.sy
 	
 	-- Muzzle flash
-	if self.time_since_creation <= 1/30 then
+	if self.time_since_creation <= 1/30 and self.do_muzzle_flash then
 		spr = spr_muzzle_flash
 		sx, sy = 1, 1
 	end

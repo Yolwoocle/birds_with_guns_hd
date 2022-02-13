@@ -47,6 +47,8 @@ function make_gun(a)
 
 		knockback = a.knockback or 300,
 
+		do_muzzle_flash = a.do_muzzle_flash,
+
 		charge				= a.charge 				or false,
 		charge_curve		= a.charge_curve		or 2,
 		charge_time 		= a.charge_time 		or 1,
@@ -194,8 +196,10 @@ function make_bullet(self, p, angle, spread, type, spr)
 
 		update_option = self.update_option,
 
-		w=1,--(self.scale + oscale ),
-		h=1,--(self.scale + oscale ),
+		do_muzzle_flash = self.do_muzzle_flash,
+
+		w=1,--(self.scale + oscale),
+		h=1,--(self.scale + oscale),
 	}
 	if self.type ==  "bullet" then
 		bullet.draw = draw_bullet
