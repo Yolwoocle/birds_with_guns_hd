@@ -11,8 +11,8 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		n = n,
 		x = x or 32,
 		y = y or 32,
-		w = 4,
-		h = 4,
+		w = 10,
+		h = 10,
 		dx = 0,
 		dy = 0,
 		walk_dir = {x=0, y=0},
@@ -188,6 +188,8 @@ function update_player(self, dt)
 end
 
 function draw_player(self)
+	draw_shadow(self)
+
 	local ft = self.iframes_flashing_time
 	-- Flashing
 	local is_drawn = true
@@ -202,13 +204,6 @@ function draw_player(self)
 		if not self.looking_up then  self.gun:draw(self)  end
 	end
 	love.graphics.setColor(1,1,1)
-
-	if self.show_cu then 
-		draw_centered(spr_cursor, self.cu_x, self.cu_y)
-	end
-
-	self:draw_hud()
-	love.graphics.print(self.rot , self.x,self.y)
 end
 
 function draw_player_hud(self)
@@ -238,6 +233,11 @@ function draw_player_hud(self)
 	love.graphics.setFont(font_small)
 	love.graphics.print(self.gun.ammo, x+5, y-1)
 	love.graphics.setFont(font_default)
+
+	-- Cursor
+	if self.show_cu then 
+		draw_centered(spr_cursor, self.cu_x, self.cu_y)
+	end
 end
 
 function player_movement(self, dt)

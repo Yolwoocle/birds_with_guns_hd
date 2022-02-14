@@ -213,6 +213,8 @@ function update_mob(self, dt)
 end
 
 function draw_mob(self)
+	draw_shadow(self)
+
 	if     self.looking_up then self.gun:draw(self) end
 	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
 	if not self.looking_up then self.gun:draw(self) end

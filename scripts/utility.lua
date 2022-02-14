@@ -262,15 +262,11 @@ function lerp(a, b, t)
 	return a + (b-a) * t
 end
 
-function switch_weapon(from , to)
-	to.guns[to.gun_n] = from.gun
-	to.gun, from.gun = to.guns[to.gun_n], to.gun
-	from.spr = from.gun.spr
-
-	for k = #_shot , 1 , -1 do
-		v = _shot[k]
-		if v.player == to then
-			table.remove(_shot , k)
-		end
-	end
+function draw_shadow(obj, alpha)
+	alpha = alpha or 0.4
+	love.graphics.setColor(0,0,0,alpha)
+	local x, y = floor(obj.x), floor(obj.y + obj.spr:getHeight()/2)
+	local r = floor(obj.spr:getWidth()/2)
+	love.graphics.ellipse("fill", x, y, r, r*0.2)
+	love.graphics.setColor(1,1,1,1)
 end

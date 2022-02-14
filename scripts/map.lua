@@ -16,13 +16,14 @@ function init_map(w, h)
 	
 	map.update = update_map
 	map.draw = draw_map
+	map.draw_with_y_sorted_objs = draw_with_y_sorted_objs
 	map.palette = {
 		[0] = make_tile(0, spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
 		}),
-		make_tile(1, spr_ground_wood, {
+		make_tile(1, sprs_floor_concrete, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
-			type="multi_tile", 
+			type="multi_tile", random_var = {13/16, 1/16, 1/16, .5/16, .5/16}
 		}),
 		make_tile(2, spr_wall_1, {
 			is_solid=true, is_destructible=false, is_transparent=false, 
@@ -66,7 +67,7 @@ function draw_map(self)
 	local x1 = floor(camera.x / block_width)
 	local x2 = floor((camera.x + window_w) / block_width )
 	local y1 = floor(camera.y / block_width)
-	local y2 = floor((camera.y + window_h) / block_width )
+	local y2 = floor((camera.y + window_h + 16) / block_width )
 	
 	x1 = clamp(0, x1, self.width-1)
 	x2 = clamp(0, x2, self.width-1)
@@ -85,6 +86,40 @@ function draw_map(self)
 		end
 	end
 end
+function draw_with_y_sorted_objs(self, objs)
+	-- Draw non-solid floor
+	self:draw()
+
+	-- Draw solid walls with y-sorting
+	local x1 = floor(camera.x / block_width)
+	local x2 = floor((camera.x + window_w) / block_width )
+	local y1 = floor(camera.y / block_width)
+	local y2 = floor((camera.y + window_h + 16) / block_width )
+	x1 = clamp(0, x1, self.width-1)
+	x2 = clamp(0, x2, self.width-1)
+	y1 = clamp(0, y1, self.height-1)
+	y2 = clamp(0, y2, self.height-1)
+	
+	local i = 1
+	for y = y1, y2 do
+		for x = x1, x2 do
+			local tile = self.grid[y][x][1]
+			local var  = self.grid[y][x][2]
+			
+			tile = self.palette[tile]
+			if tile and tile.is_solids then
+				tile:draw(x, y, var)
+			end
+		end
+
+		local next_y = (y+1)*16
+		while i <= #objs and objs[i].y <= next_y do
+			objs[i]:draw()
+			i=i+1
+		end
+	end
+end
+
 
 function make_tile(n, spr, a)
 	local tile = {
@@ -94,10 +129,12 @@ function make_tile(n, spr, a)
 		is_solid = a.is_solid,
 		is_destructible = a.is_destructible,
 		is_transparent  = a.is_transparent,
+		random_var = a.random_var,
 		ox = a.ox or 0, 
 		oy = a.oy or 0, 
 
 		draw = draw_tile,
+		get_random_var = get_random_var,
 	}
 	return tile
 end
@@ -113,6 +150,17 @@ function draw_tile(self, x, y, var)
 	
 	-- TODO: optimise map by baking into canvas & update on change
 	love.graphics.draw(spr, x*block_width, y*block_width, 0,1,1,self.ox,self.oy)
+end
+function get_random_var(self)
+	if not self.random_var then
+		return 1
+	end
+	for i=1, #self.random_var do
+		if love.math.random() <= self.random_var[i] then
+			return i
+		end
+	end
+	return 1
 end
 function set_tile(self, x, y, elt, var)
 	self.grid[floor(y)][floor(x)][1] = elt

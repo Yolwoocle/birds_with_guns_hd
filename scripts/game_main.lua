@@ -4,7 +4,7 @@ require "scripts/utility"
 function make_game_main()
     local game = {
         init = init_game_main,
-		update = udpate_game_main,
+		update = update_game_main,
         draw = draw_game_main,
     } 
 	game:init()
@@ -42,7 +42,7 @@ function init_game_main(self)
 		end
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk,anim_pigeon_walk, anim_duck_walk,}
-		local ply = init_player(i, 90+i*32, 200, birds_spr[i],controle,nbcontroller)
+		local ply = init_player(i, 90+i*32, 220, birds_spr[i],controle,nbcontroller)
 		table.insert(player_list, ply)
 		player_list[i].anim_walk = birds_spr[i]
 		player_list[i].anim_idle = birds_spr[i]
@@ -74,7 +74,9 @@ function init_game_main(self)
 	
 end
 
-function udpate_game_main(self, dt)
+local y_sort_buffer = {}
+
+function update_game_main(self, dt)
 	gf = 0
 	
 	local ox, oy = 0, 0
@@ -163,9 +165,12 @@ function udpate_game_main(self, dt)
 	end
 
 	--for i,m in ipairs(mobs) do
-	for i = #mobs , 1 , -1 do
+	for i = #mobs, 1, -1 do
 		m = mobs[i]
 		m:update(dt)
+		if m.life<=0 then
+			table.remove(mobs , i)
+		end
 	end
 
 	--for i,z in ipairs(zones) do
@@ -175,68 +180,49 @@ function udpate_game_main(self, dt)
 		damageinzone(z,i) 
 	end
 
-	--for i,m in pairs(mobs) do
-	--	if m.life<=0 then
-	--		table.remove(mobs , i)
-	--	end
-	--end
 	prevfire = false
 	hud:update()
 
 	particles:update(dt)
 
-	--spawn_timer = spawn_timer - dt
-	--if spawn_timer <= 0 then
-	--	--table.insert(mobs, mob_list.fox:spawn(window_w/2, window_h/2))
-	--	spawn_timer = 1
-	--end
+	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, player_list}
 end
 
 function draw_game_main(self)
     camera:draw()
 	-- TODO: y-sorting
-	map:draw()
-	pickups:draw()
+	map:draw_with_y_sorted_objs(y_sort_buffer)
 	draw_waves()
-
 	for i,z in ipairs(zones) do
 		z:draw()
 	end
-	for i,m in pairs(mobs) do
-		if m.life<=0 then
-			table.remove(mobs , i)
-		end
-	end
-	
 	particles:draw()
-	for _,m in pairs(mobs) do
-		m:draw()
-		--draw_mob(m)
-	end
-	
-	for i,m in ipairs(debug) do
-		circ_color("fill", m.x, m.y, 3, {1,0,0})
-	end
 
-	for _,b in pairs(bullets) do
-		b:draw()
-	end 
-	
-	for _,p in ipairs(player_list) do
-		p:draw()
+	for _,p in pairs(player_list) do
+		p:draw_hud()
 	end
-
 	--hud:draw()
 
 	-- Debug
 	debug_y = 0
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	debug_print(notification)
-	--debug_print(joystick.x)
-	--debug_print(joystick.joy:getGamepadAxis("triggerleft"))
-	--debug_print(spawn_time)
-	--debug_print(#_shot)
-	--if prevray.dist then debug_print(prevray.dist,1,1) end
-	--circ_color("fill", camera.x+window_w, camera.y+window_h, 1, {1,0,0})
-	--map:debug_draw(camera.x+5, camera.y+30)
+end
+
+function y_sort_merge(all_objs)
+	-- Concatenate all tables
+	local t = {}
+	for _,objs in pairs(all_objs) do
+		for i=1, #objs do
+			local o = objs[i]
+			table.insert(t, o)
+		end
+	end 
+
+	-- Sort the table 
+	table.sort(t, function(a,b) return a.y < b.y end)
+	return t
+end
+
+function y_sort_draw(map, objs)
 end

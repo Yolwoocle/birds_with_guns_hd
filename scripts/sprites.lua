@@ -110,7 +110,10 @@ sprs_floor_wood_detail = {
 }
 spr_wall_dum = load_image("dummy_wall")
 sprs_box = load_image_table("tiles/box_", 3)
---sprs_floor_concrete = load_image_table("tiles/")
+sprs_floor_concrete = load_image_table("tiles/tile_concrete_", 5)
 
 spr_chain = load_image("tiles/chain")
 spr_floor_metal = load_image("tiles/floor_metal")
+
+-- Misc
+spr_shadow = load_image("misc/shadow")
