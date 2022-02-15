@@ -99,10 +99,12 @@ function load_from_file(self, file)
 				elseif chr == "b" then tile = 3
 				elseif chr == "c" then tile = 4
 				elseif chr == "," then tile = 5
+				elseif chr == "H" then tile = 6
 				end
 				
 				tile_obj = self.palette[tile]
-				var = tile_obj:get_random_var()
+				local rnd_var = tile_obj:get_random_var()
+				if rnd_var then   var = rnd_var   end
 
 				rooms[room][y][x] = {tile, var}
 				x = x + 1

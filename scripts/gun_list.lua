@@ -8,7 +8,10 @@ guns = {
 		spr = spr_revolver,
 		screenkick = 4,
 		max_ammo = 300,
-		bullet_spd = 500,
+		bullet_spd = 700,
+		cooldown = 0.15,
+		is_auto = false,
+
 		make_shot = default_shoot,
 		scale = 1,
 	}),
@@ -172,6 +175,7 @@ guns = {
 		bullet_spd = 500,
 		spdslow = 0.99,
 		bounce = 1,
+		is_auto = true,
 
 		screenkick = 5,
 	

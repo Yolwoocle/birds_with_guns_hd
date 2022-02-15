@@ -12,7 +12,7 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		x = x or 32,
 		y = y or 32,
 		w = 10,
-		h = 10,
+		h = 15,
 		dx = 0,
 		dy = 0,
 		walk_dir = {x=0, y=0},
@@ -103,7 +103,7 @@ function update_player(self, dt)
 		-- Collisions
 		--self.dx = round_if_near_zero(self.dx)
 		--self.dy = round_if_near_zero(self.dy)
-		collide_object(self,.01)
+		collide_object(self, 0.01)
 		--collision_response(self, map)
 		-- Apply movement 
 		self.x = self.x + self.dx * dt
@@ -204,24 +204,28 @@ function draw_player(self)
 		if not self.looking_up then  self.gun:draw(self)  end
 	end
 	love.graphics.setColor(1,1,1)
+
+	rect_color("line", self.x-self.w, self.y-self.h, self.w*2, self.h*2, red)
 end
 
 function draw_player_hud(self)
 	-- HUD
 	local s = 8
+	local oy = 38
+
 	--- Health bar
 	for i=1, self.max_life do
 		local spr = (i <= self.life) and spr_heart or spr_heart_empty
 		
 		local w = (self.max_life*s)/2
 		local x = self.x - w + (i-1)*s + s/2
-		draw_centered(spr, floor(x), floor(self.y-32))
+		draw_centered(spr, floor(x), floor(self.y-oy))
 	end
 
 	--- Ammo bar
 	local spr = spr_bar_small_empty
 	local h = spr:getHeight()
-	local x,y = floor(self.x - 10), floor(self.y - 24)
+	local x,y = floor(self.x - 10), floor(self.y - oy + 8)
 	local sprw = spr:getWidth() - 4
 	local w = floor((self.gun.ammo / self.gun.max_ammo) * sprw)
 
@@ -238,6 +242,12 @@ function draw_player_hud(self)
 	if self.show_cu then 
 		draw_centered(spr_cursor, self.cu_x, self.cu_y)
 	end
+
+	-- "P1", "P2"... icon
+	local cx, cy = 12, 10
+	local x = floor(clamp(camera.x + cx, self.x, camera.x + window_w - cy))
+	local y = floor(clamp(camera.y + cy, self.y-oy-12, camera.y + window_h - cy))
+	draw_centered(sprs_icon_ply[self.n], x, y)
 end
 
 function player_movement(self, dt)

@@ -186,8 +186,8 @@ function update_mob(self, dt)
 	-- Apply knockback
 	self.dx = self.dx + self.knockback_x
 	self.dy = self.dy + self.knockback_y
-	self.knockback_x = self.knockback_x * 0.9 --FIXME: dt mob kb
-	self.knockback_y = self.knockback_y * 0.9
+	self.knockback_x = self.knockback_x * 0.6 --FIXME: dt mob kb
+	self.knockback_y = self.knockback_y * 0.6
 
 
 	if collide_object(self,1) then

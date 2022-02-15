@@ -27,6 +27,7 @@ spr_heart_empty = load_image("ui/heart_small_1_empty")
 spr_ammo = load_image("ui/ammo_small_1")
 spr_icon_heart = load_image("icon_heart")
 spr_icon_ammo = load_image("icon_ammo")
+sprs_icon_ply = load_image_table("ui/player_icons/p", 8)
 
 spr_bar_small_ammo = load_image("ui/small_ammo_bar") 
 spr_bar_small_life = load_image("ui/small_life_bar") 
@@ -34,28 +35,15 @@ spr_bar_small_empty = load_image("ui/small_empty_bar")
 
 -- Players
 anim_pigeon_idle = {
-	load_image("pigeon/pigeon_idle_1"),
+	load_image("players/pigeon/pigeon_idle_1"),
 }
-anim_pigeon_walk = {
-	load_image("pigeon/pigeon_walk_1"),
-	load_image("pigeon/pigeon_walk_2"),
-	load_image("pigeon/pigeon_walk_3"),
-	load_image("pigeon/pigeon_walk_4"),
-	load_image("pigeon/pigeon_walk_5"),
-	load_image("pigeon/pigeon_walk_6"),
-	load_image("pigeon/pigeon_walk_7"),
-	load_image("pigeon/pigeon_walk_8"),
-	load_image("pigeon/pigeon_walk_9"),
-	load_image("pigeon/pigeon_walk_10"),
-	--load_image("pigeon_walk_2"),
-}
-spr_pigeon_dead = load_image("pigeon/pigeon_dead")
-anim_duck_walk = {
-	load_image("duck/duck_1"),
-	--load_image("pigeon_walk_2"),
-}
-spr_penguin = load_image("penguin_1")
-spr_crow = load_image("crow_walk_1")
+anim_pigeon_walk = load_image_table("players/pigeon/pigeon_walk_", 10)
+spr_pigeon_dead = load_image("players/pigeon/pigeon_dead")
+
+anim_duck_walk = load_image_table("players/duck/duck_", 1)
+spr_penguin = load_image("players/penguin_1")
+spr_crow = load_image("players/crow_walk_1")
+anim_duck_walk = load_image_table("players/duck/duck_walk_bad_",8)
 
 
 -- Enemies
@@ -101,14 +89,10 @@ sprs_floor_wood = {
 }
 spr_ground_1 = load_image("tiles/floor_plain_1")
 spr_ground_wood = load_image("tiles/floor_wood_single")
-sprs_floor_wood_detail = {
-	load_image("floor_wood_detail1"),
-	load_image("floor_wood_detail2"),
-	load_image("floor_wood_detail3"), 
-	load_image("floor_wood_detail4"), 
-	w = 2, h = 2,
-}
-spr_wall_dum = load_image("dummy_wall")
+sprs_floor_wood_detail = load_image_table("scrapped/floor_wood_detail", 4, 2,2)
+sprs_shelf = load_image_table("tiles/shelf2_", 4)
+
+--spr_wall_dum = load_image("scrapped/dummy_wall")
 sprs_box = load_image_table("tiles/box_", 3)
 sprs_floor_concrete = load_image_table("tiles/tile_concrete_", 5)
 

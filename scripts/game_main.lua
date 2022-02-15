@@ -77,8 +77,7 @@ end
 local y_sort_buffer = {}
 
 function update_game_main(self, dt)
-	gf = 0
-	
+	-- Compute camera offset
 	local ox, oy = 0, 0
 	for i,p in ipairs(player_list) do
 		local o = p.gun.camera_offset or 0
@@ -87,12 +86,11 @@ function update_game_main(self, dt)
 		ox = ox + cx * o
 		oy = oy + cy * o
 	end
-	ox = ox/#player_list
-	oy = oy/#player_list
+	ox = ox
+	oy = oy
     camera.offset_x = ox
     camera.offset_y = oy
 	
-	camera:update(dt)
 	--Set camera target
     local avg_pos = {x=0, y=0}
 	for _,p in pairs(player_list)do
@@ -102,6 +100,7 @@ function update_game_main(self, dt)
 	avg_pos.x = avg_pos.x / number_of_players
 	avg_pos.y = avg_pos.y / number_of_players
 	camera:set_target(avg_pos.x - window_w/2, avg_pos.y - window_h/2)
+	camera:update(dt)
 
 	map:update()
 	pickups:update()
@@ -158,7 +157,7 @@ function update_game_main(self, dt)
 	--end
 	nb_delet = 0
 	--for i,b in ipairs(bullets) do
-	for i = #bullets , 1 , -1 do
+	for i = #bullets, 1, -1 do
 		b = bullets[i]
 		b:update(dt,i)
 		damage_everyone(b,i)

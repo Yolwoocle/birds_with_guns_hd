@@ -23,7 +23,7 @@ function init_map(w, h)
 		}),
 		make_tile(1, sprs_floor_concrete, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
-			type="multi_tile", random_var = {13/16, 1/16, 1/16, .5/16, .5/16}
+			type="multi_tile", random_var = {30, 2, 2, 1, 1}
 		}),
 		make_tile(2, spr_wall_1, {
 			is_solid=true, is_destructible=false, is_transparent=false, 
@@ -31,13 +31,17 @@ function init_map(w, h)
 		}),
 		make_tile(3, sprs_box, {
 			is_solid=true, is_destructible=true, is_transparent=true,
-			type="variation",
+			type="multi_tile",
 		}),
 		make_tile(4, spr_chain, {
 			is_solid=false, is_destructible=false, is_transparent=false
 		}),
 		make_tile(5, spr_floor_metal, {
 			is_solid=false, is_destructible=false, is_transparent=false 
+		}),
+		make_tile(6, sprs_shelf, {
+			is_solid=true, is_destructible=false, is_transparent=true,
+			type="multi_tile" 
 		}),
 	}
 	map.tile_size = map.palette[0].spr:getWidth() * pixel_scale
@@ -62,6 +66,9 @@ function init_map(w, h)
 	map.lvl_arena = map:load_from_file("arena.txt")
 	
 	return map
+end
+function update_map(self)
+	set_debug_canvas(self)
 end
 function draw_map(self)
 	local x1 = floor(camera.x / block_width)
@@ -107,17 +114,19 @@ function draw_with_y_sorted_objs(self, objs)
 			local var  = self.grid[y][x][2]
 			
 			tile = self.palette[tile]
-			if tile and tile.is_solids then
+			if tile and tile.is_solid then
 				tile:draw(x, y, var)
 			end
 		end
 
-		local next_y = (y+1)*16
+		local next_y = (y+1)*46
 		while i <= #objs and objs[i].y <= next_y do
 			objs[i]:draw()
 			i=i+1
 		end
 	end
+
+	rect_color("fill", 0, 0, 1, 3000, red)
 end
 
 
@@ -138,9 +147,10 @@ function make_tile(n, spr, a)
 	}
 	return tile
 end
-function draw_tile(self, x, y, var)
-	-- self refers to tile (THANKS, lua, goddamnit)
+function draw_tile(self, x, y, var, floor_spr)
+	-- self refers to tile
 	local spr
+	local floor_spr = floor_spr or sprs_floor_concrete[1]
 	if type(self.spr) == "table" then 
 		spr = self.spr[var]
 	else
@@ -148,20 +158,29 @@ function draw_tile(self, x, y, var)
 	end
 	if spr == nil then  spr = spr_missing  end
 	
+	if self.is_transparent then
+		love.graphics.draw(floor_spr, x*block_width, y*block_width, 0,1,1, self.ox, self.oy)
+	end
 	-- TODO: optimise map by baking into canvas & update on change
-	love.graphics.draw(spr, x*block_width, y*block_width, 0,1,1,self.ox,self.oy)
+	love.graphics.draw(spr, x*block_width, y*block_width, 0,1,1, self.ox, self.oy)
 end
+
 function get_random_var(self)
 	if not self.random_var then
-		return 1
+		return nil
 	end
+	-- Compute sum of weights
+	local sum = 0
+	for _,w in pairs(self.random_var) do   sum = sum + w   end
+
 	for i=1, #self.random_var do
-		if love.math.random() <= self.random_var[i] then
+		if love.math.random() <= self.random_var[i]/sum then
 			return i
 		end
 	end
 	return 1
 end
+
 function set_tile(self, x, y, elt, var)
 	self.grid[floor(y)][floor(x)][1] = elt
 	if var then
@@ -196,7 +215,7 @@ end
 function update_map(self)
 
 end
---[[
+-- [[
 function set_debug_canvas(self)
 	self.debug_canvas = love.graphics.newCanvas(self.width, self.height)
 	love.graphics.setCanvas(self.debug_canvas)
@@ -221,6 +240,6 @@ function debug_draw_map(self, px, py)
 	px = px or 0
 	py = py or 0
 	--love.graphics.draw(self.debug_canvas, px, py)
-end]]
+end--]]
 
 

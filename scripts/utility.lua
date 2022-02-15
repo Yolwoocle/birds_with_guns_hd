@@ -267,6 +267,6 @@ function draw_shadow(obj, alpha)
 	love.graphics.setColor(0,0,0,alpha)
 	local x, y = floor(obj.x), floor(obj.y + obj.spr:getHeight()/2)
 	local r = floor(obj.spr:getWidth()/2)
-	love.graphics.ellipse("fill", x, y, r, r*0.2)
+	love.graphics.ellipse("fill", x, y, r*0.8, r*0.2)
 	love.graphics.setColor(1,1,1,1)
 end
