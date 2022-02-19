@@ -11,11 +11,15 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		n = n,
 		x = x or 32,
 		y = y or 32,
-		w = 10,
-		h = 15,
+		w = 7,
+		h = 7,
 		dx = 0,
 		dy = 0,
 		walk_dir = {x=0, y=0},
+		sx = 1,
+		sy = 1,
+		ox = 0,
+		oy = 0,
 
 		speed = 64,
 		friction = 20, --FIXME:dt ply fric
@@ -49,6 +53,10 @@ function init_player(n,x,y, spr, controle,nbcontroller)
 		anim_frame = 0,
 		anim_frame_len = .05, --70 ms
 		animate = animate_player,
+
+		bounce_a = 0,
+		bounce_y = 0,
+		bounce_squash = 1,
 
 		gun = nil,
 		gun_dist = 14,
@@ -105,6 +113,7 @@ function update_player(self, dt)
 		--self.dy = round_if_near_zero(self.dy)
 		collide_object(self, 0.01)
 		--collision_response(self, map)
+		
 		-- Apply movement 
 		self.x = self.x + self.dx * dt
 		self.y = self.y + self.dy * dt
@@ -137,7 +146,7 @@ function update_player(self, dt)
 		end
 		
 		self:animate()
-	else -- if the player is dead
+	else -- If the player is dead
 		self.spr = self.spr_dead
 
 		-- Reviving
@@ -200,12 +209,10 @@ function draw_player(self)
 	-- Draw player
 	if is_drawn then
 		if self.looking_up then  self.gun:draw(self)  end
-		draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
+		draw_centered(self.spr, self.x-self.ox, self.y-self.oy, 0, self.sx*self.gun.flip, self.sy)
 		if not self.looking_up then  self.gun:draw(self)  end
 	end
-	love.graphics.setColor(1,1,1)
-
-	rect_color("line", self.x-self.w, self.y-self.h, self.w*2, self.h*2, red)
+	love.graphics.setColor(1,1,1) 
 end
 
 function draw_player_hud(self)
@@ -251,13 +258,11 @@ function draw_player_hud(self)
 end
 
 function player_movement(self, dt)
-	local dir_vector = {x = 0, y = 0}
-
 	local j
 	if self.input_device[2] == "joystick" then
-		j = joysticks[self.input_device[3]]
-		if j then
-		joystick = {}
+		local j = joysticks[self.input_device[3]]
+		if j then 
+		local joystick = {} 
 		joystick.x = j:getAxis(1)
 		joystick.y = j:getAxis(2)
 		else
@@ -268,6 +273,7 @@ function player_movement(self, dt)
 	end
 	local inp = self.input_device
 
+	local dir_vector = {x = 0, y = 0}
 	self.walk_dir = {x=0, y=0}
 	self.is_walking = false
 	if button_down("left", self.n, inp) or (joystick and joystick.x<-joystick_deadzone) then
@@ -377,7 +383,7 @@ function aim_player(self, dt)
 end
 
 function animate_player(self)
-	-- Flip player if looking left (why is this in player.gun but whatever)
+	-- Flip player if looking left (why is flip in player.gun but whatever)
 	self.flip = self.gun.flip
 	self.anim_sprs = self.anim_idle
 	self.spr = self.anim_idle[1]
@@ -396,10 +402,28 @@ function animate_player(self)
 	else
 		self.anim_sprs = self.anim_idle
 	end	
+
+	-- Bounce :3
+	if self.is_walking then
+		local dt = love.timer.getDelta()
+		self.bounce_a = self.bounce_a + dt*15
+		local sin_a = math.abs(math.sin(self.bounce_a))
+		self.bounce_y = sin_a * 12
+		self.oy = self.bounce_y - 5
+		
+		self.bounce_squash = 1 - (sin_a-0.5)*0.15
+
+		self.sx = self.bounce_squash
+		self.sy = 1/self.bounce_squash
+	else 
+		self.sx = 1
+		self.sy = 1
+		self.oy = 0
+	end
 end
 
 function damage_player(self, dmg)
-	if self.iframes_timer <= 0 then
+	if self.alive and self.iframes_timer <= 0 then
 		camera:shake(5)
 		self.life = self.life - dmg
 		self.iframes_timer = self.iframes

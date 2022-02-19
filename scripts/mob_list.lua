@@ -27,7 +27,11 @@ mob_list = {
 		closest_p = 0,
 		far_p	  = 200,
 	}),
-
+	robot = make_mob{
+		spr = spr_robot,
+		life = 20,
+		gun = guns.fox_revolver
+	},
 
 	knight = make_mob({
 		spr = spr_crow,

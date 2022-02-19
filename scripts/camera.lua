@@ -38,6 +38,10 @@ function init_camera()
 end
 
 function update_camera(self, dt)
+	--Clamp on border
+	self.target_x = self.target_x
+	self.target_y = self.target_y
+	
 	local smoothing = math.min(self.smoothing * dt, 1)
 	-- Move to player
 	if not self.lock_x then 
@@ -71,12 +75,6 @@ function update_camera(self, dt)
 	self.y = self.fake_y + self.offset_y + self.kick_y + self.shake_y
 	self.x = floor(self.x)
 	self.y = floor(self.y)
-
-	self.lock_x = false
-	self.lock_y = false
-	----------------------------------------------------------------
-	--self.x = player_list[1].x-16*15
-	--self.y = player_list[1].y-16*8.5
 end
 
 function draw_camera(self, dt)

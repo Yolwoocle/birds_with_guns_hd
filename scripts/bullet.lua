@@ -7,7 +7,7 @@ function update_bullet(self, dt, i)
 	-- Movement
 	self.rot = math.atan2(self.dy, self.dx)
 	if (self.dx * self.spdslow)^2 + (self.dy * self.spdslow)^2 < self.speed_max^2 then
-		self.dx = self.dx * self.spdslow
+		self.dx = self.dx * self.spdslow --FIXME:dt spdslow bullet 
 		self.dy = self.dy * self.spdslow
 	end
 	if self.update_option then 
@@ -19,7 +19,7 @@ function update_bullet(self, dt, i)
 
 	self.sx = (sqr(self.dx) + sqr(self.dy)) / sqr(self.spd)
 
-	if self.bounce>0 then
+	if self.bounce > 0 then
 		local coll,todestroy = collide_object(self,1)
 		if coll then
 			self.bounce = self.bounce-1
@@ -35,7 +35,7 @@ function update_bullet(self, dt, i)
 	if self.gun.ptc_type == "circle" and self.ptc_timer <= 0 then
 		local x, y = random_polar(10)
 		particles:make_circ(self.x + x, self.y + y, 10)
-		self.ptc_timer = 1/30 --OPTI
+		self.ptc_timer = 1/10 --OPTI
 	end
 	self.ptc_timer = self.ptc_timer - dt
 

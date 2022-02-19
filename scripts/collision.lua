@@ -72,6 +72,7 @@ end
 ]]
 function swept_aabb(a, b)
 	------------------------------------------------------------------------------------------------------
+	-- !!! I didn't write this
 	-- Thanks to https://gist.github.com/tesselode/e1bcf22f2c47baaedcfc472e78cac55e#file-swept-aabb-lua --
 	------------------------------------------------------------------------------------------------------
 	local entry_time_x, exit_time_x, entry_time_y, exit_time_y
@@ -256,26 +257,29 @@ function is_solid_rect(map, x, y, w, h)
         |       |
         C - l - D
     ]]
-	local blk_w = block_width
+	local blk_w = block_width or 16
 	x = x / blk_w
 	y = y / blk_w
 	w = w / blk_w
 	h = h / blk_w
 
-    return 
-        map:is_solid(x-w, y-h),{x=floor(x-w), y=floor(y-h)} or --A
-        map:is_solid(x+w, y-h),{x=floor(x+w), y=floor(y-h)} or --B
-        map:is_solid(x-w, y+h),{x=floor(x-w), y=floor(y+h)} or --C
-        map:is_solid(x+w, y+h),{x=floor(x+w), y=floor(y+h)} or --D
+    local collision_happened = 
+		map:is_solid(x-w, y-h) or --A
+        map:is_solid(x+w, y-h) or --B
+        map:is_solid(x-w, y+h) or --C
+        map:is_solid(x+w, y+h) or --D
 
 		-- Remove lower half if optimisation needed
-        map:is_solid(x,   y-h),{x=floor(x  ), y=floor(y-h)} or --i
-        map:is_solid(x-w, y  ),{x=floor(x-w), y=floor(y  )} or   --j
-        map:is_solid(x+w, y  ),{x=floor(x+w), y=floor(y  )} or   --k
-        map:is_solid(x,   y+h),{x=floor(x  ), y=floor(y+h)}   --l
+        map:is_solid(x,   y-h) or --i
+        map:is_solid(x-w, y  ) or   --j
+        map:is_solid(x+w, y  ) or   --k
+        map:is_solid(x,   y+h)   --l
+	
+	return collision_happened
 end
 
 function collide_object(o,bounce)
+	--TODO: replace with Swept AABB collisions
 	local dt = love.timer.getDelta()
 	local nextx = o.x + o.dx * dt
 	local nexty = o.y + o.dy * dt

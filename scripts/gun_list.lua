@@ -38,9 +38,10 @@ guns = {
 		spr = spr_shotgun,
 		nbshot = 10,
 		offset_spd = 300,
+		spdslow = 0.96,
 		scattering = 1,
 		cooldown = 0.5,
-		bullet_life = .3,
+		screenkick = 3,
 	},
 	assault_rifle = make_gun{
 		name = "assault rifle",

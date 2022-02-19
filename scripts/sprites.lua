@@ -41,7 +41,7 @@ anim_pigeon_walk = load_image_table("players/pigeon/pigeon_walk_", 10)
 spr_pigeon_dead = load_image("players/pigeon/pigeon_dead")
 
 anim_duck_walk = load_image_table("players/duck/duck_", 1)
-spr_penguin = load_image("players/penguin_1")
+spr_penguin = load_image("players/penguin/penguin_1")
 spr_crow = load_image("players/crow_walk_1")
 anim_duck_walk = load_image_table("players/duck/duck_walk_bad_",8)
 
@@ -51,6 +51,7 @@ spr_fox = {
 	load_image("fox_1")
 }
 spr_fox_hit = load_image("enemies/fox_1_hit")
+spr_robot = load_image("enemies/robot/robot_1")
 
 -- Pickups
 spr_pick_ammo = load_image("pickups/ammo")
@@ -91,6 +92,9 @@ spr_ground_1 = load_image("tiles/floor_plain_1")
 spr_ground_wood = load_image("tiles/floor_wood_single")
 sprs_floor_wood_detail = load_image_table("scrapped/floor_wood_detail", 4, 2,2)
 sprs_shelf = load_image_table("tiles/shelf2_", 4)
+spr_door = load_image("tiles/door")
+spr_pot_cactus = load_image("tiles/pot_cactus")
+sprs_seat = load_image_table("tiles/seat_", 4)
 
 --spr_wall_dum = load_image("scrapped/dummy_wall")
 sprs_box = load_image_table("tiles/box_", 3)

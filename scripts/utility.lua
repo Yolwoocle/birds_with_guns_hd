@@ -270,3 +270,21 @@ function draw_shadow(obj, alpha)
 	love.graphics.ellipse("fill", x, y, r*0.8, r*0.2)
 	love.graphics.setColor(1,1,1,1)
 end
+
+function table_to_str(tab)
+	if type(tab) ~= "table" then
+		return tostring(tab)
+	end
+	
+	local s = ""
+	for k,v in pairs(tab) do
+		s = s..table_to_str(v)..","
+	end
+	s = string.sub(s, 1, #s-1)
+	s = "{"..s.."}"
+	return s
+end
+
+function print_table(tab)
+	print(table_to_str(tab))
+end

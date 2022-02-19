@@ -18,31 +18,45 @@ function init_map(w, h)
 	map.draw = draw_map
 	map.draw_with_y_sorted_objs = draw_with_y_sorted_objs
 	map.palette = {
-		[0] = make_tile(0, spr_ground_dum, {
+		[0] = make_tile(0, ' ', spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
 		}),
-		make_tile(1, sprs_floor_concrete, {
+		make_tile(1, '.', sprs_floor_concrete, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
 			type="multi_tile", random_var = {30, 2, 2, 1, 1}
 		}),
-		make_tile(2, spr_wall_1, {
+		make_tile(2, '#', spr_wall_1, {
 			is_solid=true, is_destructible=false, is_transparent=false, 
 			oy = 9,
 		}),
-		make_tile(3, sprs_box, {
+		make_tile(3, 'b', sprs_box, {
 			is_solid=true, is_destructible=true, is_transparent=true,
 			type="multi_tile",
 		}),
-		make_tile(4, spr_chain, {
+		make_tile(4, 'c', spr_chain, {
 			is_solid=false, is_destructible=false, is_transparent=false
 		}),
-		make_tile(5, spr_floor_metal, {
+		make_tile(5, ',', spr_floor_metal, {
 			is_solid=false, is_destructible=false, is_transparent=false 
 		}),
-		make_tile(6, sprs_shelf, {
+		make_tile(6, 'H', sprs_shelf, {
 			is_solid=true, is_destructible=false, is_transparent=true,
 			type="multi_tile" 
 		}),
+		make_tile(7, '+', spr_door, {
+			is_solid=true, is_destructible=true, is_transparent=true, 
+		}),
+		make_tile(8, 'p', spr_pot_cactus, {
+			is_solid=true, is_destructible=true, is_transparent=true, 
+			oy = 8,
+		}),
+		make_tile(9, 's', sprs_seat, {
+			is_solid=true, is_destructible=false, is_transparent=true,
+			oy=7,
+		}),
+		make_tile(10, '_', spr_ground_wood, {
+			is_solid=false, is_destructible=false, is_transparent=false,
+		})
 	}
 	map.tile_size = map.palette[0].spr:getWidth() * pixel_scale
 
@@ -61,9 +75,9 @@ function init_map(w, h)
 	map.generate_path = generate_path
 	map.spawn_mob = tile_spawn_mob
 	
-	map.lvl1_main_rooms = map:load_from_file("lvl1_rooms_1.txt")
-	map.lvl1_branch_rooms = map:load_from_file("lvl1_rooms_branch.txt")
-	map.lvl_arena = map:load_from_file("arena.txt")
+	map.lvl1_rooms = map:load_from_file("lvl1_rooms_1.txt")
+	map.lvl1_rooms_branch = map:load_from_file("lvl1_rooms_branch.txt")
+	--map.lvl_arena = map:load_from_file("arena.txt")
 	
 	return map
 end
@@ -71,6 +85,7 @@ function update_map(self)
 	set_debug_canvas(self)
 end
 function draw_map(self)
+	-- Compute the area on screen needed to be covered
 	local x1 = floor(camera.x / block_width)
 	local x2 = floor((camera.x + window_w) / block_width )
 	local y1 = floor(camera.y / block_width)
@@ -88,7 +103,7 @@ function draw_map(self)
 			
 			tile = self.palette[tile]
 			if tile then
-				tile:draw(x, y, var)
+				tile:draw(x, y, var, true)
 			end
 		end
 	end
@@ -125,14 +140,13 @@ function draw_with_y_sorted_objs(self, objs)
 			i=i+1
 		end
 	end
-
-	rect_color("fill", 0, 0, 1, 3000, red)
 end
 
 
-function make_tile(n, spr, a)
+function make_tile(n, symb, spr, a)
 	local tile = {
 		n = n,
+		symb = symb,
 		type = a.type,
 		spr = spr or spr_missing,
 		is_solid = a.is_solid,
@@ -147,7 +161,7 @@ function make_tile(n, spr, a)
 	}
 	return tile
 end
-function draw_tile(self, x, y, var, floor_spr)
+function draw_tile(self, x, y, var, is_background_layer, floor_spr)
 	-- self refers to tile
 	local spr
 	local floor_spr = floor_spr or sprs_floor_concrete[1]
@@ -158,8 +172,8 @@ function draw_tile(self, x, y, var, floor_spr)
 	end
 	if spr == nil then  spr = spr_missing  end
 	
-	if self.is_transparent then
-		love.graphics.draw(floor_spr, x*block_width, y*block_width, 0,1,1, self.ox, self.oy)
+	if self.is_transparent and is_background_layer then
+		love.graphics.draw(floor_spr, x*block_width, y*block_width, 0,1,1)
 	end
 	-- TODO: optimise map by baking into canvas & update on change
 	love.graphics.draw(spr, x*block_width, y*block_width, 0,1,1, self.ox, self.oy)
@@ -215,31 +229,145 @@ end
 function update_map(self)
 
 end
--- [[
-function set_debug_canvas(self)
-	self.debug_canvas = love.graphics.newCanvas(self.width, self.height)
-	love.graphics.setCanvas(self.debug_canvas)
-	for y = 0, self.height-1 do
-		for x = 0, self.width-1 do
-			local tile = self:get_tile(x,y).n
-			local col = {1,0,0} 
-			if     tile == 0 then  col = {0,0,0,0} 
-			elseif tile == 1 then  col = {.5, .2, 0}
-			elseif tile == 2 then  col = {1, 1, 1}
-			elseif tile == 3 then  col = {0, 1, 1}
-			elseif tile == 4 then  col = {.5, .5, .5}
-			elseif tile == 5 then  col = {.7, .7, .7}
-			end
-			rect_color("fill", x, y, 1, 1, col)
-		end
+
+-------------------------------------------------------------------------
+---------------------------- Map Generation -----------------------------
+-------------------------------------------------------------------------
+
+function generate_map(self, seed)
+	-- The default seed in LÖVE 11.x is the following low/high pair: 0xCBBF7A44, 0x0139408D
+	local rng
+	if seed then
+		rng = love.math.newRandomGenerator(seed)  
+	else 
+		rng = love.math.newRandomGenerator()
 	end
-	love.graphics.setCanvas()
+
+	self:write_room(self.lvl1_rooms[1], 0, 0, rng)
+	self:generate_path(rng, self.lvl1_rooms, 30, 0, 2,2, 2)
 end
 
-function debug_draw_map(self, px, py)
-	px = px or 0
-	py = py or 0
-	--love.graphics.draw(self.debug_canvas, px, py)
-end--]]
+function generate_path(self, rng, rooms, x, y, nb_room_min, nb_room_max, table_min_index, table_max_index)
+	table_min_index = table_min_index or 1   
+	table_max_index = table_max_index or #rooms   
+	-- Start by generating a random layout for the main path
+	-- We get all possible rooms and shuffle them 
+	local room_ids = {}
+	for i=table_min_index, table_max_index do
+		table.insert(room_ids, i)
+	end
+	shuffle(room_ids, rng)
+	
+	local len_path = rng:random(nb_room_min, nb_room_max)
+	len_path = clamp(0, len_path, #rooms)
 
+	local ix = x
+	for i=1, len_path do
+		local room = rooms[room_ids[i]]
+		self:write_room(room, ix, y, rng)
+		ix = ix + self:get_room_width(room)
+	end
 
+	return {x=ix}
+end
+
+function tile_spawn_mob(self, rng, x, y)
+	local bw = block_width 
+	if not self:get_tile(x, y).is_solid and rng:random(100)==1 then
+		table.insert(mobs, mob_list.fox:spawn(x*bw + bw/2, y*bw + bw/2))
+	end
+end
+function get_room_tile(self, room, x, y)
+	return room[y][x]
+end
+function write_room(self, room, x, y, rng)
+	x = x or 0
+	y = y or 0 
+	for iy = 0, #room do
+		for ix = 0, #room[0] do 
+			local tile = self:get_room_tile(room, ix, iy)
+			self:set_tile(x+ix, y+iy, tile[1], tile[2])
+			if rng then
+				self:spawn_mob(rng, x+ix, y+iy)
+			end
+		end
+	end
+end
+
+function get_room_width(self, room)
+	return #room[0] + 1
+end
+function get_room_height(self, room)
+	return #room + 1
+end
+
+function load_from_file(self, file)
+	-- . ground   # wall
+	-- b box      c chain
+	--[[ example:
+		# # # # # # # # #
+		# . . . b b . . #
+		# . . . . . . . #
+		# # # # # # # # #
+	]]
+	local rooms = {{}}
+	local room = 1
+	local y = 0
+	for line in love.filesystem.lines("assets/rooms/"..file) do
+		if #line == 0 then 
+			room = room + 1 
+			y = 0
+			rooms[room] = {}
+		else
+			rooms[room][y] = {}
+			local x = 0
+			for i=1, #line, 2 do
+				local chr = string.sub(line, i, i)
+				local var = tonumber(string.sub(line, i+1, i+1))
+				if not var then  var = 1  end
+
+				local tile = 0
+				if	 chr == " " then tile = 0
+				elseif chr == "." then tile = 1 --floor
+				elseif chr == "#" then tile = 2 --wall
+				elseif chr == "b" then tile = 3 --box
+				elseif chr == "c" then tile = 4 --chain
+				elseif chr == "," then tile = 5 --floor metal
+				elseif chr == "H" then tile = 6 --shelf
+				elseif chr == "+" then tile = 7 --door
+				elseif chr == "p" then tile = 8 --potted cactus
+				elseif chr == "s" then tile = 9 --seats
+				elseif chr == "_" then tile = 10 --wooden floor
+				end
+				
+				tile_obj = self.palette[tile]
+				local rnd_var = tile_obj:get_random_var()
+				if rnd_var then   var = rnd_var   end
+
+				rooms[room][y][x] = {tile, var}
+				x = x + 1
+			end
+			y = y + 1
+		end
+	end
+	return rooms
+end
+
+function print_room(self, room)
+	if room then
+	for i,line in ipairs(room) do
+		local s = ""
+		if room[1] then
+		for j,v in ipairs(room[i]) do
+			local tile, var = v[1], v[2]
+			s = s..self.palette[tile].symb
+			if var > 1 then
+				s = s..tostring(var)
+			else 
+				s = s.." "
+			end
+		end
+		end
+	end
+	end
+end

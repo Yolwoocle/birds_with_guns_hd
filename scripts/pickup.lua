@@ -22,8 +22,6 @@ function is_picked(self, obj)
 		self.delete = true
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
-
-
 		switch_weapon(self , obj)
 	end
 end
@@ -59,12 +57,12 @@ function spawn_pickup(self, type, q, x, y)
 end
 
 function spawn_random_loot(self, x, y)
-	if love.math.random() <= 0.1 then
-		self:spawn("ammo", 0.25, x, y)
+	if love.math.random() <= 1.1 then
+		self:spawn("gun", guns.revolver, x, y)
+--		self:spawn("ammo", 0.25, x, y)
 	elseif love.math.random() <= 0.1 then
 		self:spawn("life", 2, x, y)
 	elseif love.math.random() <= 0.1 then
-		self:spawn("gun", guns.revolver, x, y)
 	end
 end
 

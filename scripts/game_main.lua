@@ -18,17 +18,15 @@ function init_game_main(self)
 	sp_mark = {}
 	camera = init_camera()
 	camera.lock_x = false
-	camera.lock_y = false
+	camera.lock_y = true
 
-
-	number_of_players = 2
+	number_of_players = 3
 
 	player_list = {}
 	for i =1,number_of_players do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			controle = "keyboard"
 			nbcontroller = 1
-			--nbcontroller = 1
 		elseif i == 2 then
 			controle = "keyboard"
 
@@ -41,8 +39,8 @@ function init_game_main(self)
 			nbcontroller=2
 		end
 
-		birds_spr = {anim_pigeon_walk, anim_duck_walk,anim_pigeon_walk, anim_duck_walk,}
-		local ply = init_player(i, 90+i*32, 220, birds_spr[i],controle,nbcontroller)
+		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
+		local ply = init_player(i, 84, 90+i*16, birds_spr[i], controle, nbcontroller)
 		table.insert(player_list, ply)
 		player_list[i].anim_walk = birds_spr[i]
 		player_list[i].anim_idle = birds_spr[i]
@@ -66,12 +64,11 @@ function init_game_main(self)
 
 	hud = make_hud()
 	hud:make_bar("life_bar", 6,6, 10,10, spr_hp_bar, spr_hp_bar_empty, spr_icon_heart)
-	hud:make_bar("ammo_bar", 6,26,nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
+	hud:make_bar("ammo_bar", 6,26, nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
 	hud:make_img("gun_1", 78,6, spr_missing)
 	hud:make_img("gun_2", 78,6, spr_missing)
 	hud:make_imgs("gun_list", 78,40, {spr_missing})
 	spawn_location = {}
-	
 end
 
 local y_sort_buffer = {}
@@ -93,7 +90,7 @@ function update_game_main(self, dt)
 	
 	--Set camera target
     local avg_pos = {x=0, y=0}
-	for _,p in pairs(player_list)do
+	for _,p in pairs(player_list) do
 		avg_pos.x = avg_pos.x + p.x
 		avg_pos.y = avg_pos.y + p.y
 	end
@@ -104,20 +101,13 @@ function update_game_main(self, dt)
 
 	map:update()
 	pickups:update()
-	update_waves(dt)
+	--update_waves(dt)
 
-	--for i,z in ipairs(zones) do
 	for i = #zones , 1 , -1 do
 		z = zones[i]
 		z:update(dt,i)
 		damageinzone(z,i) 
 	end
-
-	--for i = #_shot_ , 1 , -1 do
-	--	s = _shot_[i]
-	--	append_list(_shot, s)
-	--	table.remove(_shot_, i)
-	--end
 
 	local number_alive_players = 0
 	for _,p in ipairs(player_list) do
@@ -184,12 +174,13 @@ function update_game_main(self, dt)
 
 	particles:update(dt)
 
-	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, player_list}
+	y_sort_buffer = y_sort_merge{mobs, bullets, player_list}
 end
 
 function draw_game_main(self)
     camera:draw()
-	-- TODO: y-sorting
+	
+	pickups:draw()
 	map:draw_with_y_sorted_objs(y_sort_buffer)
 	draw_waves()
 	for i,z in ipairs(zones) do
@@ -206,6 +197,7 @@ function draw_game_main(self)
 	debug_y = 0
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	debug_print(notification)
+	debug_print("target_x"..tostr(camera.target_x))
 end
 
 function y_sort_merge(all_objs)
