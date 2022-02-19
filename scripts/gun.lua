@@ -68,7 +68,7 @@ function make_gun(a)
 
 		cooldown_timer = 0,
 		dt 			   = 0,
-		speed_max	   = a.speed_max				or 600,
+		speed_max	   = a.speed_max				or 1000,
 
 		make_shot = a.make_shot or default_shoot,
 

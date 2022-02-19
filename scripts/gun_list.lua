@@ -38,7 +38,7 @@ guns = {
 		spr = spr_shotgun,
 		nbshot = 10,
 		offset_spd = 300,
-		spdslow = 0.96,
+		spdslow = .95,
 		scattering = 1,
 		cooldown = 0.5,
 		screenkick = 3,
@@ -118,7 +118,7 @@ guns = {
 
 		nbshot = 1,
 
-		spdslow = 1.3,
+		spdslow = 1.005,
 		bullet_spd = 500,
 		scattering    = 0,
 

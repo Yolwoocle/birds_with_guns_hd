@@ -6,10 +6,12 @@ require "scripts/damage_zone"
 function update_bullet(self, dt, i)
 	-- Movement
 	self.rot = math.atan2(self.dy, self.dx)
+
 	if (self.dx * self.spdslow)^2 + (self.dy * self.spdslow)^2 < self.speed_max^2 then
-		self.dx = self.dx * self.spdslow --FIXME:dt spdslow bullet 
-		self.dy = self.dy * self.spdslow
+		self.dx = self.dx * (1-(1-self.spdslow)*60*dt) --FIXME:dt spdslow bullet 
+		self.dy = self.dy * (1-(1-self.spdslow)*60*dt)
 	end
+
 	if self.update_option then 
 		self:update_option(dt) 
 	end
