@@ -263,19 +263,30 @@ function is_solid_rect(map, x, y, w, h)
 	w = w / blk_w
 	h = h / blk_w
 
-    local collision_happened = 
-		map:is_solid(x-w, y-h) or --A
-        map:is_solid(x+w, y-h) or --B
-        map:is_solid(x-w, y+h) or --C
-        map:is_solid(x+w, y+h) or --D
+    local collision_positions = { 
+		{x-w, y-h}, --A
+        {x+w, y-h}, --B
+        {x-w, y+h}, --C
+        {x+w, y+h}, --D
 
 		-- Remove lower half if optimisation needed
-        map:is_solid(x,   y-h) or --i
-        map:is_solid(x-w, y  ) or   --j
-        map:is_solid(x+w, y  ) or   --k
-        map:is_solid(x,   y+h)   --l
+        {x,   y-h}, --i
+        {x-w, y  }, --j
+        {x+w, y  }, --k
+        {x,   y+h}, --l
+	}
 	
-	return collision_happened
+	local collision_happened = false
+	local collision_coordinates = {nil, nil}
+	for i,pos in pairs(collision_positions) do
+		local is_solid = map:is_solid(pos[1], pos[2])
+		collision_happened = collision_happened or is_solid
+		if collision_happened then
+			collision_coordinates = {pos[1], pos[2]}
+		end
+	end
+
+	return collision_happened, collision_coordinates
 end
 
 function collide_object(o,bounce)

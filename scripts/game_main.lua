@@ -20,7 +20,7 @@ function init_game_main(self)
 	camera.lock_x = false
 	camera.lock_y = true
 
-	number_of_players = 3
+	number_of_players = 2
 
 	player_list = {}
 	for i =1,number_of_players do
@@ -174,15 +174,15 @@ function update_game_main(self, dt)
 
 	particles:update(dt)
 
-	y_sort_buffer = y_sort_merge{mobs, bullets, player_list}
+	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, player_list}
 end
 
 function draw_game_main(self)
     camera:draw()
 	
-	pickups:draw()
 	map:draw_with_y_sorted_objs(y_sort_buffer)
 	draw_waves()
+	
 	for i,z in ipairs(zones) do
 		z:draw()
 	end
