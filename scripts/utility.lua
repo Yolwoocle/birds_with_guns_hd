@@ -278,9 +278,13 @@ function table_to_str(tab)
 	
 	local s = ""
 	for k,v in pairs(tab) do
-		s = s..table_to_str(v)..","
+		if type(k) == "number" then
+			s = s..table_to_str(v)..", "
+		else
+			s = s..tostr(k).." = "..table_to_str(v)..", "
+		end
 	end
-	s = string.sub(s, 1, #s-1)
+	s = string.sub(s, 1, #s-2)
 	s = "{"..s.."}"
 	return s
 end
