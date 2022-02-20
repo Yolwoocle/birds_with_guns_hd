@@ -22,12 +22,13 @@ function update_bullet(self, dt, i)
 	self.sx = (sqr(self.dx) + sqr(self.dy)) / sqr(self.spd)
 
 	if self.bounce > 0 then
-		local coll,todestroy = collide_object(self,1)
+		local coll, todestroy = collide_object(self, 1)
+		self.debug = {coll, todestroy}
 		if coll then
 			self.bounce = self.bounce-1
 
 			for _,k in pairs(todestroy) do 
-				interact_map(self, map,(k.x), (k.y))
+				interact_map(self, map, k.x, k.y)
 			end
 			
 		end
@@ -113,6 +114,8 @@ function draw_bullet(self)
 		sx, sy = 1, 1
 	end
 	draw_centered(spr, self.x, self.y, self.rot, sx, sy)
+
+	love.graphics.print(table_to_str(self.debug), self.x+16, self.y)
 	
 	--rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
 	--love.graphics.pr int(self.scale,self.x+10,self.y+10)

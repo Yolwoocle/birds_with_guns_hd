@@ -57,7 +57,7 @@ function spawn_pickup(self, type, q, x, y)
 end
 
 function spawn_random_loot(self, x, y)
-	if love.math.random() <= 1.1 then
+	if love.math.random() <= 0.1 then
 		self:spawn("gun", guns.revolver, x, y)
 --		self:spawn("ammo", 0.25, x, y)
 	elseif love.math.random() <= 0.1 then

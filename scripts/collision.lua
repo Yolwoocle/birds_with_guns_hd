@@ -282,7 +282,7 @@ function is_solid_rect(map, x, y, w, h)
 		local is_solid = map:is_solid(pos[1], pos[2])
 		collision_happened = collision_happened or is_solid
 		if collision_happened then
-			collision_coordinates = {pos[1], pos[2]}
+			collision_coordinates = {x=floor(pos[1]), y=floor(pos[2])}
 		end
 	end
 
@@ -304,9 +304,9 @@ function collide_object(o,bounce)
 	end
 
 	local bw = block_width
-	local coll_x,x_block = is_solid_rect(map, nextx, o.y, o.w, o.h)
-	local coll_y,y_block = is_solid_rect(map, o.x, nexty, o.w, o.h)
-	local coll_xy,xy_block = is_solid_rect(map, nextx, nexty, o.w, o.h)
+	local coll_x, x_block = is_solid_rect(map, nextx, o.y, o.w, o.h)
+	local coll_y, y_block = is_solid_rect(map, o.x, nexty, o.w, o.h)
+	local coll_xy, xy_block = is_solid_rect(map, nextx, nexty, o.w, o.h)
 	
 	if coll_x then 
 		o.dx = -o.dx * bounce 
@@ -318,7 +318,7 @@ function collide_object(o,bounce)
 		o.dx = -o.dx * bounce
 		o.dy = -o.dy * bounce
 	end
-	return coll_x or coll_y or coll_xy, {x_block,y_block,xy_block}
+	return coll_x or coll_y or coll_xy, {x_block, y_block, xy_block}
 end
 
 function raycast_coll(x, y, dx, dy)

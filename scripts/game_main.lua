@@ -181,6 +181,7 @@ function draw_game_main(self)
     camera:draw()
 	
 	map:draw_with_y_sorted_objs(y_sort_buffer)
+	pickups:draw()
 	draw_waves()
 	
 	for i,z in ipairs(zones) do
