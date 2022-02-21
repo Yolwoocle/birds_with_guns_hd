@@ -98,10 +98,14 @@ end
 
 function love.update(dt)
 	updatejoystick()
-    game:update(dt)
+	if map_edit_mode then
+		update_map_edit(dt)
+		
+	else
+		game:update(dt)
+	end
+
     table.insert(perf, dt)
-	
-	update_map_edit(dt)
 end
 
 function love.draw()
@@ -109,15 +113,18 @@ function love.draw()
     love.graphics.clear()
     love.graphics.translate(0, 0)
     
-    game:draw()
+	if map_edit_mode then
+		draw_map_edit()
+		
+	else
+		game:draw()
+	end
     
     -- Canvas for that sweet pixel art
     love.graphics.setCanvas()
     love.graphics.origin()
     love.graphics.scale(1, 1)
     love.graphics.draw(canvas, screen_ox, screen_oy, 0, screen_scale, screen_scale)
-
-	draw_map_edit()
 end
 
 function love.keypressed(key)
