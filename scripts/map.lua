@@ -17,6 +17,7 @@ function init_map(w, h)
 	map.update = update_map
 	map.draw = draw_map
 	map.draw_with_y_sorted_objs = draw_with_y_sorted_objs
+    map.chr_to_tile_number = chr_to_tile_number
 	map.palette = {
 		[0] = make_tile(0, ' ', spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
@@ -65,6 +66,7 @@ function init_map(w, h)
 	map.is_solid = is_solid
 	map.valid_tile = valid_tile
 	map.generate_map = generate_map
+    map.draw_room = draw_room
 	
 	map.rooms = {}
 	map.write_room = write_room
@@ -142,7 +144,6 @@ function draw_with_y_sorted_objs(self, objs)
 	end
 end
 
-
 function make_tile(n, symb, spr, a)
 	local tile = {
 		n = n,
@@ -177,6 +178,15 @@ function draw_tile(self, x, y, var, is_background_layer, floor_spr)
 	end
 	-- TODO: optimise map by baking into canvas & update on change
 	love.graphics.draw(spr, x*block_width, y*block_width, 0,1,1, self.ox, self.oy)
+end
+
+function chr_to_tile_number(self,chr)
+    for i,tile in pairs(self.palette) do
+        if tile.symb == chr then
+            return tile.n
+        end
+    end
+    return 0
 end
 
 function get_random_var(self)
@@ -301,6 +311,21 @@ function get_room_height(self, room)
 	return #room + 1
 end
 
+function draw_room(self, room, x, y)
+	x = x or 0
+	y = y or 0 
+	for iy = 0, #room do
+		for ix = 0, #room[0] do 
+			local tile, var = self:get_room_tile(room, ix, iy)
+			tile = self.palette[tile]
+			
+			if tile then
+				tile:draw(x, y, var, true)
+			end
+		end
+	end
+end
+
 function load_from_file(self, file)
 	-- . ground   # wall
 	-- b box      c chain
@@ -326,19 +351,7 @@ function load_from_file(self, file)
 				local var = tonumber(string.sub(line, i+1, i+1))
 				if not var then  var = 1  end
 
-				local tile = 0
-				if	 chr == " " then tile = 0
-				elseif chr == "." then tile = 1 --floor
-				elseif chr == "#" then tile = 2 --wall
-				elseif chr == "b" then tile = 3 --box
-				elseif chr == "c" then tile = 4 --chain
-				elseif chr == "," then tile = 5 --floor metal
-				elseif chr == "H" then tile = 6 --shelf
-				elseif chr == "+" then tile = 7 --door
-				elseif chr == "p" then tile = 8 --potted cactus
-				elseif chr == "s" then tile = 9 --seats
-				elseif chr == "_" then tile = 10 --wooden floor
-				end
+				local tile = self:chr_to_tile_number(chr)
 				
 				tile_obj = self.palette[tile]
 				local rnd_var = tile_obj:get_random_var()

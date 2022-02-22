@@ -24,8 +24,8 @@ function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 
 	if (camera.x-w < x) and (x < camera.x+window_w+w) 
 	and (camera.y-h < y) and (y < camera.y+window_h+h) then
-		x = x
-		y = y
+		x = floor(x)
+		y = floor(y)
 		r = r or 0
 		sx = sx or pixel_scale
 		sy = sy or sx
@@ -291,4 +291,12 @@ end
 
 function print_table(tab)
 	print(table_to_str(tab))
+end
+
+function randint(a,b, rng)
+	if rng then
+		return math.floor(rng:random() * b-a) + a
+	else
+		return math.floor(love.math.random() * b-a) + a
+	end
 end

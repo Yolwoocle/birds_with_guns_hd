@@ -246,7 +246,7 @@ function draw_player_hud(self)
 	love.graphics.setFont(font_default)
 
 	-- Cursor
-	if self.show_cu then 
+	if self.show_cu then
 		draw_centered(spr_cursor, self.cu_x, self.cu_y)
 	end
 

@@ -65,6 +65,7 @@ spr_bullet_red = load_image("projectiles/bullet_flat_red_1")
 spr_laser = load_image("projectiles/laser")
 spr_rocket = load_image("projectiles/rocket")
 spr_paper_plane = load_image("projectiles/paper_plane")
+spr_fire_extinguisher_smoke = load_image("projectiles/fire_extinguisher_smoke")
 
 -- Guns
 spr_revolver = load_image("guns/gun_revolver_small")
