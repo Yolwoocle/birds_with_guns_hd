@@ -115,6 +115,8 @@ function draw_bullet(self)
 	end
 	draw_centered(spr, self.x, self.y, self.rot, sx, sy)
 
+	--love.graphics.print(table_to_str(self.debug), self.x+16, self.y)
+	
 	--rect_color("line", floor(self.x-self.scale*6), floor(self.y-self.scale*6), floor(2*self.scale*6), floor(2*self.scale*6), {1,0,0})
 	--love.graphics.pr int(self.scale,self.x+10,self.y+10)
 end

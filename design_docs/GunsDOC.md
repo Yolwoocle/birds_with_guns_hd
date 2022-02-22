@@ -23,6 +23,7 @@
 | `scale`                | float   | `1` | the size of the laser or bullet |
 | `oscale` 	             | float   | `0` | range of the random variation of `scale` |
 | `speed_max` | float | None | cap speed |
+| `knockback` | float | 300  | the force applied to enemies and alike when shot |
 
 ### Speed properties (only for bullets)
 | name                   | type    | default value | description |

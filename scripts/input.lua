@@ -159,7 +159,7 @@ function get_joystick_cursor_pos(input_device,ply,dt)
 		local qdsf = dist(joyy,joyx,0,0)
 		if qdsf>joystick_deadzone2 then
 			local a = math.atan2(joyy,joyx)
-			return lerp(ply.cu_x,ply.x+math.cos(a)*220,.2)-camera.x, lerp(ply.cu_y,ply.y+math.sin(a)*220,.2)-camera.y
+			return lerp(ply.cu_x,ply.x+math.cos(a)*100,.2)-camera.x, lerp(ply.cu_y,ply.y+math.sin(a)*100,.2)-camera.y
 		elseif dist((ply.cu_x-camera.x)+ply.dx*dt,(ply.cu_y-camera.y)+ply.dy*dt,ply.x-camera.x,ply.y-camera.y)>10 then
 			local x,y = lerp(ply.cu_x+ply.dx*dt, ply.x, .1)-camera.x ,  lerp(ply.cu_y+ply.dy*dt, ply.y,0.1)-camera.y
 			return x,y

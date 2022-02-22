@@ -278,6 +278,7 @@ function is_solid_rect(map, x, y, w, h)
 	
 	local collision_happened = false
 	local collision_coordinates = {nil, nil}
+	
 	for i,pos in pairs(collision_positions) do
 		local is_solid = map:is_solid(pos[1], pos[2])
 		collision_happened = collision_happened or is_solid
