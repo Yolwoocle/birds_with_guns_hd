@@ -6,6 +6,7 @@ function init_keybinds()
 		down  = {{"s"},{"down"}},
 		fire  = {{"c"},{"m"}},
 		alt   = {{"v"},{","}},
+		middlems = {{"t"},{"p"}},
 	}
 end
 function init_joystickbinds()
@@ -16,6 +17,7 @@ function init_joystickbinds()
 		down  = {{"dpdown"}, {"dpdown"}},
 		fire  = {{"triggerleft"}, {"triggerleft"}},
 		alt   = {{"triggerright"}, {"triggerright"}},
+		middlems = {{},{}},
 	}
 end
 function init_button_last_state_table()
@@ -46,19 +48,23 @@ function button_down(command, player_n, input_device)
 		return true
 	end
 
-	if input_device[2] == "keyboard+mouse" or input_device[2] == "keyboard" then
+	if command == "middlems" and (input_device[2] == "keyboard+mouse" and love.mouse.isDown(3)) then
+		return true
+	end
+
+	if input_device[2] == "keyboard+mouse" or input_device[2] == "keyboard" then--and not (command == "middlems") then --FI XME: and not command == "middlems" ajouter ca de facon propre
 		local keys = input_device[1][command][player_n]
 		for _,k in pairs(keys) do
 			if love.keyboard.isScancodeDown(k) then
 				return true
 			end
 		end
-	end
+	end -- love.mouse.isDown(3)
 
 	if input_device[2] == "joystick" then
 		local dp = joystickbinds[command][1]
 		for _,d in pairs(dp) do
-			if not(command == "fire" or command == "alt") then
+			if not(command == "fire" or command == "alt" or command == "middlems") then
 				if  joysticks[input_device[3]]:isGamepadDown(d) then -- joysticks[input_device[3]]:getAxis(1)
 					return true
 				end
