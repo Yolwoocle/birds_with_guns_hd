@@ -62,28 +62,27 @@ guns = {
 	fire_extinguisher = make_gun({
 		name = "fire extinguisher",
 		spr = spr_fire_extinguisher,
-		spr_bullet = spr_empty,
+		spr_bullet = spr_fire_extinguisher_smoke,
 		nbshot = 10,
 		damage = 0.1,
-		bullet_life = .75,
+		bullet_life = .05,
 		is_auto = true,
+		knockback = 10,
 
 		spdslow = 1,
 		bullet_spd = 200,
 		screenkick = -0.2,
+		screenkick_shake = 20,
 
-		spawn_x = 40,
+		spawn_x = 30,
 		spread = 0.3,
 		scattering = 0.3,
 
-		bullet_spr = spr_empty,
 		scale = 1,
 		cooldown = 0.01,
 
-		ptc_type = "circle",
+		ptc_type = nil,--"circle",
 		max_ammo = 3000,
-
-		bullet_life = 10,
 
 		update_option = function(self,dt)
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))

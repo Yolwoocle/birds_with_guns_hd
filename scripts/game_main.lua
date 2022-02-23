@@ -18,7 +18,7 @@ function init_game_main(self)
 	sp_mark = {}
 	camera = init_camera()
 	camera.lock_x = false
-	camera.lock_y = true
+	camera.lock_y = false
 
 	number_of_players = 1
 
@@ -200,6 +200,7 @@ function draw_game_main(self)
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	debug_print(notification)
 	debug_print("target_x"..tostr(camera.target_x))
+	debug_print(debugg)
 end
 
 function y_sort_merge(all_objs)
