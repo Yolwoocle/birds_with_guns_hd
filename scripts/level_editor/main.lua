@@ -47,9 +47,14 @@ function update_map_edit(dt)
         end
     end
 
-    --place block with left click
-
     local bx,by=floor(mx/block_width), floor(my/block_width)
+    --fast select 
+    if button_down("middlems", 1,input_device) then
+        tile_n = map.grid[by][bx][1]
+        nb_variente = map.grid[by][bx][2]
+    end
+
+    --place block with left click
     
     if button_down("fire", 1,input_device) and map.grid[floor(by)] and map.grid[floor(by)][floor(bx)] and not(floor((by+1)/19) == (by+1)/19)  then
         local tile = map.palette[tile_n].n
