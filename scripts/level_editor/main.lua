@@ -33,15 +33,17 @@ function update_map_edit(dt)
     end
 
     --switch betwin tiles
-    tile_n = mod_plus_1(tile_n + wheel, #map.palette)
-    if not (wheel == 0) then
-        nb_variente=1
+    if not(button_down("alt", 1,input_device)) then
+        tile_n = mod_plus_1(tile_n + wheel, #map.palette)
+        if not (wheel == 0) then
+            nb_variente=1
+        end
     end
 
     --switch betwin varients of tiles
-    if button_pressed("middlems", 1,input_device) then --"middlems"
+    if button_down("alt", 1,input_device) then --button_pressed("middlems", 1,input_device)
         if map.palette[tile_n].spr[1] then
-            nb_variente = mod_plus_1(nb_variente + 1, #map.palette[tile_n].spr)
+            nb_variente = mod_plus_1(nb_variente + wheel, #map.palette[tile_n].spr)
         end
     end
 
