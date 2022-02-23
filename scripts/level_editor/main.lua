@@ -41,22 +41,25 @@ function update_map_edit(dt)
     end
 
     --switch betwin varients of tiles
-    if button_down("alt", 1,input_device) then --button_pressed("middlems", 1,input_device)
+    if button_down("alt", 1,input_device) then
         if map.palette[tile_n].spr[1] then
             nb_variente = mod_plus_1(nb_variente + wheel, #map.palette[tile_n].spr)
         end
     end
 
     local bx,by=floor(mx/block_width), floor(my/block_width)
+    local ongrid = map.grid[by] and map.grid[by][bx]
+    local notvoid = ongrid and not(map.grid[by][bx][1]==0)
+
     --fast select 
-    if button_down("middlems", 1,input_device) then
+    if button_down("middlems", 1,input_device) and ongrid and notvoid then
         tile_n = map.grid[by][bx][1]
         nb_variente = map.grid[by][bx][2]
     end
 
     --place block with left click
     
-    if button_down("fire", 1,input_device) and map.grid[floor(by)] and map.grid[floor(by)][floor(bx)] and not(floor((by+1)/19) == (by+1)/19)  then
+    if button_down("fire", 1,input_device) and ongrid and notvoid then --not(floor((by+1)/19) == (by+1)/19)
         local tile = map.palette[tile_n].n
         map:set_tile(bx,by, tile_n, nb_variente)
 
