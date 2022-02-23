@@ -51,7 +51,8 @@ function init_game_main(self)
 	pickups = make_pickups()
 	
 	map = init_map(600, 300)
-	map:generate_map(love.math.random()*40000)
+	seed = love.math.random()*40000
+	map:generate_map(seed)
 
 	bullets = {}
 	_shot = {}
