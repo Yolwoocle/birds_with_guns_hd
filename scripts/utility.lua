@@ -17,9 +17,10 @@ magenta = {1,0,1}
 white = {1,1,1}
 black = {0,0,0}
 
-function draw_centered(spr, x, y, r, sx, sy, ox, oy)
+function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
 	local w = spr:getWidth() or 0
 	local h = spr:getHeight() or 0
+	local col = color or {1,1,1}
 	if spr == nil then spr = spr_missing end 
 
 	if (camera.x-w < x) and (x < camera.x+window_w+w) 
@@ -34,9 +35,24 @@ function draw_centered(spr, x, y, r, sx, sy, ox, oy)
 
 		ox = floor(ox + spr:getWidth()/2)
 		oy = floor(oy + spr:getHeight()/2)
-
+		love.graphics.setColor(col)
 		love.graphics.draw(spr, x, y, r, sx, sy, ox, oy)
+		love.graphics.setColor(1,1,1)
 	end
+end
+
+function draw_centered_outline(spr, x, y, r, sx, sy, thiccness, color)
+
+	draw_centered(spr, x, y, r, sx, sy, thiccness ,0, color)
+	draw_centered(spr, x, y, r, sx, sy, -thiccness,0, color)
+	draw_centered(spr, x, y, r, sx, sy, 0, thiccness, color)
+	draw_centered(spr, x, y, r, sx, sy, 0,-thiccness, color)
+
+	draw_centered(spr, x, y, r, sx, sy, thiccness ,thiccness , color)
+	draw_centered(spr, x, y, r, sx, sy,-thiccness ,thiccness , color)
+	draw_centered(spr, x, y, r, sx, sy, thiccness ,-thiccness, color)
+	draw_centered(spr, x, y, r, sx, sy,-thiccness ,-thiccness, color)
+
 end
 
 function circ_color(mode,x,y,radius,col)
