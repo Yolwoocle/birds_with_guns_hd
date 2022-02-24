@@ -113,7 +113,7 @@ end
 
 function shoot_gun(self)
 	self.ammo = self.ammo - 1
-	self.cooldown_timer = self.cooldown
+	self.cooldown_timer = self.cooldown+ (self.burst*self.burstdt)-self.burstdt
 end
 
 function default_shoot(g,p)

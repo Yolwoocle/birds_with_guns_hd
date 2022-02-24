@@ -25,16 +25,29 @@ function is_picked(self, obj)
 		switch_weapon(self , obj)
 	elseif self.type == "modifier" then
 		self.delete = true
-		local rnd = math.random(1,#modifiers)
-		obj.gun[modifiers[rnd][1]] = obj.gun[modifiers[rnd][1]] + modifiers[rnd][2]
-		debugg = modifiers[rnd][1]
+		local modif_lis = modifiers[self.q]
+		local rnd = math.random(1,#modif_lis)
+
+		if obj.gun.type == "laser" and love.math.random() <= 0.5 then 
+			modif_lis = modifiers[4]
+		end
+
+		if modif_lis[rnd][3] then
+			obj.gun[modif_lis[rnd][1]] = obj.gun[modif_lis[rnd][1]] * modif_lis[rnd][2]
+		else
+			obj.gun[modif_lis[rnd][1]] = obj.gun[modif_lis[rnd][1]] + modif_lis[rnd][2]
+		end
+
+		debugg = modif_lis[rnd][1]
+
 	end
 end
 
-modifiers = {{"damage",.5},{"bounce",1},{"bullet_spd",50},{"cooldown",-0.1},{"max_ammo",50},{"burst",1},{"burstdt",-0.05},
-{"bullet_life",0.2},{"laser_length",50},{"nbshot",1},{"scattering",-0.1},{"spread",-0.1},{"damge_tick",-0.05},{"scale",.25},{"knockback",100}}
+modifiers = {{{"damage",.5},{"bounce",1},{"burst",1},{"nbshot",1}} , {{"bullet_spd",50},{"knockback",50},{"cooldown",0.85,"multi"},{"burstdt",0.85,"multi"}} , 
+			 {{"max_ammo",50},{"bullet_life",0.1},{"scale",.25}} , {{"laser_length",50},{"damge_tick",.85,"multi"}}}
 --spdslow
 --oscale
+--{"scattering",-0.1},{"spread",-0.1},
 
 function spawn_pickup(self, type, q, x, y)
 	local pick = {
@@ -77,12 +90,8 @@ function spawn_random_loot(self, x, y)
 	elseif love.math.random() <= 0.1 then
 		self:spawn("ammo", 0.25, x, y)
 
-	elseif love.math.random() <= 0.1 then
-		self:spawn("modifier", 1, x, y)
-	elseif love.math.random() <= 0.1 then
-		self:spawn("modifier", 2, x, y)
-	elseif love.math.random() <= 0.1 then
-		self:spawn("modifier", 3, x, y)
+	elseif love.math.random() <= 0.5 then
+		self:spawn("modifier", math.random(1,3), x, y)
 	end
 end
 
@@ -98,5 +107,6 @@ end
 function draw_pickups(self)
 	for i,pick in ipairs(self.table) do
 		draw_centered(pick.spr, pick.x, pick.y)
+		love.graphics.print(pick.q , pick.x, pick.y)
 	end
 end
