@@ -20,7 +20,7 @@ function make_gun(a)
 		--spr_bullet
 		--spr_laser 
 		--spr_rocket
-		--spr_bullet
+		--spr_bullet --9
 		damage 		  = a.damage		or 1,
 		category	  = a.category		or "instant",
 		bounce 		  = a.bounce		or 0,
@@ -32,7 +32,7 @@ function make_gun(a)
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
 		burst	      = a.burst	    or 1, 
-		burstdt      = a.burstdt	    or .5, 
+		burstdt       = a.burstdt	    or .5, 
 		bullet_life	  = a.bullet_life   or 2,	--bullet_life
 		laser_length  = a.laser_length  or 100,
 		nbshot 	      = a.nbshot	    or 1, --??????

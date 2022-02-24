@@ -23,8 +23,18 @@ function is_picked(self, obj)
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
 		switch_weapon(self , obj)
+	elseif self.type == "modifier" then
+		self.delete = true
+		local rnd = math.random(1,#modifiers)
+		obj.gun[modifiers[rnd][1]] = obj.gun[modifiers[rnd][1]] + modifiers[rnd][2]
+		debugg = modifiers[rnd][1]
 	end
 end
+
+modifiers = {{"damage",.5},{"bounce",1},{"bullet_spd",50},{"cooldown",-0.1},{"max_ammo",50},{"burst",1},{"burstdt",-0.05},
+{"bullet_life",0.2},{"laser_length",50},{"nbshot",1},{"scattering",-0.1},{"spread",-0.1},{"damge_tick",-0.05},{"scale",.25},{"knockback",100}}
+--spdslow
+--oscale
 
 function spawn_pickup(self, type, q, x, y)
 	local pick = {
@@ -51,6 +61,9 @@ function spawn_pickup(self, type, q, x, y)
 	elseif type == "gun" then
 		pick.gun = copy(q)
 		pick.spr = q.spr
+	elseif type == "modifier" then
+		pick.q = q
+		pick.spr = spr_missing
 
 	end
 	table.insert(self.table, pick)
@@ -59,15 +72,23 @@ end
 function spawn_random_loot(self, x, y)
 	if love.math.random() <= 0.1 then
 		self:spawn("gun", guns.revolver, x, y)
---		self:spawn("ammo", 0.25, x, y)
 	elseif love.math.random() <= 0.1 then
 		self:spawn("life", 2, x, y)
 	elseif love.math.random() <= 0.1 then
+		self:spawn("ammo", 0.25, x, y)
+
+	elseif love.math.random() <= 0.1 then
+		self:spawn("modifier", 1, x, y)
+	elseif love.math.random() <= 0.1 then
+		self:spawn("modifier", 2, x, y)
+	elseif love.math.random() <= 0.1 then
+		self:spawn("modifier", 3, x, y)
 	end
 end
 
 function update_pickups(self, dt)
-	for i,pick in ipairs(self.table) do
+	for i = #self.table, 1, -1 do
+		pick = self.table[i]
 		if pick.delete then
 			table.remove(self.table, i)
 		end
