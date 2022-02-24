@@ -253,8 +253,68 @@ function generate_map(self, seed)
 		rng = love.math.newRandomGenerator()
 	end
 
-	self:write_room(self.lvl1_rooms[1], 0, 0, rng)
-	self:generate_path(rng, self.lvl1_rooms, 30, 0, 2,2, 2)
+	local layout = {}
+	local layout_len = 12
+	local layout_height = 12
+	for iy=0, layout_height-1 do
+		layout[iy] = {}
+		for ix=0,layout_len-1 do
+			layout[iy][ix] = 0 
+		end
+	end
+
+	generate_path(self, rng, self.lvl1_rooms, 0, 0, 5, 5)
+
+--[[
+	local mainpath_y = 5
+	for ix=0,layout_len-1 do
+		--[[
+			               Branch       + Dead end
+			              +-------+     |
+			Main path ====+=======+=====+=======
+		]]--[[
+		layout[mainpath_y][ix] = {1,1,0,0} --Left Right Up Down // 1=open 0=walled
+
+		-- Branches
+		if not debugg then  debugg = ""  end
+		if rng:random() < 1/3 then 	
+			local pathlen = rng:random(2,5)
+			local branch_y = mainpath_y + 1
+			
+			layout[branch_y][ix] = {0,1,1,0}
+			for i=1,pathlen-2 do
+				layout[branch_y][i] = {1,1,0,0}
+			end
+			layout[branch_y][ix+pathlen] = {1,0,1,0}
+		end
+	end
+
+	print_table(layout)
+	
+	local rooms = self.lvl1_rooms --Please modify depending on level
+	
+	-- Use the layout to generate the level
+	-- We get all possible rooms and shuffle them 
+	local room_ids = {}
+	for i=1, #rooms do
+		table.insert(room_ids, i)
+	end
+	shuffle(room_ids, rng)
+	
+	local i = 1
+	local w,h = 30, 16
+	for iy=0, layout_height-1 do
+		for ix=0,layout_len-1 do
+			
+			if layout[iy][ix] ~= 0 then 
+				local room = rooms[room_ids[i] ]
+				if room then
+					self:write_room(room, ix*w, iy*h, rng)
+				end
+			end
+		end
+	end
+]]
 end
 
 function generate_path(self, rng, rooms, x, y, nb_room_min, nb_room_max, table_min_index, table_max_index)
