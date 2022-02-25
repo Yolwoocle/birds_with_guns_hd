@@ -23,8 +23,31 @@ function is_picked(self, obj)
 		obj.life = obj.life + self.q
 	elseif self.type == "gun" then
 		switch_weapon(self , obj)
+	elseif self.type == "modifier" then
+		self.delete = true
+		local modif_lis = modifiers[self.q]
+		local rnd = math.random(1,#modif_lis)
+
+		if obj.gun.type == "laser" and love.math.random() <= 0.5 then 
+			modif_lis = modifiers[4]
+		end
+
+		if modif_lis[rnd][3] then
+			obj.gun[modif_lis[rnd][1]] = obj.gun[modif_lis[rnd][1]] * modif_lis[rnd][2]
+		else
+			obj.gun[modif_lis[rnd][1]] = obj.gun[modif_lis[rnd][1]] + modif_lis[rnd][2]
+		end
+
+		debugg = modif_lis[rnd][1]
+
 	end
 end
+
+modifiers = {{{"damage",.5},{"bounce",1},{"burst",1},{"nbshot",1}} , {{"bullet_spd",50},{"knockback",50},{"cooldown",0.85,"multi"},{"burstdt",0.85,"multi"}} , 
+			 {{"max_ammo",50},{"bullet_life",0.1},{"scale",.25}} , {{"laser_length",50},{"damge_tick",.85,"multi"}}}
+--spdslow
+--oscale
+--{"scattering",-0.1},{"spread",-0.1},
 
 function spawn_pickup(self, type, q, x, y)
 	local pick = {
@@ -51,6 +74,9 @@ function spawn_pickup(self, type, q, x, y)
 	elseif type == "gun" then
 		pick.gun = copy(q)
 		pick.spr = q.spr
+	elseif type == "modifier" then
+		pick.q = q
+		pick.spr = spr_missing
 
 	end
 	table.insert(self.table, pick)
@@ -59,15 +85,19 @@ end
 function spawn_random_loot(self, x, y)
 	if love.math.random() <= 0.1 then
 		self:spawn("gun", guns.revolver, x, y)
---		self:spawn("ammo", 0.25, x, y)
 	elseif love.math.random() <= 0.1 then
 		self:spawn("life", 2, x, y)
 	elseif love.math.random() <= 0.1 then
+		self:spawn("ammo", 0.25, x, y)
+
+	elseif love.math.random() <= 0.5 then
+		self:spawn("modifier", math.random(1,3), x, y)
 	end
 end
 
 function update_pickups(self, dt)
-	for i,pick in ipairs(self.table) do
+	for i = #self.table, 1, -1 do
+		pick = self.table[i]
 		if pick.delete then
 			table.remove(self.table, i)
 		end
@@ -77,5 +107,6 @@ end
 function draw_pickups(self)
 	for i,pick in ipairs(self.table) do
 		draw_centered(pick.spr, pick.x, pick.y)
+		love.graphics.print(pick.q , pick.x, pick.y)
 	end
 end
