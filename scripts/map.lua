@@ -57,7 +57,11 @@ function init_map(w, h)
 		}),
 		make_tile(10, '_', spr_ground_wood, {
 			is_solid=false, is_destructible=false, is_transparent=false,
-		})
+		}),
+		make_tile(11, '=', spr_missing, {
+			is_solid=false, is_destructible=false, is_transparent=false,
+			tile_to_write_when_placed=2,
+		}),
 	}
 	map.tile_size = map.palette[0].spr:getWidth() * pixel_scale
 
@@ -77,7 +81,7 @@ function init_map(w, h)
 	map.generate_path = generate_path
 	map.spawn_mob = tile_spawn_mob
 	
-	map.lvl1_rooms = map:load_from_file("lvl1_rooms_1.txt")
+	map.lvl1_rooms = map:load_from_file("lvl1_rooms.txt")
 	map.lvl1_rooms_branch = map:load_from_file("lvl1_rooms_branch.txt")
 	--map.lvl_arena = map:load_from_file("arena.txt")
 	
@@ -110,20 +114,18 @@ function draw_map(self)
 		end
 	end
 end
+
 function draw_with_y_sorted_objs(self, objs)
 	-- Draw non-solid floor
 	self:draw()
 
 	-- Draw solid walls with y-sorting
-	local x1 = floor(camera.x / block_width)
-	local x2 = floor((camera.x + window_w) / block_width )
-	local y1 = floor(camera.y / block_width)
-	local y2 = floor((camera.y + window_h + 16) / block_width )
+	local x1, x2, y1, y2 = camera:get_bounds()
 	x1 = clamp(0, x1, self.width-1)
 	x2 = clamp(0, x2, self.width-1)
 	y1 = clamp(0, y1, self.height-1)
 	y2 = clamp(0, y2, self.height-1)
-	
+
 	local i = 1
 	for y = y1, y2 do
 		for x = x1, x2 do
@@ -136,7 +138,7 @@ function draw_with_y_sorted_objs(self, objs)
 			end
 		end
 
-		local next_y = (y+1)*46
+		local next_y = (y+1)*block_width
 		while i <= #objs and objs[i].y <= next_y do
 			objs[i]:draw()
 			i=i+1
@@ -164,10 +166,10 @@ function make_tile(n, symb, spr, a)
 		spr = spr[1]
 	end
 	if not a.ox then 
-		tile.ox = block_width - spr:getWidth()
+		tile.ox = spr:getWidth() - block_width
 	end
 	if not a.oy then 
-		tile.oy = block_width - spr:getHeight()
+		tile.oy = spr:getHeight() - block_width 
 	end
 	return tile
 end
@@ -219,12 +221,17 @@ function set_tile(self, x, y, elt, var)
 	y = floor(y)
 	var = var or 1
 	if x<0 or self.width<x or y<0 or self.height<y then
-		error("set_tile coordinates outside map bounds")
+		error("set_tile coordinates outside map bounds")--TODO: we should probably log that instead of crashing
+	end
+
+	if elt == 11 then  
+		elt = 2
 	end
 
 	self.grid[floor(y)][floor(x)][1] = elt
 	self.grid[floor(y)][floor(x)][2] = var
-end 
+end
+
 function get_tile(self, x, y)
 	local default = self.palette[0]
 	if x == nil or y == nil 
@@ -237,7 +244,7 @@ function get_tile(self, x, y)
 	local tile = self.grid[floor(y)][floor(x)][1]
 	tile = self.palette[tile]
 
-	if tile == nil then return default end --error(tostr(a)) end
+	if tile == nil then  return default  end --error(tostr(a)) end
 	return tile
 end	
 function is_solid(self, x, y)
@@ -276,7 +283,7 @@ function generate_map(self, seed)
 	local layout = table_2d_0(layout_width, layout_height, 0)
 
 	-- Generate randomly shuffled list of all rooms
-	local rooms_source = self.lvl1_rooms --Please modify depending on level
+	local rooms_source = self.lvl1_rooms --TODO: modify depending on level
 	local rooms = {}
 	for i=2, #rooms_source do --We don't include 1 bc it's the starting area
 		table.insert(rooms, rooms_source[i]) 
@@ -295,17 +302,16 @@ function generate_map(self, seed)
 	-- Starting area
 	self:write_room(rooms_source[1], 0, mainpath_y*h, rng)
 
-	--[[
-						Branch   + Dead end
-					  +-------+	 |
-		Main path ====+=======+=====+=======
-	--]]
+	--					Branch   + Dead end
+	--				  +-------+	 |
+	--	Main path ====+=======+=====+=======
+	--
 	-- Generate branches below and above
 	for dir = -1, 1, 2 do 
-		local branch_y = mainpath_y + random_sample{-1, 1}
-		local ix = 0
+		local branch_y = mainpath_y + dir
+		local ix = rng:random(1,4)
 		while ix < layout_width do
-			if rng:random() < 0.7 and layout[branch_y][ix] then
+			if layout[branch_y][ix] then
 				local pathlen = rng:random(2,5)
 
 				-- Generate a branch
@@ -322,22 +328,43 @@ function generate_map(self, seed)
 				end
 
 				-- Openings
-				local start_x, start_y = ix*w, branch_y*h
-				local end_y = branch_y*(h+1) - 1 
+				--(upper_x, upper_y)
+				--  X---------
+				--  |        |
+				--  X---==----
+				--(upper_x, bottom_y)
+				---- Entrance
+				local upper_x = ix*w 
+				local upper_y = branch_y*h
+				local bottom_y = branch_y*h + h - 1 
 				if dir == -1 then
-					self:set_tile(start_x+14, end_y, 1)
-					self:set_tile(start_x+14, end_y+1, 1)
-					self:set_tile(start_x+15, end_y, 1)
-					self:set_tile(start_x+15, end_y+1, 1)
+					self:set_tile(upper_x+14, bottom_y,   1)
+					self:set_tile(upper_x+14, bottom_y+1, 1)
+					self:set_tile(upper_x+15, bottom_y,   1)
+					self:set_tile(upper_x+15, bottom_y+1, 1)
 				else
-					self:set_tile(start_x+14, start_y, 1)
-					self:set_tile(start_x+14, start_y-1, 1)
-					self:set_tile(start_x+15, start_y, 1)
-					self:set_tile(start_x+15, start_y-1, 1)
+					self:set_tile(upper_x+14, upper_y,   1)
+					self:set_tile(upper_x+14, upper_y-1, 1)
+					self:set_tile(upper_x+15, upper_y,   1)
+					self:set_tile(upper_x+15, upper_y-1, 1)
 				end
+				---- Exit 
+				upper_x = (ix+pathlen-1)*w
+				if dir == -1 then
+					self:set_tile(upper_x+14, bottom_y,   1)
+					self:set_tile(upper_x+14, bottom_y+1, 1)
+					self:set_tile(upper_x+15, bottom_y,   1)
+					self:set_tile(upper_x+15, bottom_y+1, 1)
+				else
+					self:set_tile(upper_x+14, upper_y,   1)
+					self:set_tile(upper_x+14, upper_y-1, 1)
+					self:set_tile(upper_x+15, upper_y,   1)
+					self:set_tile(upper_x+15, upper_y-1, 1)
+				end
+
 				ix = ix + pathlen
 			end
-			ix = ix + 1
+			ix = ix + rng:random(1,4)
 		end
 	end
 end

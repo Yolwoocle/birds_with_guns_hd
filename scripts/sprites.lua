@@ -206,6 +206,7 @@ sprs_seat = load_image_table("tiles/seat_", 4)
 --spr_wall_dum = load_image("scrapped/dummy_wall")
 sprs_box = load_image_table("tiles/box_", 3)
 sprs_floor_concrete = load_image_table("tiles/tile_concrete_", 5)
+sprs_floor_carpet = load_image_table("tiles/tile_carpet_", 5)
 
 spr_chain = load_image("tiles/chain")
 spr_floor_metal = load_image("tiles/floor_metal")

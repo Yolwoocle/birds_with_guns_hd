@@ -6,7 +6,7 @@ require "scripts/gun_list"
 require "scripts/collision"
 require "scripts/settings"
 
-function init_player(n,x,y, spr, controle,nbcontroller)
+function init_player(n,x,y, spr, controle, nbcontroller)
 	local player = {
 		n = n,
 		x = x or 32,
@@ -111,7 +111,7 @@ function update_player(self, dt)
 		-- Collisions
 		--self.dx = round_if_near_zero(self.dx)
 		--self.dy = round_if_near_zero(self.dy)
-		--collide_object(self, 0.01)
+		collide_object(self, 0.01)
 		--collision_response(self, map)
 		
 		-- Apply movement 
@@ -194,6 +194,10 @@ function update_player(self, dt)
 	hud.elements.gun_list.sprs = self.guns
 	local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6
 	hud.elements.gun_2.x = x
+
+	if love.keyboard.isDown("t") then  camera:set_scale(0.2,0.2)  
+	else camera:set_scale(1,1)
+	end 
 end
 
 function draw_player(self)

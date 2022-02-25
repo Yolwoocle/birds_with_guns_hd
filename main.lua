@@ -18,6 +18,7 @@ require "scripts/pickup"
 require "scripts/particles"
 require "scripts/waves"
 require "scripts/level_editor/main"
+gifcat = require("gifcat")
 
 function love.load()
 	keymode = "keyboard"
@@ -26,6 +27,8 @@ function love.load()
 	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
+	
+	gifcat.init()
 
 	res_1080p_4 = 480, 270
 	res_1080p_3 = 640, 360
@@ -93,6 +96,7 @@ function love.load()
 end
 
 function love.update(dt)
+	gifcat.update(dt)
 	updatejoystick()
 	if map_edit_mode then
 		update_map_edit(dt)
@@ -121,28 +125,67 @@ function love.draw()
     love.graphics.origin()
     love.graphics.scale(1, 1)
     love.graphics.draw(canvas, screen_ox, screen_oy, 0, screen_scale, screen_scale)
+
+	-- Catpure GIFs
+	capture_clip_frame()
+
+--[[ debug print map
+	local cols = {[0]={0,0,0,0}, [1]=black, [2]=white, [3]=brown, [4]=magenta,
+	[5]=grey, [6]=cyan, [7]=orange, [8]=green, [9]=red, [10]={0.1,0.1,0.1},
+	[11]=magenta}
+	for iy = 0, map.height-1 do
+	for ix = 0, map.width-1 do
+		local n = map:get_tile(ix,iy).n
+		local s = 3
+		if n~= 0 then 
+			rect_color("fill",ix*s,iy*s,s,s, cols[n])
+		end
+	end
+	end
+--]]
 end
 
 function love.keypressed(key)
-
-	if key == "f5" then
-		--remove for release
-		love.event.quit("restart")
-	elseif key == "escape" then
-		--remove for release
-		love.event.quit()
-	
+	if key == "f1" then
 	elseif key == "f2" then
 		if canvas then
 			screenshot()
 		else
 			notification = "Could not save screenshot: no canvas"
 		end
+	
 	elseif key == "f3" then
 		screenshot_clip()
+		notification = "Recording GIF..."
+	elseif key == "f4" then
+		--remove for release
+		love.event.quit()
+	elseif key == "f5" then
+		--remove for release
+		love.event.quit("restart")
+
 	elseif key == "f6" then
 		toggle_map_edit()
 	end
 end
 
+function love.keyreleased(key)
+	if key == "f3" then
+		notification = "Finished recording GIF."
+		-- Stop writing to the gif. This finalizes the file and closes it.
+		curgif:close()
+		-- Set to nil so our program knows we aren't writing a gif.
+		curgif = nil
+	end
+end
 
+
+
+
+function love.quit()
+	gifcat.close()
+end
+
+function love.threaderror(thread, errorstr)
+	print("Thread error!\n"..errorstr)
+end

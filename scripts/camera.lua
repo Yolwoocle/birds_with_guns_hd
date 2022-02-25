@@ -33,6 +33,7 @@ function init_camera()
 		set_pos = camera_set_pos,
 		set_target = camera_set_target,
 		set_scale = camera_set_scale,
+		get_bounds = get_bounds,
 	}
 	return camera
 end
@@ -79,7 +80,7 @@ end
 
 function draw_camera(self, dt)
 	-- Put this in love.draw, while update_camera should be in update. 
-	love.graphics.translate(-self.x, -self.y)
+	love.graphics.translate(-self.x*self.sx, -self.y*self.sy)
 	love.graphics.scale(self.sx, self.sy)
 end
 
@@ -109,4 +110,13 @@ end
 
 function shake_camera(self, r)
 	self.shake_rad = r
+end
+
+function get_bounds(self)
+	local x1 = (self.x / block_width) 
+	local x2 = ((self.x + window_w) / block_width ) 
+	local y1 = (self.y / block_width) 
+	local y2 = ((self.y + window_h + 16) / block_width ) 
+
+	return floor(x1), floor(x2), floor(y1), floor(y2)
 end

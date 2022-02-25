@@ -25,19 +25,24 @@ function screenshot()
 end
 
 function screenshot_clip()
-	--[[
-	local cmd = io.popen('clip-copyfile','w')
-	cmd:write(path)
-	cmd:close()--]] 
-	
-	--echo "<img src='data:image/png;base64,"$(base64 -w0 "$TMP")"' />" | \
-	--xclip -selection clipboard -t text/html || screenshotfail
+	curgif = gifcat.newGif(os.time()..".gif",window_w*gif_scale, window_h*gif_scale)
 
-	--local filepath, imgdata, imgpng = screenshot()
+	-- Optional method to just print out the progress of the gif
+	-- Thanks to https://github.com/maxiy01/gifcat 
+	curgif:onUpdate(function(gif,curframes,totalframes)
+		print(string.format("Progress: %.2f%% (%d/%d)",gif:progress()*100,curframes,totalframes))
+	end)
+	curgif:onFinish(function(gif,totalframes)
+		print(totalframes.." frames written")
+	end)
+end
 
-	--local img_str = imgdata:getString()
-	--local txt = love.system.getClipboardText( )
+function capture_clip_frame()
+	if curgif then
+		-- Save a frame to our gif.
+		love.graphics.captureScreenshot(function(screenshot) curgif:frame(screenshot) end)
 
-	--local encoded_img = love.data.encode("string", "base64", img_str)
-	--love.system.setClipboardText(encoded_img)
+		-- Show a little recording icon in the upper right hand corner. This will
+		--   not get shown in the gif because it is displayed after the call to
+	end
 end
