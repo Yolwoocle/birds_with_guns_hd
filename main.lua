@@ -80,9 +80,6 @@ function love.load()
 	--end
 	pickups = make_pickups()
 	
-	map = init_map(600, 100)
-	map:generate_map(love.math.random()*40000)
-
 	bullets = {}
 	_shot = {}
 	

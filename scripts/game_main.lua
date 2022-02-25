@@ -40,7 +40,7 @@ function init_game_main(self)
 		end
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
-		local ply = init_player(i, 84, 90+i*16, birds_spr[i], controle, nbcontroller)
+		local ply = init_player(i, 84, 18*85+i*16, birds_spr[i], controle, nbcontroller)
 		table.insert(player_list, ply)
 		player_list[i].anim_walk = birds_spr[i]
 		player_list[i].anim_idle = birds_spr[i]

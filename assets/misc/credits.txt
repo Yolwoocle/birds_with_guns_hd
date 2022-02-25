@@ -4,17 +4,20 @@ Gaspard Delpiano-Manfrini ☻
 
 # Art, animations
 Léo Bernard
--Help :
-Guillaume Tran
+With help from Guillaume Tran
 
 # Special thanks
-Azure
 Simon T.
+Azure
 The lovely PICO-8 community
 
 # Assets
 Kenney assets: https://www.kenney.nl/
 
+Font: 
 Eeve Somepx
 @somepx
 info@somepx.com
+
+# Sound effects
+Sound effects obtained from https://www.zapsplat.com/

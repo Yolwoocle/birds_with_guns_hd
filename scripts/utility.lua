@@ -316,3 +316,29 @@ function randint(a,b, rng)
 		return math.floor(love.math.random() * b-a) + a
 	end
 end
+
+function table_2d(w,h,val)
+	local t = {}
+	for i=1,h do
+		t[i] = {}
+		for j=1,w do
+			t[i][j] = val
+		end
+	end
+	return t
+end
+
+function table_2d_0(w,h,val)
+	local t = {}
+	for i=0,h-1 do
+		t[i] = {}
+		for j=0,w-1 do
+			t[i][j] = val
+		end
+	end
+	return t
+end
+
+function random_sample(t)
+	return t[love.math.random(1,#t)]
+end

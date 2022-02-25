@@ -33,6 +33,112 @@ spr_bar_small_ammo = load_image("ui/small_ammo_bar")
 spr_bar_small_life = load_image("ui/small_life_bar") 
 spr_bar_small_empty = load_image("ui/small_empty_bar") 
 
+-- Button prompts
+sprs_buttons = {}
+sprs_buttons.keyboard = {
+	["a"] = load_image("ui/buttons/keyboard/a"),
+	["b"] = load_image("ui/buttons/keyboard/b"),
+	["c"] = load_image("ui/buttons/keyboard/c"),
+	["d"] = load_image("ui/buttons/keyboard/d"),
+	["e"] = load_image("ui/buttons/keyboard/e"),
+	["f"] = load_image("ui/buttons/keyboard/f"),
+	["g"] = load_image("ui/buttons/keyboard/g"),
+	["h"] = load_image("ui/buttons/keyboard/h"),
+	["i"] = load_image("ui/buttons/keyboard/i"),
+	["j"] = load_image("ui/buttons/keyboard/j"),
+	["k"] = load_image("ui/buttons/keyboard/k"),
+	["l"] = load_image("ui/buttons/keyboard/l"),
+	["m"] = load_image("ui/buttons/keyboard/m"),
+	["n"] = load_image("ui/buttons/keyboard/n"),
+	["o"] = load_image("ui/buttons/keyboard/o"),
+	["p"] = load_image("ui/buttons/keyboard/p"),
+	["q"] = load_image("ui/buttons/keyboard/q"),
+	["r"] = load_image("ui/buttons/keyboard/r"),
+	["s"] = load_image("ui/buttons/keyboard/s"),
+	["t"] = load_image("ui/buttons/keyboard/t"),
+	["u"] = load_image("ui/buttons/keyboard/u"),
+	["v"] = load_image("ui/buttons/keyboard/v"),
+	["w"] = load_image("ui/buttons/keyboard/w"),
+	["x"] = load_image("ui/buttons/keyboard/x"),
+	["y"] = load_image("ui/buttons/keyboard/y"),
+	["z"] = load_image("ui/buttons/keyboard/z"),
+	["0"] = load_image("ui/buttons/keyboard/0"),
+	["1"] = load_image("ui/buttons/keyboard/1"),
+	["2"] = load_image("ui/buttons/keyboard/2"),
+	["3"] = load_image("ui/buttons/keyboard/3"),
+	["4"] = load_image("ui/buttons/keyboard/4"),
+	["5"] = load_image("ui/buttons/keyboard/5"),
+	["6"] = load_image("ui/buttons/keyboard/6"),
+	["7"] = load_image("ui/buttons/keyboard/7"),
+	["8"] = load_image("ui/buttons/keyboard/8"),
+	["9"] = load_image("ui/buttons/keyboard/9"),
+	
+	["space"] = load_image("ui/buttons/keyboard/space"),
+	["!"] = load_image("ui/buttons/keyboard/exclamation"),
+	["\""] = load_image("ui/buttons/keyboard/double_quote"),
+	["#"] = load_image("ui/buttons/keyboard/hash"),
+	["$"] = load_image("ui/buttons/keyboard/dollar"),
+	["&"] = load_image("ui/buttons/keyboard/ampersand"),
+	["'"] = load_image("ui/buttons/keyboard/apostrophe"),
+	["("] = load_image("ui/buttons/keyboard/left_parenthesis"),
+	[")"] = load_image("ui/buttons/keyboard/right_parenthesis"),
+	["*"] = load_image("ui/buttons/keyboard/asterisk"),
+	["+"] = load_image("ui/buttons/keyboard/plus"),
+	[","] = load_image("ui/buttons/keyboard/comma"),
+	["-"] = load_image("ui/buttons/keyboard/minus"),
+	["."] = load_image("ui/buttons/keyboard/period"),
+	["/"] = load_image("ui/buttons/keyboard/slash"),
+	[":"] = load_image("ui/buttons/keyboard/colon"),
+	[";"] = load_image("ui/buttons/keyboard/semicolon"),
+	["<"] = load_image("ui/buttons/keyboard/left_angle_bracket"),
+	["="] = load_image("ui/buttons/keyboard/equals"),
+	[">"] = load_image("ui/buttons/keyboard/right_angle_bracket"),
+	["?"] = load_image("ui/buttons/keyboard/question_mark"),
+	["@"] = load_image("ui/buttons/keyboard/at"),
+	["["] = load_image("ui/buttons/keyboard/left_bracket"),
+	["]"] = load_image("ui/buttons/keyboard/right_bracket"),
+	["\\"] = load_image("ui/buttons/keyboard/backslash"),
+	["^"] = load_image("ui/buttons/keyboard/caret"),
+	["_"] = load_image("ui/buttons/keyboard/underscore"),
+	["`"] = load_image("ui/buttons/keyboard/backtick"),
+	
+	["f1"] = load_image("ui/buttons/keyboard/f1"),
+	["f2"] = load_image("ui/buttons/keyboard/f2"),
+	["f3"] = load_image("ui/buttons/keyboard/f3"),
+	["f4"] = load_image("ui/buttons/keyboard/f4"),
+	["f5"] = load_image("ui/buttons/keyboard/f5"),
+	["f6"] = load_image("ui/buttons/keyboard/f6"),
+	["f7"] = load_image("ui/buttons/keyboard/f7"),
+	["f8"] = load_image("ui/buttons/keyboard/f8"),
+	["f9"] = load_image("ui/buttons/keyboard/f9"),
+	["f10"] = load_image("ui/buttons/keyboard/f10"),
+	["f11"] = load_image("ui/buttons/keyboard/f11"),
+	["f12"] = load_image("ui/buttons/keyboard/f12"),
+	
+	["return"] = load_image("ui/buttons/keyboard/return"),
+	["escape"] = load_image("ui/buttons/keyboard/esc"),
+	["backspace"] = load_image("ui/buttons/keyboard/backspace"),
+	["tab"] = load_image("ui/buttons/keyboard/tab"),
+	["capslock"] = load_image("ui/buttons/keyboard/capslock"),
+	["lgui"] = load_image("ui/buttons/keyboard/win"),
+	["rgui"] = load_image("ui/buttons/keyboard/win"),
+	["lctrl"] = load_image("ui/buttons/keyboard/lctrl"),
+	["rctrl"] = load_image("ui/buttons/keyboard/rctrl"),
+	["lshift"] = load_image("ui/buttons/keyboard/lshift"),
+	["rshift"] = load_image("ui/buttons/keyboard/rshift"),
+	["lalt"] = load_image("ui/buttons/keyboard/lalt"),
+	["ralt"] = load_image("ui/buttons/keyboard/ralt"),
+	["return"] = load_image("ui/buttons/keyboard/return"),
+	["delete"] = load_image("ui/buttons/keyboard/del"),
+	["end"] = load_image("ui/buttons/keyboard/end"),
+	
+	["left"] = load_image("ui/buttons/keyboard/arrow_left"),
+	["right"] = load_image("ui/buttons/keyboard/arrow_right"),
+	["up"] = load_image("ui/buttons/keyboard/arrow_up"),
+	["down"] = load_image("ui/buttons/keyboard/arrow_down"),
+}
+sprs_buttons.joystick = {}
+
 -- Players
 anim_pigeon_idle = {
 	load_image("players/pigeon/pigeon_idle_1"),
@@ -93,7 +199,7 @@ spr_ground_1 = load_image("tiles/floor_plain_1")
 spr_ground_wood = load_image("tiles/floor_wood_single")
 sprs_floor_wood_detail = load_image_table("scrapped/floor_wood_detail", 4, 2,2)
 sprs_shelf = load_image_table("tiles/shelf2_", 4)
-spr_door = load_image("tiles/door")
+spr_door = load_image("tiles/door_1")
 spr_pot_cactus = load_image("tiles/pot_cactus")
 sprs_seat = load_image_table("tiles/seat_", 4)
 

@@ -1,6 +1,20 @@
 require "scripts/utility"
 require "scripts/collision"
 
+function draw_3_slice_vertical(x, y, w, spr1, spr2, spr3)
+	love.graphics.draw(spr1, x, y)
+
+	local x2 = x + spr1:getWidth()
+	local s2 = w / spr2:getWidth()
+	love.graphics.draw(spr2, x, y, 0, s2, 1)
+	
+	x2 = x2 + spr2:getWidth()
+	love.graphics.draw(spr3, x, y)
+end
+
+---------------------------
+--DEPRECATED
+---------------------------
 function make_hud()
 	return {
 		elements = {},
@@ -167,3 +181,4 @@ function draw_imgs(self)
 		ix = ix + self.margin + spr:getWidth()
 	end
 end
+--]]

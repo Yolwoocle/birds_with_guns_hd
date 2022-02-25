@@ -17,7 +17,7 @@ function init_map(w, h)
 	map.update = update_map
 	map.draw = draw_map
 	map.draw_with_y_sorted_objs = draw_with_y_sorted_objs
-    map.chr_to_tile_number = chr_to_tile_number
+	map.chr_to_tile_number = chr_to_tile_number
 	map.palette = {
 		[0] = make_tile(0, ' ', spr_ground_dum, {
 			is_solid=true, is_destructible=false, is_transparent=false
@@ -42,7 +42,7 @@ function init_map(w, h)
 		}),
 		make_tile(6, 'H', sprs_shelf, {
 			is_solid=true, is_destructible=false, is_transparent=true,
-			type="multi_tile" 
+			type="multi_tile", oy=8,
 		}),
 		make_tile(7, '+', spr_door, {
 			is_solid=true, is_destructible=true, is_transparent=true, 
@@ -66,7 +66,7 @@ function init_map(w, h)
 	map.is_solid = is_solid
 	map.valid_tile = valid_tile
 	map.generate_map = generate_map
-    map.draw_room = draw_room
+	map.draw_room = draw_room
 	
 	map.rooms = {}
 	map.write_room = write_room
@@ -160,6 +160,15 @@ function make_tile(n, symb, spr, a)
 		draw = draw_tile,
 		get_random_var = get_random_var,
 	}
+	if type(spr) == "table" then
+		spr = spr[1]
+	end
+	if not a.ox then 
+		tile.ox = block_width - spr:getWidth()
+	end
+	if not a.oy then 
+		tile.oy = block_width - spr:getHeight()
+	end
 	return tile
 end
 function draw_tile(self, x, y, var, is_background_layer, floor_spr)
@@ -181,12 +190,12 @@ function draw_tile(self, x, y, var, is_background_layer, floor_spr)
 end
 
 function chr_to_tile_number(self,chr)
-    for i,tile in pairs(self.palette) do
-        if tile.symb == chr then
-            return tile.n
-        end
-    end
-    return 0
+	for i,tile in pairs(self.palette) do
+		if tile.symb == chr then
+			return tile.n
+		end
+	end
+	return 0
 end
 
 function get_random_var(self)
@@ -206,10 +215,15 @@ function get_random_var(self)
 end
 
 function set_tile(self, x, y, elt, var)
-	self.grid[floor(y)][floor(x)][1] = elt
-	if var then
-		self.grid[floor(y)][floor(x)][2] = var
+	x = floor(x)
+	y = floor(y)
+	var = var or 1
+	if x<0 or self.width<x or y<0 or self.height<y then
+		error("set_tile coordinates outside map bounds")
 	end
+
+	self.grid[floor(y)][floor(x)][1] = elt
+	self.grid[floor(y)][floor(x)][2] = var
 end 
 function get_tile(self, x, y)
 	local default = self.palette[0]
@@ -236,6 +250,7 @@ function valid_tile(self, tile)
 	if tile == nil then  return false  end 
 	return 1 <= tile and tile <= #self.palette 
 end
+
 function update_map(self)
 
 end
@@ -246,75 +261,85 @@ end
 
 function generate_map(self, seed)
 	-- The default seed in LÖVE 11.x is the following low/high pair: 0xCBBF7A44, 0x0139408D
+	-- Init random number generator
 	local rng
 	if seed then
 		rng = love.math.newRandomGenerator(seed)  
 	else 
 		rng = love.math.newRandomGenerator()
 	end
+	--generate_path(self, rng, self.lvl1_rooms, 0, 0, 5, 5)
 
-	local layout = {}
-	local layout_len = 12
+	-- Init layout table
+	local layout_width = 12
 	local layout_height = 12
-	for iy=0, layout_height-1 do
-		layout[iy] = {}
-		for ix=0,layout_len-1 do
-			layout[iy][ix] = 0 
-		end
+	local layout = table_2d_0(layout_width, layout_height, 0)
+
+	-- Generate randomly shuffled list of all rooms
+	local rooms_source = self.lvl1_rooms --Please modify depending on level
+	local rooms = {}
+	for i=2, #rooms_source do --We don't include 1 bc it's the starting area
+		table.insert(rooms, rooms_source[i]) 
 	end
+	shuffle(rooms)
 
-	generate_path(self, rng, self.lvl1_rooms, 0, 0, 5, 5)
-
---[[
+	-- Write main path
 	local mainpath_y = 5
-	for ix=0,layout_len-1 do
-		--[[
-			               Branch       + Dead end
-			              +-------+     |
-			Main path ====+=======+=====+=======
-		]]--[[
-		layout[mainpath_y][ix] = {1,1,0,0} --Left Right Up Down // 1=open 0=walled
-
-		-- Branches
-		if not debugg then  debugg = ""  end
-		if rng:random() < 1/3 then 	
-			local pathlen = rng:random(2,5)
-			local branch_y = mainpath_y + 1
-			
-			layout[branch_y][ix] = {0,1,1,0}
-			for i=1,pathlen-2 do
-				layout[branch_y][i] = {1,1,0,0}
-			end
-			layout[branch_y][ix+pathlen] = {1,0,1,0}
-		end
+	local room_id = 1
+	local w,h = 30, 18
+	for ix=1,layout_width-1 do
+		layout[mainpath_y][ix] = 1 
+		room_id = room_id + 1
+		self:write_room(rooms[room_id], ix*w, mainpath_y*h, rng)
 	end
+	-- Starting area
+	self:write_room(rooms_source[1], 0, mainpath_y*h, rng)
 
-	print_table(layout)
-	
-	local rooms = self.lvl1_rooms --Please modify depending on level
-	
-	-- Use the layout to generate the level
-	-- We get all possible rooms and shuffle them 
-	local room_ids = {}
-	for i=1, #rooms do
-		table.insert(room_ids, i)
-	end
-	shuffle(room_ids, rng)
-	
-	local i = 1
-	local w,h = 30, 16
-	for iy=0, layout_height-1 do
-		for ix=0,layout_len-1 do
-			
-			if layout[iy][ix] ~= 0 then 
-				local room = rooms[room_ids[i] ]
-				if room then
-					self:write_room(room, ix*w, iy*h, rng)
+	--[[
+						Branch   + Dead end
+					  +-------+	 |
+		Main path ====+=======+=====+=======
+	--]]
+	-- Generate branches below and above
+	for dir = -1, 1, 2 do 
+		local branch_y = mainpath_y + random_sample{-1, 1}
+		local ix = 0
+		while ix < layout_width do
+			if rng:random() < 0.7 and layout[branch_y][ix] then
+				local pathlen = rng:random(2,5)
+
+				-- Generate a branch
+				for i=0, pathlen-1 do
+					layout[branch_y][ix+i] = 1
+					self:write_room(rooms[room_id], (ix+i)*w, branch_y*h, rng)
+
+					-- Re-shuffle rooms if all of them have been used
+					room_id = room_id + 1
+					if room_id > #rooms then
+						room_id = 1
+						shuffle(rooms)
+					end
 				end
+
+				-- Openings
+				local start_x, start_y = ix*w, branch_y*h
+				local end_y = branch_y*(h+1) - 1 
+				if dir == -1 then
+					self:set_tile(start_x+14, end_y, 1)
+					self:set_tile(start_x+14, end_y+1, 1)
+					self:set_tile(start_x+15, end_y, 1)
+					self:set_tile(start_x+15, end_y+1, 1)
+				else
+					self:set_tile(start_x+14, start_y, 1)
+					self:set_tile(start_x+14, start_y-1, 1)
+					self:set_tile(start_x+15, start_y, 1)
+					self:set_tile(start_x+15, start_y-1, 1)
+				end
+				ix = ix + pathlen
 			end
+			ix = ix + 1
 		end
 	end
-]]
 end
 
 function generate_path(self, rng, rooms, x, y, nb_room_min, nb_room_max, table_min_index, table_max_index)
@@ -388,7 +413,7 @@ end
 
 function load_from_file(self, file)
 	-- . ground   # wall
-	-- b box      c chain
+	-- b box	  c chain
 	--[[ example:
 		# # # # # # # # #
 		# . . . b b . . #
@@ -419,6 +444,15 @@ function load_from_file(self, file)
 
 				rooms[room][y][x] = {tile, var}
 				x = x + 1
+
+				-- Flag openings 
+				if chr == "=" then
+					if y == 0 then
+						rooms[room].open_up = true
+					else
+						rooms[room].open_down = true
+					end
+				end
 			end
 			y = y + 1
 		end
