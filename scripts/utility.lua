@@ -59,18 +59,38 @@ function draw_centered_outline(spr, x, y, r, sx, sy, thiccness, color)
 
 end
 
-function circ_color(mode,x,y,radius,col)
-	love.graphics.setColor(col)
-	love.graphics.circle(mode, x, y, radius)
-	love.graphics.setColor(1,1,1)
-end
 
 function rect_color(mode, x, y, w, h, col)
 	--[[mode, x, y, w, h, col]]
 	love.graphics.setColor(col)
 	love.graphics.rectangle(mode, x, y, w, h)
 	love.graphics.setColor(1,1,1)
+end
 
+function line_color(col, ...)
+	--[[x1, y1, x2, y2, ...]]
+	love.graphics.setColor(col)
+	love.graphics.line(...)
+	love.graphics.setColor(1,1,1)
+end
+function circ_color(mode,x,y,radius,col)
+	love.graphics.setColor(col)
+	love.graphics.circle(mode, x, y, radius)
+	love.graphics.setColor(1,1,1)
+end
+
+function camera_print(text, x, y, r, sx, sy, ox, oy, kx, ky)
+	love.graphics.print(text, x+camera.x, y+camera.y, r, sx, sy, ox, oy, kx, ky)
+end
+function camera_rect_color(mode, x, y, w, h, col)
+	rect_color(mode, x+camera.x, y+camera.y, w, h, col)
+end
+function camera_line_color(col, x1, y1, x2, y2)
+	--does not support polyline
+	line_color(col, x1+camera.x, y1+camera.y, x2+camera.x, y2+camera.y)
+end
+function camera_circ_color(mode,x,y,...)
+	circ_color(made, x+camera.x, y+camera.y, ...)
 end
 
 function setColor(hex)
@@ -226,7 +246,7 @@ end]]
 
 function debug_print(txt)
 	love.graphics.print(tostr(txt), camera.x + 10, camera.y + debug_y)
-	debug_y = debug_y + 20
+	debug_y = debug_y + 16
 end
 
 

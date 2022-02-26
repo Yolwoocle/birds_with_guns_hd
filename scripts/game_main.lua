@@ -1,17 +1,18 @@
 require "scripts/waves"
 require "scripts/utility"
 
-function make_game_main()
+function make_game()
     local game = {
-        init = init_game_main,
-		update = update_game_main,
-        draw = draw_game_main,
+        init = init_game,
+		update = update_game,
+        draw = draw_game,
+		keypressed = game_keypressed,
     } 
 	game:init()
     return game
 end
 
-function init_game_main(self)
+function init_game(self)
 	spawn_time = inf
 	nbwave = 0
 	_shot_ = {}
@@ -20,27 +21,27 @@ function init_game_main(self)
 	camera.lock_x = false
 	camera.lock_y = false
 
-	number_of_players = 1
+	number_of_players = 2
 
 	player_list = {}
 	for i =1,number_of_players do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
-			controle = "keyboard+mouse"
+			control_scheme = "keyboard+mouse"
 			nbcontroller = 1
 		elseif i == 2 then
-			controle = "keyboard"
+			control_scheme = "keyboard"
 
 		elseif i == 3 then 
-			controle = "joystick"
+			control_scheme = "joystick"
 			nbcontroller=1
 			
 		elseif i == 4 then 
-			controle = "joystick"
+			control_scheme = "joystick"
 			nbcontroller=2
 		end
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
-		local ply = init_player(i, 84, 18*85+i*16, birds_spr[i], controle, nbcontroller)
+		local ply = init_player(i, 84, 18*85+i*16, birds_spr[i], control_scheme, nbcontroller)
 		table.insert(player_list, ply)
 		player_list[i].anim_walk = birds_spr[i]
 		player_list[i].anim_idle = birds_spr[i]
@@ -74,7 +75,7 @@ end
 
 local y_sort_buffer = {}
 
-function update_game_main(self, dt)
+function update_game(self, dt)
 	-- Compute camera offset
 	local ox, oy = 0, 0
 	for i,p in ipairs(player_list) do
@@ -164,6 +165,7 @@ function update_game_main(self, dt)
 	end
 
 	--for i,z in ipairs(zones) do
+	--"zone" means "damage zone"
 	for i = #zones , 1 , -1 do
 		z = zones[i]
 		z:update(dt,i)
@@ -178,7 +180,7 @@ function update_game_main(self, dt)
 	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, player_list}
 end
 
-function draw_game_main(self)
+function draw_game(self)
     camera:draw()
 	
 	map:draw_with_y_sorted_objs(y_sort_buffer)
@@ -199,8 +201,11 @@ function draw_game_main(self)
 	debug_y = 0
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	debug_print(notification)
-	debug_print("target_x"..tostr(camera.target_x))
 	debug_print(debugg)
+end
+
+function game_keypressed(key, scancode)
+	
 end
 
 function y_sort_merge(all_objs)

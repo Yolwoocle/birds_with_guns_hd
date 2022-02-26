@@ -13,11 +13,11 @@ require "scripts/ui"
 require "scripts/damage_zone_list"
 require "scripts/damage_zone"
 require "scripts/game_main"
-require "scripts/game_menu_main"
 require "scripts/pickup"
 require "scripts/particles"
 require "scripts/waves"
 require "scripts/level_editor/main"
+require "scripts/menu"
 gifcat = require("gifcat")
 
 function love.load()
@@ -59,7 +59,7 @@ function love.load()
 	love.mouse.setVisible(mouse_visible)
 
 	notification = ""
-	
+
 	updatejoystick()
 	init_keybinds()
 	init_joystickbinds()
@@ -92,7 +92,8 @@ function love.load()
 	perf = {}
 	g = 0
 
-	game = make_game_main()
+	init_menu_manager()
+	game = make_game()
 end
 
 function love.update(dt)
@@ -100,11 +101,15 @@ function love.update(dt)
 	updatejoystick()
 	if map_edit_mode then
 		update_map_edit(dt)
-		
 	else
-		game:update(dt)
+		if menu_manager.curmenu_name == "none" then
+			game:update(dt)
+		else
+			menu_manager:update(dt)
+		end
 	end
 
+	input_manager:update(dt)
     table.insert(perf, dt)
 end
 
@@ -115,11 +120,11 @@ function love.draw()
     
 	if map_edit_mode then
 		draw_map_edit()
-		
 	else
 		game:draw()
 	end
-    
+	menu_manager:draw()
+
     -- Canvas for that sweet pixel art
     love.graphics.setCanvas()
     love.graphics.origin()
@@ -145,8 +150,12 @@ function love.draw()
 --]]
 end
 
-function love.keypressed(key)
+function love.keypressed(key, scancode, isrepeat)
+	game:keypressed(key, scancode)
+	menu_manager:keypressed(key, scancode)
+
 	if key == "f1" then
+		-- ...
 	elseif key == "f2" then
 		if canvas then
 			screenshot()

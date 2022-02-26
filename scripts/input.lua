@@ -26,7 +26,7 @@ function init_button_last_state_table()
 		button_last_state[key] = {}
 		for i=1,4 do
 			button_last_state[key][i] = false
-		end
+		end 
 	end
 end
 
@@ -152,18 +152,19 @@ function get_world_cursor_pos(ply, input_device,dt, camera)
 end
 
 function get_mouse_pos()
-	--FIXME: won't wrok if the screen has borders
+	--FIXME: won't work if the screen has borders
 	local mx, my = love.mouse.getPosition()
 	return mx/screen_sx, my/screen_sy
 end
 
 function get_joystick_cursor_pos(input_device,ply,dt)
+	--??????
 	if not(input_device[2] == "joystick" and not(joysticks[input_device[3]])) then
 		local joyx = joysticks[input_device[3]]:getAxis(3)
 		local joyy = joysticks[input_device[3]]:getAxis(4)
 
 		local qdsf = dist(joyy,joyx,0,0)
-		if qdsf>joystick_deadzone2 then
+		if qdsf > joystick_deadzone2 then
 			local a = math.atan2(joyy,joyx)
 			return lerp(ply.cu_x,ply.x+math.cos(a)*100,.2)-camera.x, lerp(ply.cu_y,ply.y+math.sin(a)*100,.2)-camera.y
 		elseif dist((ply.cu_x-camera.x)+ply.dx*dt,(ply.cu_y-camera.y)+ply.dy*dt,ply.x-camera.x,ply.y-camera.y)>10 then
