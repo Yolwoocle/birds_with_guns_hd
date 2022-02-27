@@ -245,6 +245,13 @@ function coll_rect(x1,y1,w1,h1,x2,y2,w2,h2)
 	   and y1 + h1 > y2 - h2
 end
 
+function coll_rect_point(x1,y1,w1,h1,x2,y2)
+	return x1-w1 <= x2 
+		and x2 <= x1+w1
+		and y1-h1 <= y2
+		and y2 <= y1+h1
+end
+
 function draw_coll(x,y,w,h)
 	love.graphics.rectangle("line",x,y,w,h)
 end

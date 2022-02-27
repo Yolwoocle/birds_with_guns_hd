@@ -76,10 +76,10 @@ end
 local y_sort_buffer = {}
 
 function update_game(self, dt)
-	-- Compute camera offset
+	-- Compute camera offset (e.g. from aiming)
 	local ox, oy = 0, 0
 	for i,p in ipairs(player_list) do
-		local o = p.gun.camera_offset or 0
+		local o = 0.1--p.gun.camera_offset or 0
 		local cx = p.cu_x - p.x
 		local cy = p.cu_y - p.y
 		ox = ox + cx * o

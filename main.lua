@@ -108,9 +108,7 @@ function love.update(dt)
 			menu_manager:update(dt)
 		end
 	end
-
-	input_manager:update(dt)
-    table.insert(perf, dt)
+	--input_manager:update(dt)
 end
 
 function love.draw()
@@ -166,11 +164,12 @@ function love.keypressed(key, scancode, isrepeat)
 	elseif key == "f3" then
 		screenshot_clip()
 		notification = "Recording GIF..."
+
+	--remove for release
 	elseif key == "f4" then
-		--remove for release
 		love.event.quit()
+	
 	elseif key == "f5" then
-		--remove for release
 		love.event.quit("restart")
 
 	elseif key == "f6" then

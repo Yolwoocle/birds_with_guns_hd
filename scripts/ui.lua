@@ -1,20 +1,29 @@
 require "scripts/utility"
 require "scripts/collision"
 
-function draw_3_slice_vertical(x, y, w, spr1, spr2, spr3)
+function draw_3_slice(x, y, w, spr1, spr2, spr3)
+	if type(spr1)=='table' then  
+		spr2 = spr1[2]
+		spr3 = spr1[3]
+		spr1 = spr1[1]
+	end
+	
+	x = x + camera.x
+	y = y + camera.y
+
 	love.graphics.draw(spr1, x, y)
 
-	local x2 = x + spr1:getWidth()
 	local s2 = w / spr2:getWidth()
+	x = x + spr1:getWidth()
 	love.graphics.draw(spr2, x, y, 0, s2, 1)
 	
-	x2 = x2 + spr2:getWidth()
+	x = x + w
 	love.graphics.draw(spr3, x, y)
 end
 
----------------------------
---DEPRECATED
----------------------------
+--------------------------
+-- vvvv DEPRECATED vvvv --
+--------------------------
 function make_hud()
 	return {
 		elements = {},

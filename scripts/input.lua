@@ -20,6 +20,8 @@ function init_joystickbinds()
 		middlems = {{},{}},
 	}
 end
+
+--TODO: IMPORTANT: completely rework this fucking mess, use an input_manager object.
 function init_button_last_state_table()
 	button_last_state = {}
 	for key,_ in pairs(keybinds) do
@@ -33,75 +35,54 @@ end
 
 function button_down(command, player_n, input_device)
 	if not(input_device[2] == "joystick" and not(joysticks[input_device[3]])) then
-	player_n = player_n or 1
-	if command == "fire" and ((input_device[2] == "keyboard+mouse" and love.mouse.isDown(1)) or (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("rightshoulder")))then
-		if joystick and joysticks[input_device[3]]:isGamepadDown("rightshoulder") then
-			keymode = "joystick"
-		else
-			keymode = "keyboard"
-		end
-		--joystick.joy:setVibration(10, 10)
-		
-		return true
-	end
-	if command == "alt" and ((input_device[2] == "keyboard+mouse" and love.mouse.isDown(2)) or (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("leftshoulder"))) then
-		return true
-	end
+		player_n = player_n or 1
 
-	if command == "middlems" and (input_device[2] == "keyboard+mouse" and love.mouse.isDown(3)) then
-		return true
-	end
-
-	if input_device[2] == "keyboard+mouse" or input_device[2] == "keyboard" then--and not (command == "middlems") then --FI XME: and not command == "middlems" ajouter ca de facon propre
-		local keys = input_device[1][command][player_n]
-		for _,k in pairs(keys) do
-			if love.keyboard.isScancodeDown(k) then
-				return true
+		local mouse_fire = (input_device[2] == "keyboard+mouse" and love.mouse.isDown(1))
+		local joy_fire = (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("rightshoulder"))
+		if command == "fire" and (mouse_fire or joy_fire)then
+			if joystick and joysticks[input_device[3]]:isGamepadDown("rightshoulder") then
+				keymode = "joystick"
+			else
+				keymode = "keyboard"
 			end
+			--joystick.joy:setVibration(10, 10)
+			
+			return true
 		end
-	end -- love.mouse.isDown(3)
+		
+		local mouse_alt = (input_device[2] == "keyboard+mouse" and love.mouse.isDown(2))
+		local joy_alt = (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("leftshoulder"))
+		if command == "alt" and (mouse_alt or joy_alt) then
+			return true
+		end
 
-	if input_device[2] == "joystick" then
-		local dp = joystickbinds[command][1]
-		for _,d in pairs(dp) do
-			if not(command == "fire" or command == "alt" or command == "middlems") then
-				if  joysticks[input_device[3]]:isGamepadDown(d) then -- joysticks[input_device[3]]:getAxis(1)
+		local mouse_mid = (input_device[2] == "keyboard+mouse" and love.mouse.isDown(3))
+		if command == "middlems" and mouse_mid then
+			return true
+		end
+
+		if input_device[2] == "keyboard+mouse" or input_device[2] == "keyboard" then--and not (command == "middlems") then --FI XME: and not command == "middlems" ajouter ca de facon propre
+			local keys = input_device[1][command][player_n]
+			for _,k in pairs(keys) do
+				if love.keyboard.isScancodeDown(k) then
 					return true
 				end
 			end
+		end -- love.mouse.isDown(3)
+
+		if input_device[2] == "joystick" then
+			local dp = joystickbinds[command][1]
+			for _,d in pairs(dp) do
+				if not(command == "fire" or command == "alt" or command == "middlems") then
+					if  joysticks[input_device[3]]:isGamepadDown(d) then -- joysticks[input_device[3]]:getAxis(1)
+						return true
+					end
+				end
+			end
 		end
+
+		return false
 	end
-
-	return false
-end
-end
-
-function get_autoaim(ply)
-	local ne = ply:get_nearest_enemy()
-	local x, y
-	if ne then
-		x = ne.x
-		y = ne.y 
-		ply.show_cu = true
-	else 
-
-		if dist_sq(0,0, math.abs(ply.dx), math.abs(ply.dy)) > sqr(4) then
-			ply.dircux, ply.dircuy = ply.dx, ply.dy
-			ply.show_cu = true
-			local dir = math.atan2(ply.dircuy, ply.dircux)
-			local rad = 64
-			x = ply.x + ply.dircux*0.6--math.cos(dir) * rad
-			y = ply.y + ply.dircuy*0.6--math.sin(dir) * rad
-		else 
-			ply.show_cu = false
-			x = ply.cu_x
-			y = ply.cu_y
-		end
-	end
-	local dt = love.timer.getDelta()
-	x = lerp(ply.cu_x, x, 0.1)
-	y = lerp(ply.cu_y, y, 0.1)
-	return x-camera.x, y-camera.y
 end
 
 function button_pressed(cmd, n, input_device)
@@ -154,7 +135,8 @@ end
 function get_mouse_pos()
 	--FIXME: won't work if the screen has borders
 	local mx, my = love.mouse.getPosition()
-	return mx/screen_sx, my/screen_sy
+	mx, my = floor(mx/screen_sx), floor(my/screen_sy)
+	return mx, my
 end
 
 function get_joystick_cursor_pos(input_device,ply,dt)

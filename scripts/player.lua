@@ -86,7 +86,10 @@ function init_player(n,x,y, spr, controle, nbcontroller)
 		cu_y = y+10,
 		dircux = 0,
 		dircuy = 0,
+		
 		draw_hud = draw_player_hud,
+		update_cursor = player_update_cursor,
+		draw_cursor = player_draw_cursor,
 
 		update = update_player,
 		draw = draw_player,
@@ -119,6 +122,7 @@ function update_player(self, dt)
 		self.y = self.y + self.dy * dt
 
 		-- Aiming
+		self:update_cursor(dt)
 		aim_player(self, dt)
 		self.rot = self.rot % pi2
 		self.looking_up = self.rot > pi
@@ -249,16 +253,23 @@ function draw_player_hud(self)
 	love.graphics.print(self.gun.ammo, x+5, y-1)
 	love.graphics.setFont(font_default)
 
-	-- Cursor
-	if self.show_cu then
-		draw_centered(spr_cursor, self.cu_x, self.cu_y)
-	end
-
 	-- "P1", "P2"... icon
 	local cx, cy = 12, 10
 	local x = floor(clamp(camera.x + cx, self.x, camera.x + window_w - cy))
 	local y = floor(clamp(camera.y + cy, self.y-oy-12, camera.y + window_h - cy))
 	draw_centered(sprs_icon_ply[self.n], x, y)
+
+	-- Cursor is *always* above everything else
+	self:draw_cursor()
+end
+function player_update_cursor(self)
+
+end
+function player_draw_cursor(self)
+	-- Cursor
+	if self.show_cu then
+		draw_centered(spr_cursor, self.cu_x, self.cu_y)
+	end
 end
 
 function player_movement(self, dt)
@@ -281,20 +292,20 @@ function player_movement(self, dt)
 	local dir_vector = {x = 0, y = 0}
 	self.walk_dir = {x=0, y=0}
 	self.is_walking = false
-	if button_down("left", self.n, inp) or (joystick and joystick.x<-joystick_deadzone) then
+	if button_down("left", self.n, self.input_device) or (joystick and joystick.x<-joystick_deadzone) then
 		if (joystick and joystick.x < -joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
-		dir_vector.x = dir_vector.x - 1
+			dir_vector.x = dir_vector.x - 1
 		end
 		self.is_walking = true
 		self.walk_dir.x = self.walk_dir.x - 1
 	end
-	if button_down("right", self.n,inp) or (joystick and joystick.x>joystick_deadzone) then
+	if button_down("right", self.n, self.input_device) or (joystick and joystick.x>joystick_deadzone) then
 		if (joystick and joystick.x > joystick_deadzone) then 
 			dir_vector.x = dir_vector.x + joystick.x
 		else
-		dir_vector.x = dir_vector.x + 1
+			dir_vector.x = dir_vector.x + 1
 		end
 		self.is_walking = true
 		self.walk_dir.x = self.walk_dir.x + 1
@@ -303,7 +314,7 @@ function player_movement(self, dt)
 		if (joystick and joystick.y<-joystick_deadzone) then 
 			dir_vector.y = dir_vector.y + joystick.y
 		else
-		dir_vector.y = dir_vector.y - 1
+			dir_vector.y = dir_vector.y - 1
 		end
 		self.is_walking = true
 	end
@@ -311,7 +322,7 @@ function player_movement(self, dt)
 		if (joystick and joystick.y>joystick_deadzone) then 
 			dir_vector.y = dir_vector.y + joystick.y
 		else
-		dir_vector.y = dir_vector.y + 1
+			dir_vector.y = dir_vector.y + 1
 		end
 		self.is_walking = true
 	end
@@ -343,7 +354,7 @@ function aim_player(self, dt)
 	--	mmx, mmy = get_mouse_pos(self.input_device, camera , self)
 	--end
 
-		mmx, mmy = get_world_cursor_pos(self, self.input_device,dt, camera)
+	mmx, mmy = get_world_cursor_pos(self, self.input_device,dt, camera)
 
 	self.cu_x = mmx or self.cu_x
 	self.cu_y = mmy or self.cu_x
@@ -365,13 +376,13 @@ function aim_player(self, dt)
 
 				if self.gun.charge then
 					local avancement = (self.gun.dt/self.gun.charge_time)^self.gun.charge_curve
-				if self.gun.save_rafale then
-					load_save_gun_stats(self)
-				end
+					if self.gun.save_rafale then
+						load_save_gun_stats(self)
+					end
 
-				save_gun_stats(self)
+					save_gun_stats(self)
 
-				advancementtoactive(self,avancement)
+					advancementtoactive(self,avancement)--tf is advancement
 				end
 
 				self.shoot = true
@@ -385,6 +396,35 @@ function aim_player(self, dt)
 			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
 		end
 	end
+end
+
+
+function get_autoaim(self)
+	local ne = self:get_nearest_enemy()
+	local x, y
+	if ne then
+		x = ne.x
+		y = ne.y 
+		self.show_cu = true
+	else 
+
+		if dist_sq(0,0, math.abs(self.dx), math.abs(self.dy)) > sqr(4) then
+			self.dircux, self.dircuy = self.dx, self.dy
+			self.show_cu = true
+			local dir = math.atan2(self.dircuy, self.dircux)
+			local rad = 64
+			x = self.x + self.dircux*0.6--math.cos(dir) * rad
+			y = self.y + self.dircuy*0.6--math.sin(dir) * rad
+		else 
+			self.show_cu = false
+			x = self.cu_x
+			y = self.cu_y
+		end
+	end
+	local dt = love.timer.getDelta()
+	x = lerp(self.cu_x, x, 0.1)
+	y = lerp(self.cu_y, y, 0.1)
+	return x-camera.x, y-camera.y
 end
 
 function animate_player(self)

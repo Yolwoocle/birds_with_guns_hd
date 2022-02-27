@@ -28,6 +28,7 @@ spr_ammo = load_image("ui/ammo_small_1")
 spr_icon_heart = load_image("icon_heart")
 spr_icon_ammo = load_image("icon_ammo")
 sprs_icon_ply = load_image_table("ui/player_icons/p", 8)
+sprs_white_bar = load_image_table("ui/white_bar_", 3)
 
 spr_bar_small_ammo = load_image("ui/small_ammo_bar") 
 spr_bar_small_life = load_image("ui/small_life_bar") 
