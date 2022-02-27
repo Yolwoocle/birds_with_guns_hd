@@ -4,10 +4,12 @@ Gaspard Delpiano-Manfrini ☻
 
 # Art, animations
 Léo Bernard
-With help from Guillaume Tran
+With the help from Guillaume Tran
+
+# Music
+Simon T.
 
 # Special thanks
-Simon T.
 Azure
 The lovely PICO-8 community
 
