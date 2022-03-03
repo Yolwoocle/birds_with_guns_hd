@@ -5,7 +5,7 @@ end
 pixel_scale = 1
 block_width = 16
 mouse_enabled = true
-mouse_visible = false
+mouse_visible = true
 
 screenshot_scale = 2
 gif_scale = 2

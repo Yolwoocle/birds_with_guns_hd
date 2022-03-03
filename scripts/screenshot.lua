@@ -3,7 +3,6 @@ require "scripts/settings"
 local ffi = require "ffi"
 
 function screenshot()
-	--TODO: capture GIFs: https://love2d.org/forums/viewtopic.php?t=81543 + lua-gd lib
 	--These features are important as it provides an easy way 
 	--for players to share the game with others (GIF especially)
 	local filename = os.date('birds_with_guns_%Y-%m-%d_%H-%M-%S.png') 
@@ -25,7 +24,8 @@ function screenshot()
 end
 
 function screenshot_clip()
-	curgif = gifcat.newGif(os.time()..".gif",window_w*gif_scale, window_h*gif_scale)
+	gif_timer = 0
+	curgif = gifcat.newGif(os.time()..".gif",window_w*gif_scale, window_h*gif_scale, 10)
 
 	-- Optional method to just print out the progress of the gif
 	-- Thanks to https://github.com/maxiy01/gifcat 
@@ -38,11 +38,14 @@ function screenshot_clip()
 end
 
 function capture_clip_frame()
-	if curgif then
+	if curgif and gif_timer > 0.1 then
 		-- Save a frame to our gif.
 		love.graphics.captureScreenshot(function(screenshot) curgif:frame(screenshot) end)
+		gif_timer = gif_timer - 0.1
 
 		-- Show a little recording icon in the upper right hand corner. This will
 		--   not get shown in the gif because it is displayed after the call to
 	end
+	if not gif_timer then  gif_timer = 0  end
+	gif_timer = gif_timer + love.timer.getDelta()
 end

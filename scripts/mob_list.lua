@@ -1,7 +1,6 @@
 require "scripts/mob"
 require "scripts/gun_list"
 
-
 mob_list = {
 	fox = make_mob({
 		name = "place_older",
@@ -29,8 +28,10 @@ mob_list = {
 	}),
 	robot = make_mob{
 		spr = spr_robot,
+		spr_hit = spr_robot_hit,
+		anim_walk = {spr_robot},
 		life = 20,
-		gun = guns.fox_revolver
+		gun = guns.robot_shotgun,
 	},
 
 	knight = make_mob({

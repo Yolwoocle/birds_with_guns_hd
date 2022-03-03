@@ -1,13 +1,14 @@
 require "scripts/utility"
+local mob_distribution_table = require "probability_tables/mob_distribution"
 
 function make_mob(a)
-	spr 	   = a.spr or spr_revolver
+	spr = spr_missing--a.spr or spr_missing
 	local mob = {
 		name = a.name or "enemy",
 		state = "walk",
 
 		anim_idle = a.anim_idle or {spr_missing},
-		anim_walk = spr_fox,
+		anim_walk = a.anim_walk or {spr_missing},--spr_fox,
 		spr_hit = a.spr_hit or spr_fox_hit,
 		hit_flash_timer = 0,
 		
@@ -42,8 +43,8 @@ function make_mob(a)
 		knockback_x = 0,
 		knockback_y = 0,
 
-		gun_dist 			= a.gun_dist 		or 14,
-		close_mv			= a.close_mv		or false,
+		gun_dist = a.gun_dist or 14,
+		close_mv = a.close_mv or false,
 
 		gun = a.gun or guns.fox_revolver,
 
@@ -92,7 +93,7 @@ end
 
 function update_mob(self, dt)
 	self.distplayer = inf
-	for _,p in ipairs(player_list) do
+	for _,p in ipairs(players) do
 		nwd =  dist(p.x,p.y,self.x,self.y)
 		if nwd < self.distplayer then
 			self.distplayer = nwd
@@ -161,13 +162,14 @@ function update_mob(self, dt)
 	else
 		self.dtmouvement = max(self.dtmouvement-dt,0)
 
-		if self.dtmouvement > 0 and self.dtmouvement <self.mv_mouvement then
+		if self.dtmouvement > 0 and self.dtmouvement < self.mv_mouvement then
 			self.dx = self.dx_idle
 			self.dy = self.dy_idle
+		
 		elseif self.dtmouvement == 0 then
-
 			self.dtmouvement = self.mv_mouvement + self.mv_pause
 			rndmouvement(self,self.spd)
+
 		elseif self.dtmouvement >self.mv_mouvement then
 			self.dx = 0
 			self.dy	= 0
@@ -240,4 +242,12 @@ function knockback_mob(self, x, y, val)
 	local kx, ky = math.cos(a), math.sin(a)
 	self.knockback_x = self.knockback_x + kx * val
 	self.knockback_y = self.knockback_y + ky * val
+end
+
+---
+
+function spawn_random_mob(x,y)
+	local mob_name = random_weighted(mob_distribution_table)
+	local mob = mob_list[mob_name]	
+	if mob then  table.insert(mobs, mob:spawn(x,y))  end
 end

@@ -11,7 +11,7 @@ function make_pickups()
 		update = update_pickups,
 		draw = draw_pickups,
 	}
-	return p 
+	return p
 end
 
 function is_picked(self, obj)
@@ -74,6 +74,7 @@ function spawn_pickup(self, type, q, x, y)
 	elseif type == "gun" then
 		pick.gun = copy(q)
 		pick.spr = q.spr
+
 	elseif type == "modifier" then
 		pick.q = q
 		pick.spr = spr_missing
@@ -84,13 +85,15 @@ end
 
 function spawn_random_loot(self, x, y)
 	if love.math.random() <= 0.1 then
-		self:spawn("gun", guns.revolver, x, y)
+		self:spawn("gun", get_random_gun(), x, y)
+		
 	elseif love.math.random() <= 0.1 then
 		self:spawn("life", 2, x, y)
+
 	elseif love.math.random() <= 0.1 then
 		self:spawn("ammo", 0.25, x, y)
 
-	elseif love.math.random() <= 0.5 then
+	elseif love.math.random() <= -0.5 then
 		self:spawn("modifier", math.random(1,3), x, y)
 	end
 end

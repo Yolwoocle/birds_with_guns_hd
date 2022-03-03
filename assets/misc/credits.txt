@@ -1,19 +1,20 @@
-# Code and Design
+--- Code and Design
 Léo Bernard ☺
 Gaspard Delpiano-Manfrini ☻
 
-# Art, animations
+--- Art, animations
 Léo Bernard
 With the help from Guillaume Tran
 
-# Music
+--- Music ---
 Simon T.
 
-# Special thanks
+--- Special thanks ---
 Azure
+Made using LÖVE: https://love2d.org/
 The lovely PICO-8 community
 
-# Assets
+--- Assets ---
 Kenney assets: https://www.kenney.nl/
 
 Font: 

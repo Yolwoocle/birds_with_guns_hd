@@ -73,7 +73,7 @@ function damageinzone(self,l)
 
         end
 
-        for _,p in ipairs(player_list) do
+        for _,p in ipairs(players) do
 	        local coll = dist(self.x,self.y,p.x,p.y) < self.rayon
 	        if coll then
 	        	p:damage(self.damage)

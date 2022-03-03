@@ -65,7 +65,7 @@ guns = {
 		spr_bullet = spr_fire_extinguisher_smoke,
 		nbshot = 10,
 		damage = 0.1,
-		bullet_life = .05,
+		bullet_life = .5,
 		is_auto = true,
 		knockback = 10,
 
@@ -271,119 +271,18 @@ guns = {
 		make_shot = default_shoot,
 		scale = 1.5,
 	}),
-	
-	pistolet = make_gun({
-		name = "pistolet", 
+	robot_shotgun = make_gun({
+		name = "Robot revolver",
 		type = "bullet",
-		category = "instant",--FIXME "instant" not instant GODDAMNIT
-		charge = true,
-		charge_time = .1,
-		bounce = 1,
-		laser_length = 300,
-		scale = .1,
-		scattering = 0,
-		spawn_x = 17,
-		spawn_y = 0,
-		charge_scale = 10,
+		spr_bullet = spr_bullet_red,
+		spr = spr_shotgun,
 		bullet_spd = 100,
-		cooldown = .1,
-		charge_damage = 10,
-
-		bullet_life = 3,
-		nbshot = 1,
-		spread  = pi/2,
-
-		spawn_x =  10,
-
-		spawn_y =  0,
-
-		max_ammo = 300,
-	}),
-
-	jsp = make_gun({
-		name = "jsp", 
-		type = "bullet",
-		bounce = 1,
-		scale = .5,
-		oscale = 0,
-
-		cooldown = 1,
-		bullet_spd = 100,
-	}),
-
-	jspp = make_gun({
-		name = "jsp", 
-		type = "bullet",
-		laser_length = 3000,
-		category = "instant",
-		bounce = 1,
-		max_ammo = 200000,
-		charge = true,
-		charge_curve = 2,			
-		charge_time = 1,
-		charge_nbburst = 10,
-		scattering = 0,
-
-		spread  = pi/2,
-
-		scale = .75,
-		oscale = 0,
-		nbshot = 10,
-
-		bullet_life = 10,
-
-		--cooldown = 0,
-		screenkick = 10,
-
-		bullet_spd = 100,
-		on_death = function(self , k)
-			 table.insert(zones, zone.fire:spawn_zone( self.x, self.y))
-			 table.remove(bullets, k)
-		end
-
-	}),
-
-	boum = make_gun({
-		name = "jsp", 
-
-		--type = "laser",
-		--spr_bullet = spr_laser,
-
-		type = "bullet",
-		spr_bullet = spr_bullet,
-		--category = "instant",
-		bounce = 0,
-		max_ammo = 400,
-		charge = true,
-		charge_curve = 2,			
-		charge_time = 1,
-		charge_nbburst = 10,
-		scattering = .1,
-
-		spread  = pi/2,
-
+		
 		scale = 1,
-		oscale = 0,
-		nbshot = 1,
-
-		bullet_life = 1,
-
-
-		cooldown = .1,
-
-		spdslow = 1.1,
-
-		bullet_spd = 100,
-
-		on_death = function(self , k)
-			
-			 table.remove(bullets, k)
-			 --bullets = {}
-			 --table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
-		end
-
-	}),
-	
+		cooldown = 3,
+		make_shot = default_shoot,
+		scale = 1.5,
+	}),	
 }
 
 

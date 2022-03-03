@@ -3,6 +3,7 @@ require "scripts/settings"
 require "scripts/damage_zone_list"
 require "scripts/damage_zone"
 require "scripts/bullet"
+local gun_loot_table = require "probability_tables/gun"
 
 function make_gun(a)
 	spr = a.spr or spr_revolver
@@ -139,6 +140,15 @@ function default_shoot(g,p)
 	return shot
 end
 
+---------------
+
+function get_random_gun(diff) --TODO: gun difficulty
+	print("gun loot table "..table_to_str(gun_loot_table))
+	local gun_name = random_weighted(gun_loot_table)
+	print(gun_name)
+	return guns[gun_name]
+end
+
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------- BULLET -------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -270,7 +280,7 @@ function switch_weapon(from , to)
 	to.gun, from.gun = to.guns[to.gun_n], to.gun
 	from.spr = from.gun.spr
 
-	for k = #_shot , 1 , -1 do
+	for k = #_shot, 1, -1 do
 		v = _shot[k]
 		if v.player == to then
 			table.remove(_shot , k)

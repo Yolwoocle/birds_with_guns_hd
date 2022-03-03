@@ -154,6 +154,32 @@ function random_polar(rad)
 	return x, y
 end
 
+function random_pos_neg(n)
+	-- Random number between -n and n
+	return math.random(2*n) - n
+end
+random_neighbor = random_pos_neg 
+
+function random_sample(t)
+	return t[love.math.random(1,#t)]
+end
+
+function random_weighted(tab)
+	if not tab then  return nil  end
+
+	local sum = 0
+	for k,v in pairs(tab) do
+		sum = sum + v
+	end
+
+	for k,v in pairs(tab) do
+		if love.math.random() <= v/sum then
+			return k
+		end
+	end
+	return nil
+end
+
 function copy(t)
 	local new_t = {}
 	for k,v in pairs(t) do
@@ -169,12 +195,6 @@ function append_list(ls1,ls2)
 	end
 	return ls1
 end
-
-function random_pos_neg(n)
-	-- Random number between -n and n
-	return math.random(2*n) - n
-end
-random_neighbor = random_pos_neg 
 
 function raycast(x,y,dx,dy,distmax,pas)
 	local pas = pas or 1
@@ -363,6 +383,3 @@ function table_2d_0(w,h,val)
 	return t
 end
 
-function random_sample(t)
-	return t[love.math.random(1,#t)]
-end

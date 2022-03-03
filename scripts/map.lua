@@ -204,16 +204,7 @@ function get_random_var(self)
 	if not self.random_var then
 		return nil
 	end
-	-- Compute sum of weights
-	local sum = 0
-	for _,w in pairs(self.random_var) do   sum = sum + w   end
-
-	for i=1, #self.random_var do
-		if love.math.random() <= self.random_var[i]/sum then
-			return i
-		end
-	end
-	return 1
+	return random_weighted(self.random_var)
 end
 
 function set_tile(self, x, y, elt, var)
@@ -224,6 +215,7 @@ function set_tile(self, x, y, elt, var)
 		error("set_tile coordinates outside map bounds")--TODO: we should probably log that instead of crashing
 	end
 
+	-- Doors between rooms
 	if elt == 11 then  
 		elt = 2
 	end
@@ -267,23 +259,23 @@ end
 -------------------------------------------------------------------------
 
 function generate_map(self, seed)
-	-- The default seed in LÖVE 11.x is the following low/high pair: 0xCBBF7A44, 0x0139408D
+	local rooms_source = self.lvl1_rooms
+	local layout_width = 12
+	local layout_height = 12
+
 	-- Init random number generator
 	local rng
 	if seed then
 		rng = love.math.newRandomGenerator(seed)  
 	else 
+		-- The default seed in LÖVE 11.x is the following low/high pair: 0xCBBF7A44, 0x0139408D
 		rng = love.math.newRandomGenerator()
 	end
 	--generate_path(self, rng, self.lvl1_rooms, 0, 0, 5, 5)
 
-	-- Init layout table
-	local layout_width = 12
-	local layout_height = 12
 	local layout = table_2d_0(layout_width, layout_height, 0)
 
 	-- Generate randomly shuffled list of all rooms
-	local rooms_source = self.lvl1_rooms --TODO: modify depending on level
 	local rooms = {}
 	for i=2, #rooms_source do --We don't include 1 bc it's the starting area
 		table.insert(rooms, rooms_source[i]) 
@@ -309,6 +301,7 @@ function generate_map(self, seed)
 	-- Generate branches below and above
 	for dir = -1, 1, 2 do 
 		local branch_y = mainpath_y + dir
+
 		local ix = rng:random(1,4)
 		while ix < layout_width do
 			if layout[branch_y][ix] then
@@ -396,7 +389,7 @@ end
 function tile_spawn_mob(self, rng, x, y)
 	local bw = block_width 
 	if not self:get_tile(x, y).is_solid and rng:random(100)==1 then
-		table.insert(mobs, mob_list.fox:spawn(x*bw + bw/2, y*bw + bw/2))
+		spawn_random_mob(x*bw + bw/2, y*bw + bw/2)
 	end
 end
 function get_room_tile(self, room, x, y)

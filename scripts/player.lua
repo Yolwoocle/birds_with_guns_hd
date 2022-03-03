@@ -70,11 +70,14 @@ function init_player(n,x,y, spr, controle, nbcontroller)
 			copy(guns.laser)
 		},
 		gun_n = 1,
+		--methods
 		set_gun = ply_set_gun,
 		update_gun = ply_update_gun,
 		set_gun = ply_get_gun,
-
 		damage = damage_player,
+		kill = kill_player,
+		revive = revive_player,
+
 		get_pickups = player_get_pickups,
 		pickup_cd = 0,
 		max_pickup_cd = 1,
@@ -82,6 +85,7 @@ function init_player(n,x,y, spr, controle, nbcontroller)
 		get_nearest_enemy = get_nearest_enemy,
 		autoaim_max_dist = 360,
 		last_autoaim_dist = math.huge,
+		spr_cu = sprs_cursor[n],
 		cu_x = x,
 		cu_y = y+10,
 		dircux = 0,
@@ -156,7 +160,7 @@ function update_player(self, dt)
 		-- Reviving
 		--- Get all near players
 		local n = 0
-		for _,p in pairs(player_list) do
+		for _,p in pairs(players) do
 			local near = dist_sq(self.x, self.y, p.x, p.y) <= sqr(self.revive_radius) 
 			if near and p.n ~= self.n and p.alive then
 				n = n + 1
@@ -185,23 +189,9 @@ function update_player(self, dt)
 	self.iframes_timer = self.iframes_timer - dt
 	self.invincible = self.iframes_timer > 0 
 
-	hud.elements.life_bar.val = self.life
-	hud.elements.life_bar.max_val = self.max_life
-	hud.elements.ammo_bar.val = self.gun.ammo
-	hud.elements.ammo_bar.max_val = self.gun.max_ammo
 	if self.life <= 0 then
-		self.alive = false
+		self:kill()
 	end
-	
-	hud.elements.gun_1.spr = self.guns[1].spr
-	hud.elements.gun_2.spr = self.guns[2].spr
-	hud.elements.gun_list.sprs = self.guns
-	local x = hud.elements.gun_1.x + hud.elements.gun_1.spr:getWidth() + 6
-	hud.elements.gun_2.x = x
-
-	if love.keyboard.isDown("t") then  camera:set_scale(0.2,0.2)  
-	else camera:set_scale(1,1)
-	end 
 end
 
 function draw_player(self)
@@ -268,7 +258,8 @@ end
 function player_draw_cursor(self)
 	-- Cursor
 	if self.show_cu then
-		draw_centered(spr_cursor, self.cu_x, self.cu_y)
+		local spr = self.spr_cu or spr_cursor
+		draw_centered(spr, self.cu_x, self.cu_y)
 	end
 end
 
@@ -473,6 +464,16 @@ function damage_player(self, dmg)
 		self.life = self.life - dmg
 		self.iframes_timer = self.iframes
 	end
+end
+
+function kill_player(self)
+	self.alive = false
+	self.show_cu = false
+end
+
+function revive_player(self, life)
+	life = life or self.max_life
+	self.life = life
 end
 
 function ply_set_gun(self, gun)

@@ -19,6 +19,7 @@ spr_empty = load_image("empty")
 
 -- UI
 spr_cursor = load_image("cursor")
+sprs_cursor = load_image_table("ui/cursors/cursor_p", 4)
 spr_hp_bar = load_image("hp_bar")
 spr_ammo_bar = load_image("ammo_bar")
 spr_hp_bar_empty = load_image("hp_bar_empty")
@@ -154,11 +155,12 @@ anim_duck_walk = load_image_table("players/duck/duck_walk_bad_",8)
 
 
 -- Enemies
-spr_fox = {
+anim_fox = {
 	load_image("fox_1")
 }
 spr_fox_hit = load_image("enemies/fox_1_hit")
 spr_robot = load_image("enemies/robot/robot_1")
+spr_robot_hit = load_image("enemies/robot/robot_1_hit")
 
 -- Pickups
 spr_pick_ammo = load_image("pickups/ammo")

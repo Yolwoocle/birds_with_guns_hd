@@ -7,7 +7,7 @@ require "scripts/gun"
 require "scripts/gun_list"
 require "scripts/mob"
 require "scripts/mob_list"
-require "scripts/camera"
+require "scripts/camera_manager"
 require "scripts/screenshot"
 require "scripts/ui"
 require "scripts/damage_zone_list"
@@ -21,6 +21,7 @@ require "scripts/menu"
 gifcat = require("gifcat")
 
 function love.load()
+	-- I am deeply sorry for these globals
 	keymode = "keyboard"
 	prevray = {}
 
@@ -46,6 +47,7 @@ function love.load()
 	font_normal = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
 	font_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
 	
+	font_compass = love.graphics.newFont("assets/fonts/somepx/CompassPro.ttf", 16) 
 	font_equipment = love.graphics.newFont("assets/fonts/somepx/EquipmentPro.ttf", 16) 
 	font_expression = love.graphics.newFont("assets/fonts/somepx/ExpressionPro.ttf", 16) 
 	font_futile = love.graphics.newFont("assets/fonts/somepx/FutilePro.ttf", 16) 
@@ -53,7 +55,7 @@ function love.load()
 	
 	font_4x4 = love.graphics.newFont("assets/fonts/4x4_mono.ttf", 16)
 
-	font_default = font_matchup
+	font_default = font_futile--font_matchup
 	love.graphics.setFont(font_default)
 
 	love.mouse.setVisible(mouse_visible)
@@ -64,33 +66,6 @@ function love.load()
 	init_keybinds()
 	init_joystickbinds()
 	init_button_last_state_table()
-
-	camera = init_camera()
-	camera.lock_x = true
-	camera.lock_y = true
-
-	--[[nb_joueurs = 1
-	player_list = {}
-	for i =1,nb_joueurs do
-		local ply = init_player(20, 20)
-		table.insert(player_list, ply)
-	end--]]
-
-	zones = {}
-	mobs = {}
-	--for i = 1,1 do
-	--	table.insert(mobs, mob_list.knight:spawn(100,100))
-	--end
-	pickups = make_pickups()
-	
-	bullets = {}
-	_shot = {}
-	
-	prevfire = false
-	particles = init_particles()
-
-	perf = {}
-	g = 0
 
 	init_menu_manager()
 	game = make_game()

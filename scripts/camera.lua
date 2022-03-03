@@ -13,7 +13,14 @@ function init_camera()
 		sx = 1,
 		sy = 1,
 
+		min_x = 0,
+		max_x = 2^16,
+		min_y = 0,
+		max_y = 2^16,
+
 		shake = shake_camera,
+		shake_x = 0,
+		shake_y = 0,
 		shake_rad = 0,
 		shake_fric = 50,
 
@@ -32,24 +39,25 @@ function init_camera()
 		draw = draw_camera,
 		set_pos = camera_set_pos,
 		set_target = camera_set_target,
+		set_offset = camera_set_offset,
 		set_scale = camera_set_scale,
 		get_bounds = get_bounds,
+		clamp_to_allowed_coordinates = clamp_to_allowed_coordinates,
 	}
 	return camera
 end
 
 function update_camera(self, dt)
-	--Clamp on border
-	self.target_x = self.target_x
-	self.target_y = self.target_y
-	
 	local smoothing = math.min(self.smoothing * dt, 1)
-	-- Move to player
+	
+	-- Lerp to player
 	if not self.lock_x then 
-		self.fake_x = self.fake_x + (self.target_x - self.fake_x) * smoothing  
+		self.fake_x = lerp(self.fake_x, self.target_x, smoothing)--FIXME:dt cam smoothing
+		--self.fake_x + (self.target_x - self.fake_x) * smoothing  
 	end
 	if not self.lock_y then 
-		self.fake_y = self.fake_y + (self.target_y - self.fake_y) * smoothing
+		self.fake_y = lerp(self.fake_y, self.target_y, smoothing)--FIXME:dt cam smoothing--self.fake_x + (self.target_x - self.fake_x) * smoothing  
+		--self.fake_y = self.fake_y + (self.target_y - self.fake_y) * smoothing
 	end
 
 	-- Aiming offset
@@ -69,11 +77,15 @@ function update_camera(self, dt)
 	local rnd_rad = love.math.random() * self.shake_rad
 	self.shake_x = math.cos(rnd_ang) * rnd_rad
 	self.shake_y = math.sin(rnd_ang) * rnd_rad
-	self.shake_rad = self.shake_rad * self.kick_fric--inv_dt(self.shake_fric, dt)
-	--self.shake_rad = round_if_near_zero(self.shake_rad) 
+	self.shake_rad = max(0, self.shake_rad - dt*10) --* self.kick_fric--inv_dt(self.shake_fric, dt) 
 
-	self.x = self.fake_x + self.offset_x + self.kick_x + self.shake_x
-	self.y = self.fake_y + self.offset_y + self.kick_y + self.shake_y
+	local pos_x = self.fake_x + self.offset_x 
+	local pos_y = self.fake_y + self.offset_y
+	self.x, self.y = self:clamp_to_allowed_coordinates(pos_x, pos_y)
+
+	-- Apply screen disturbance (kick + shake)
+	self.x = self.x + self.kick_x + self.shake_x
+	self.y = self.y + self.kick_y + self.shake_y
 	self.x = floor(self.x)
 	self.y = floor(self.y)
 end
@@ -85,13 +97,20 @@ function draw_camera(self, dt)
 end
 
 function camera_set_pos(self, x, y)
+	x, y = self:clamp_to_allowed_coordinates(x, y)
 	self.x = x
 	self.y = y
 end
 
 function camera_set_target(self, x, y)
+	x, y = self:clamp_to_allowed_coordinates(x, y)
 	self.target_x = x
 	self.target_y = y
+end
+
+function camera_set_offset(self, x, y)
+	self.offset_x = x
+	self.offset_y = y
 end
 
 function camera_set_scale(self, sx, sy)
@@ -119,4 +138,10 @@ function get_bounds(self)
 	local y2 = ((self.y + window_h + 16) / block_width ) 
 
 	return floor(x1), floor(x2), floor(y1), floor(y2)
+end
+
+function clamp_to_allowed_coordinates(self, x, y)
+	local new_x = clamp(self.min_x, x, self.max_x)
+	local new_y = clamp(self.min_y, y, self.max_y)
+	return new_x, new_y
 end

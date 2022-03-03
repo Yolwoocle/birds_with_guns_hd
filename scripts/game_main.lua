@@ -1,5 +1,6 @@
 require "scripts/waves"
 require "scripts/utility"
+local CameraManager = require "scripts/camera_manager"
 
 function make_game()
     local game = {
@@ -17,13 +18,10 @@ function init_game(self)
 	nbwave = 0
 	_shot_ = {}
 	sp_mark = {}
-	camera = init_camera()
-	camera.lock_x = false
-	camera.lock_y = false
 
 	number_of_players = 2
 
-	player_list = {}
+	players = {}
 	for i =1,number_of_players do
 		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
 			control_scheme = "keyboard+mouse"
@@ -42,10 +40,17 @@ function init_game(self)
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
 		local ply = init_player(i, 84, 18*85+i*16, birds_spr[i], control_scheme, nbcontroller)
-		table.insert(player_list, ply)
-		player_list[i].anim_walk = birds_spr[i]
-		player_list[i].anim_idle = birds_spr[i]
+		table.insert(players, ply)
+		players[i].anim_walk = birds_spr[i]
+		players[i].anim_idle = birds_spr[i]
 	end
+
+	camera = init_camera()
+	camera.lock_x = false
+	camera.lock_y = true
+	camera:set_pos(0, 16*18*7)
+	camera.fake_y = 16*18*5 
+--	camera_manager = CameraManager:new(camera, players)
 
 	zones = {}
 	mobs = {}
@@ -59,9 +64,9 @@ function init_game(self)
 	_shot = {}
 	
 	particles = init_particles()
-
+	
+	prevfire = false
 	perf = {}
-
 	g = 0
 
 	hud = make_hud()
@@ -78,21 +83,18 @@ local y_sort_buffer = {}
 function update_game(self, dt)
 	-- Compute camera offset (e.g. from aiming)
 	local ox, oy = 0, 0
-	for i,p in ipairs(player_list) do
+	for i,p in ipairs(players) do
 		local o = 0.1--p.gun.camera_offset or 0
 		local cx = p.cu_x - p.x
 		local cy = p.cu_y - p.y
 		ox = ox + cx * o
 		oy = oy + cy * o
 	end
-	ox = ox
-	oy = oy
-    camera.offset_x = ox
-    camera.offset_y = oy
+	camera:set_offset(ox, oy)
 	
 	--Set camera target
     local avg_pos = {x=0, y=0}
-	for _,p in pairs(player_list) do
+	for _,p in pairs(players) do
 		avg_pos.x = avg_pos.x + p.x
 		avg_pos.y = avg_pos.y + p.y
 	end
@@ -112,7 +114,7 @@ function update_game(self, dt)
 	end
 
 	local number_alive_players = 0
-	for _,p in ipairs(player_list) do
+	for _,p in ipairs(players) do
 		p:update(dt, camera)
 		if p.shoot then
 			--_shot = player.gun:make_bullet(player,player.rot)
@@ -177,7 +179,7 @@ function update_game(self, dt)
 
 	particles:update(dt)
 
-	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, player_list}
+	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, players}
 end
 
 function draw_game(self)
@@ -192,7 +194,7 @@ function draw_game(self)
 	end
 	particles:draw()
 
-	for _,p in pairs(player_list) do
+	for _,p in pairs(players) do
 		p:draw_hud()
 	end
 	--hud:draw()

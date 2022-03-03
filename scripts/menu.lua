@@ -5,35 +5,45 @@ require "scripts/ui"
 
 local donothing = function() return end --For debugging
 
+local function callback_set_menu(menu_name)
+	return function(self)
+		menu_manager:set_menu(menu_name)
+	end
+end
+
 function init_menu_manager()
 	local m = {}
 	m.menus = {
-		main = make_menu({
-			{"PLAY", donothing},
-			{"OPTIONS", donothing},
+		title = make_menu({
+			{"new super birds with guns bros 2 HD ultra 3D"},
+			{"featuring dante from devil may cry series"},
+			{""},
+			{"PLAY", callback_set_menu('none')},
+			{"OPTIONS", callback_set_menu('options')},
 		}, function()
 			camera_rect_color("fill", 0, 0, window_w, window_h, {0,0,0,0.5})
 		end),
 
 		pause = make_menu({
+			{"--- PAUSED ---"},
+			{""},
 			{"RESUME", toggle_pause},
 			{"RETRY", donothing},
-			{"OPTIONS", function(self)
-				menu_manager:set_menu('options')
-			end},
-			{"CREDITS", function(self)
-				menu_manager:set_menu('credits')
-			end},--remove for release 
-			{"I love video games", donothing},
-			{"('u') obey", donothing},
+			{"OPTIONS", callback_set_menu('options')},
+			{"CREDITS (pls remove)", callback_set_menu('credits')},
+			{"EXIT", callback_set_menu('title')}, 
 		}, function()
 			camera_rect_color("fill", 0, 0, window_w, window_h, {0,0,0,0.7})
 		end),
 
+		win = make_menu({
+			{"You win!"},
+		}, function()
+			--camera_rect_color("fill", 0, 0, window_w, window_h, {0,0,0,0.7})
+		end),
+
 		options = make_menu({
-			{"< Back", function(self)
-				menu_manager:set_menu('pause')
-			end},
+			{"< Back", callback_set_menu('pause')},
 			{"Wowowow options???", toggle_pause},
 			{"so cool!!!", donothing},
 			{"cool button:", function(self) 
@@ -45,26 +55,26 @@ function init_menu_manager()
 		end),
 
 		credits = make_menu({
-			{"< Back", function(self)
-				menu_manager:set_menu('pause')
-			end},
+			{"< Back", callback_set_menu('pause')},
+			{""},
 			{"--- Code and Design ---"},
 			{"Léo Bernard (@yolwoocle_)"},
 			{"Gaspard Delpiano-Manfrini"},
 			{""},
 			{"--- Music ---"},
 			{"Simon T."},
+			{""},
 			{"--- Art and Animations ---"},
 			{"some sentients birds probably"},
-			{"idk"},
-			{"You: existing????"},
-			{"what is reality anyways"},
+			{"love2d.org", function()
+				love.system.openURL("http://love2d.org/")
+			end}
 		}, function()
 			camera_rect_color("fill", 0, 0, window_w, window_h, {0,0,0,0.85})
 		end),
 	}
-	m.curmenu_name = "none"
-	m.curmenu = m.menus.main
+	m.curmenu_name = "title"
+	m.curmenu = m.menus.title
 
 	m.update = function(self, dt)
 		if self.curmenu then  self.curmenu:update(dt)  end
@@ -88,6 +98,9 @@ function init_menu_manager()
 	end
 
 	m.set_menu = function(self, menuname)
+		if menuname == "none" then
+			self.curmenu_name = 'none'
+		end
 		if self.menus[menuname] then
 			self.curmenu_name = menuname
 			self.curmenu = self.menus[menuname]
@@ -118,7 +131,7 @@ function make_menu(items, custom_bg)
 	
 	m.items = {}
 	local x = floor(window_w / 2)
-	local height_of_items = #items * m.spacing_items
+	local height_of_items = (#items - 1) * m.spacing_items --classic fence post problem
 	local y = floor((window_h - height_of_items)/ 2)
 	for i=1, #items do
 		m.items[i] = make_menu_item(i, x, y, unpack(items[i]))
@@ -149,7 +162,7 @@ end
 
 ------------------------
 
-function make_menu_item(n, x, y, text, on_click, display_val)
+function make_menu_item(n, x, y, text, on_click, display_val, is_hoverable)
 	font = font or font_default
 	local it = {}
 	it.n = n
@@ -185,18 +198,25 @@ function make_menu_item(n, x, y, text, on_click, display_val)
 
 	if on_click then
 		it.on_click = on_click
+		it.is_hoverable = true
 	else
 		it.on_click = function() return end
+		it.is_hoverable = false 
 	end
 	it.is_selected = false
 
 	it.draw = function(self)
 		local text = self.text
-		if self.is_selected then
-			-- White bar
-			local bar_border_w = 7
-			draw_3_slice(self.x-self.ox-bar_border_w, self.y-self.oy, self.width, sprs_white_bar)
-			love.graphics.setColor(black)
+		if self.is_hoverable then
+			if self.is_selected then 
+				-- White bar on selection
+				local bar_border_w = 7
+				draw_3_slice(self.x-self.ox-bar_border_w, self.y-self.oy, self.width, sprs_white_bar)
+				love.graphics.setColor(black)
+			end
+		else -- If this is just display text
+			local v = 0.6
+			love.graphics.setColor(v,v,v)
 		end
 		camera_print(text, self.x, self.y, 0,1,1, self.ox, self.oy)
 		love.graphics.setColor(white)

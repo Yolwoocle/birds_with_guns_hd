@@ -234,8 +234,8 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 		end
 	end
 
-	for pi = #player_list , 1 , -1 do
-		p = player_list[pi]
+	for pi = #players , 1 , -1 do
+		p = players[pi]
 		local coll = coll_rect(p.x, p.y, p.w*1.3, p.h*1.3, self.x, self.y, self.scale, self.scale)
 		if self.type ==  "bullet" then
 			if self.is_enemy and coll then
