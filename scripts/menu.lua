@@ -48,7 +48,7 @@ function init_menu_manager()
 			{"so cool!!!", donothing},
 			{"cool button:", function(self) 
 				set_setting('mouse_visible',false)
-				self:update_display_val(set_setting('screenshot_scale',0.3))
+				self:update_display_val(set_setting('screenshot_scale',3000))
 			end, 34},
 		}, function()
 			camera_rect_color("fill", 0, 0, window_w, window_h, {0,0,0,0.85})
