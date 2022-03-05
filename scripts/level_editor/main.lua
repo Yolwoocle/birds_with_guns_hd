@@ -7,7 +7,7 @@ function toggle_map_edit()
 
 	if map_edit_mode==true then
 		room_files_n = 1
-		room_files = {"lvl1_rooms_1.txt","lvl1_rooms_branch.txt"}
+		room_files = {"lvl1_rooms.txt","lvl1_rooms_branch.txt","lvl1_rooms_branch_old.txt"}
 
 		init_room_map(room_files[room_files_n])
 
@@ -100,17 +100,19 @@ function update_map_edit(dt)
 		
 	end
 
-	if button_pressed("up", 1, input_device) or button_pressed("down", 1, input_device) then 
-		local next
-		if button_pressed("up", 1, input_device) then 
-            next=1 
-        else 
-            next = -1 
-        end
-	    room_files_n = mod_plus_1(room_files_n+next, #room_files)
-		room_files = {"lvl1_rooms_1.txt","lvl1_rooms_branch.txt"}
+	local next = nil
+
+	if button_pressed("up", 1, input_device) then 
+        next = 1
+    elseif button_pressed("down", 1, input_device) then
+        next = -1
+    end
+
+	if next then
+	room_files_n = mod_plus_1(room_files_n+next, #room_files)
 	init_room_map(room_files[room_files_n])
 	end
+
 
 end
 
