@@ -1,7 +1,7 @@
-require "scripts/utility"
-require "scripts/settings"
-require "scripts/damage_zone_list"
-require "scripts/damage_zone"
+require "scripts.utility"
+require "scripts.constants"
+require "scripts.damage_zone_list"
+require "scripts.damage_zone"
 
 function update_bullet(self, dt, i)
 	-- Movement
@@ -126,7 +126,7 @@ function draw_laser(self)
 
 		if self.active then
 			if checkdeath({x=v.x ,y=v.y,life = 10}) then
-				local mapx, mapy = v.x / block_width, v.y / block_width
+				local mapx, mapy = v.x / BLOCK_WIDTH, v.y / BLOCK_WIDTH
 				if map:is_solid(mapx, mapy) then
 				interact_map(self, map, mapx, mapy)
 				end
@@ -163,7 +163,7 @@ function checkdeath(self)
 		return true
 	end
 
-	local mapx, mapy = self.x / block_width, self.y / block_width
+	local mapx, mapy = self.x / BLOCK_WIDTH, self.y / BLOCK_WIDTH
 	if map:is_solid(mapx, mapy) then
 		self.remove = true
 		return true
@@ -180,7 +180,7 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 				return
 				--nb_delet = nb_delet+1
 			end
-			local mapx, mapy = self.x / block_width, self.y / block_width
+			local mapx, mapy = self.x / BLOCK_WIDTH, self.y / BLOCK_WIDTH
 			if map:is_solid(mapx, mapy) then
 			interact_map(self, map, mapx, mapy)
 			self:on_death(k)

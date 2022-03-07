@@ -1,6 +1,6 @@
-require "scripts/sprites"
-require "scripts/gun"
-require "scripts/utility"
+require "scripts.sprites"
+require "scripts.gun"
+require "scripts.utility"
 
 guns = {
 	revolver = make_gun({

@@ -1,7 +1,7 @@
-require "scripts/sprites"
-require "scripts/settings"
-require "scripts/files"
-require "scripts/utility"
+require "scripts.sprites"
+require "scripts.constants"
+require "scripts.files"
+require "scripts.utility"
 
 function init_map(w, h)
 	local map = {grid = {}}
@@ -63,7 +63,7 @@ function init_map(w, h)
 			tile_to_write_when_placed=2,
 		}),
 	}
-	map.tile_size = map.palette[0].spr:getWidth() * pixel_scale
+	map.tile_size = map.palette[0].spr:getWidth() * PIXEL_SCALE
 
 	map.get_tile = get_tile
 	map.set_tile = set_tile
@@ -92,10 +92,10 @@ function update_map(self)
 end
 function draw_map(self)
 	-- Compute the area on screen needed to be covered
-	local x1 = floor(camera.x / block_width)
-	local x2 = floor((camera.x + window_w) / block_width )
-	local y1 = floor(camera.y / block_width)
-	local y2 = floor((camera.y + window_h + 16) / block_width )
+	local x1 = floor(camera.x / BLOCK_WIDTH)
+	local x2 = floor((camera.x + window_w) / BLOCK_WIDTH )
+	local y1 = floor(camera.y / BLOCK_WIDTH)
+	local y2 = floor((camera.y + window_h + 16) / BLOCK_WIDTH )
 	
 	x1 = clamp(0, x1, self.width-1)
 	x2 = clamp(0, x2, self.width-1)
@@ -138,7 +138,7 @@ function draw_with_y_sorted_objs(self, objs)
 			end
 		end
 
-		local next_y = (y+1)*block_width
+		local next_y = (y+1)*BLOCK_WIDTH
 		while i <= #objs and objs[i].y <= next_y do
 			objs[i]:draw()
 			i=i+1
@@ -166,10 +166,10 @@ function make_tile(n, symb, spr, a)
 		spr = spr[1]
 	end
 	if not a.ox then 
-		tile.ox = spr:getWidth() - block_width
+		tile.ox = spr:getWidth() - BLOCK_WIDTH
 	end
 	if not a.oy then 
-		tile.oy = spr:getHeight() - block_width 
+		tile.oy = spr:getHeight() - BLOCK_WIDTH 
 	end
 	return tile
 end
@@ -185,10 +185,10 @@ function draw_tile(self, x, y, var, is_background_layer, floor_spr)
 	if spr == nil then  spr = spr_missing  end
 	
 	if self.is_transparent and is_background_layer then
-		love.graphics.draw(floor_spr, x*block_width, y*block_width, 0,1,1)
+		love.graphics.draw(floor_spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1)
 	end
 	-- TODO: optimise map by baking into canvas & update on change
-	love.graphics.draw(spr, x*block_width, y*block_width, 0,1,1, self.ox, self.oy)
+	love.graphics.draw(spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1, self.ox, self.oy)
 end
 
 function chr_to_tile_number(self,chr)
@@ -283,16 +283,15 @@ function generate_map(self, seed)
 	shuffle(rooms)
 
 	-- Write main path
-	local mainpath_y = 5
 	local room_id = 1
-	local w,h = 30, 18
+	local w,h = ROOM_W, ROOM_H
 	for ix=1,layout_width-1 do
-		layout[mainpath_y][ix] = 1 
+		layout[MAIN_PATH_Y][ix] = 1 
 		room_id = room_id + 1
-		self:write_room(rooms[room_id], ix*w, mainpath_y*h, rng)
+		self:write_room(rooms[room_id], ix*w, MAIN_PATH_Y*h, rng)
 	end
 	-- Starting area
-	self:write_room(rooms_source[1], 0, mainpath_y*h, rng)
+	self:write_room(rooms_source[1], 0, MAIN_PATH_Y*h, rng)
 
 	--					Branch   + Dead end
 	--				  +-------+	 |
@@ -300,7 +299,7 @@ function generate_map(self, seed)
 	--
 	-- Generate branches below and above
 	for dir = -1, 1, 2 do 
-		local branch_y = mainpath_y + dir
+		local branch_y = MAIN_PATH_Y + dir
 
 		local ix = rng:random(1,4)
 		while ix < layout_width do
@@ -387,8 +386,9 @@ function generate_path(self, rng, rooms, x, y, nb_room_min, nb_room_max, table_m
 end
 
 function tile_spawn_mob(self, rng, x, y)
-	local bw = block_width 
-	if not self:get_tile(x, y).is_solid and rng:random(100)==1 then
+	local bw = BLOCK_WIDTH 
+	local valid_x = (x > ROOM_W*1.5)
+	if not self:get_tile(x, y).is_solid and valid_x and rng:random(100)==1 then
 		spawn_random_mob(x*bw + bw/2, y*bw + bw/2)
 	end
 end

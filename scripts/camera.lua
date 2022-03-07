@@ -1,4 +1,5 @@
-require "scripts/utility"
+require "scripts.utility"
+require "scripts.constants"
 
 function init_camera()
 	local camera = {
@@ -42,6 +43,7 @@ function init_camera()
 		set_offset = camera_set_offset,
 		set_scale = camera_set_scale,
 		get_bounds = get_bounds,
+		manage_camera_lock = manage_camera_lock,
 		clamp_to_allowed_coordinates = clamp_to_allowed_coordinates,
 	}
 	return camera
@@ -51,14 +53,11 @@ function update_camera(self, dt)
 	local smoothing = math.min(self.smoothing * dt, 1)
 	
 	-- Lerp to player
-	if not self.lock_x then 
-		self.fake_x = lerp(self.fake_x, self.target_x, smoothing)--FIXME:dt cam smoothing
-		--self.fake_x + (self.target_x - self.fake_x) * smoothing  
-	end
-	if not self.lock_y then 
-		self.fake_y = lerp(self.fake_y, self.target_y, smoothing)--FIXME:dt cam smoothing--self.fake_x + (self.target_x - self.fake_x) * smoothing  
-		--self.fake_y = self.fake_y + (self.target_y - self.fake_y) * smoothing
-	end
+	self.fake_x = lerp(self.fake_x, self.target_x, smoothing)--FIXME:dt cam smoothing
+	self.fake_y = lerp(self.fake_y, self.target_y, smoothing)--FIXME:dt cam smoothing--self.fake_x + (self.target_x - self.fake_x) * smoothing  
+
+	-- Exit lock on if target is far away enough/certain positions
+	self:manage_camera_lock()
 
 	-- Aiming offset
 	if self.lock_x then
@@ -104,8 +103,12 @@ end
 
 function camera_set_target(self, x, y)
 	x, y = self:clamp_to_allowed_coordinates(x, y)
-	self.target_x = x
-	self.target_y = y
+	if not self.lock_x then
+		self.target_x = x
+	end
+	if not self.lock_y then
+		self.target_y = y
+	end
 end
 
 function camera_set_offset(self, x, y)
@@ -132,10 +135,10 @@ function shake_camera(self, r)
 end
 
 function get_bounds(self)
-	local x1 = (self.x / block_width) 
-	local x2 = ((self.x + window_w) / block_width ) 
-	local y1 = (self.y / block_width) 
-	local y2 = ((self.y + window_h + 16) / block_width ) 
+	local x1 = (self.x / BLOCK_WIDTH) 
+	local x2 = ((self.x + window_w) / BLOCK_WIDTH ) 
+	local y1 = (self.y / BLOCK_WIDTH) 
+	local y2 = ((self.y + window_h + 16) / BLOCK_WIDTH ) 
 
 	return floor(x1), floor(x2), floor(y1), floor(y2)
 end
@@ -144,4 +147,27 @@ function clamp_to_allowed_coordinates(self, x, y)
 	local new_x = clamp(self.min_x, x, self.max_x)
 	local new_y = clamp(self.min_y, y, self.max_y)
 	return new_x, new_y
+end
+
+function manage_camera_lock(self)
+	for i,p in pairs(players) do
+		-- If players exit the beginning room, exit x-lock
+		if p.x > ROOM_PIXEL_W then
+			self.lock_x = false
+		end
+
+		-- Move if on branch
+		if p.y < MAIN_PATH_PIXEL_Y then 
+			self.target_y = MAIN_PATH_PIXEL_Y - ROOM_PIXEL_H
+		end
+		if p.y > MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H then
+			self.target_y = MAIN_PATH_PIXEL_Y + ROOM_PIXEL_H
+		end
+
+		-- Back to main branch
+		local y1, y2 = MAIN_PATH_PIXEL_Y, MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H
+		if y1 < p.y and p.y < y2 then 
+			self.target_y = MAIN_PATH_PIXEL_Y
+		end
+	end
 end

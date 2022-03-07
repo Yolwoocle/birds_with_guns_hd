@@ -1,4 +1,4 @@
-require "scripts/utility"
+require "scripts.utility"
 local mob_distribution_table = require "probability_tables/mob_distribution"
 
 function make_mob(a)
@@ -218,7 +218,7 @@ function draw_mob(self)
 	draw_shadow(self)
 
 	if     self.looking_up then self.gun:draw(self) end
-	draw_centered(self.spr, self.x, self.y, 0, pixel_scale*self.gun.flip, pixel_scale)
+	draw_centered(self.spr, self.x, self.y, 0, PIXEL_SCALE*self.gun.flip, PIXEL_SCALE)
 	if not self.looking_up then self.gun:draw(self) end
 	
 	--rect_color("line", floor(self.x-self.w), floor(self.y-self.h), floor(2*self.w), floor(2*self.h), {1,0,0})

@@ -1,4 +1,4 @@
-require "scripts/utility"
+require "scripts.utility"
 
 
 waves = {
@@ -128,7 +128,7 @@ waves = {
 }
 
 function update_waves(dt)
-    bw = block_width
+    bw = BLOCK_WIDTH
     spawn_time = max(spawn_time - dt,0)
     if #mobs == 0 and spawn_time==inf then
         spawn_time = 3

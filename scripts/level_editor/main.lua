@@ -1,4 +1,4 @@
-require "scripts/utility"
+require "scripts.utility"
 
 map_edit_mode = false
 local wheel = 0
@@ -24,7 +24,7 @@ function update_map_edit(dt)
 	local input_device = {keybinds,"keyboard+mouse",1}
 	 prevmx,prevmy = mx,my
 	 mx,my=get_world_cursor_pos(mid_screen, input_device,dt, camera)
-	 mapmx,mapmy = floor(mx/block_width)*block_width, floor(my/block_width)*block_width,block_width,block_width
+	 mapmx,mapmy = floor(mx/BLOCK_WIDTH)*BLOCK_WIDTH, floor(my/BLOCK_WIDTH)*BLOCK_WIDTH,BLOCK_WIDTH,BLOCK_WIDTH
 
 	 --moove camera with right click
 	if button_down("alt", 1,input_device) then
@@ -47,7 +47,7 @@ function update_map_edit(dt)
 		end
 	end
 
-	local bx,by=floor(mx/block_width), floor(my/block_width)
+	local bx,by=floor(mx/BLOCK_WIDTH), floor(my/BLOCK_WIDTH)
 	local ongrid = map.grid[by] and map.grid[by][bx]
 	local notvoid = ongrid and not(map.grid[by][bx][1]==0)
 
@@ -118,7 +118,7 @@ function draw_map_edit()
 	camera:draw()
 	map:draw()
 
-	love.graphics.rectangle("line", mapmx,mapmy ,block_width ,block_width)
+	love.graphics.rectangle("line", mapmx,mapmy ,BLOCK_WIDTH ,BLOCK_WIDTH)
 	draw_centered(spr_cursor, mx, my)
 	if map.palette[tile_n].spr[1] then
 

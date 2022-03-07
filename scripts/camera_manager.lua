@@ -1,4 +1,4 @@
-require "scripts/camera"
+require "scripts.camera"
 
 local CameraManager = {}
 

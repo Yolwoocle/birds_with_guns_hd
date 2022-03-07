@@ -1,4 +1,4 @@
-require "scripts/utility"
+require "scripts.utility"
 
 
 function collision_response(obj, map)
@@ -19,7 +19,7 @@ function collision_response(obj, map)
 	local x2, y2 = floor(o.x+o.dx*dt), floor(o.y+o.dy*dt)
 
 	obj.is_coll = false
-	local bw = block_width
+	local bw = BLOCK_WIDTH
 	local sgn_x = sign(x2-x1)
 	local sgn_y = sign(y2-y1)
 
@@ -264,7 +264,7 @@ function is_solid_rect(map, x, y, w, h)
         |       |
         C - l - D
     ]]
-	local blk_w = block_width or 16
+	local blk_w = BLOCK_WIDTH or 16
 	x = x / blk_w
 	y = y / blk_w
 	w = w / blk_w
@@ -311,7 +311,7 @@ function collide_object(o,bounce)
 		o.dy = 0
 	end
 
-	local bw = block_width
+	local bw = BLOCK_WIDTH
 	local coll_x, x_block = is_solid_rect(map, nextx, o.y, o.w, o.h)
 	local coll_y, y_block = is_solid_rect(map, o.x, nexty, o.w, o.h)
 	local coll_xy, xy_block = is_solid_rect(map, nextx, nexty, o.w, o.h)
@@ -361,7 +361,7 @@ end
 	local x2, y2 = floor(o.x+o.dx*dt), floor(o.y+o.dy*dt)
 
 	obj.is_coll = false
-	local bw = block_width
+	local bw = BLOCK_WIDTH
 	local sgn_x = sign(x2-x1)
 	local sgn_y = sign(y2-y1)
 	
@@ -410,7 +410,7 @@ function swept_aabb(o, b)
 			| b   | |
 			+-----+ v	
 	] ]
-	local bw = block_width
+	local bw = BLOCK_WIDTH
 	local dt = love.timer.getDelta()
 
 	rect_color("line", b.x, b.y, b.w, b.h, {1,0,0})

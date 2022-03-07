@@ -1,7 +1,8 @@
-require "scripts/utility"
-require "scripts/collision"
-require "scripts/settings"
-require "scripts/ui"
+require "scripts.utility"
+require "scripts.collision"
+require "scripts.constants"
+require "scripts.settings"
+require "scripts.ui"
 
 local donothing = function() return end --For debugging
 

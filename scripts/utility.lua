@@ -32,7 +32,7 @@ function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
 		x = floor(x)
 		y = floor(y)
 		r = r or 0
-		sx = sx or pixel_scale
+		sx = sx or PIXEL_SCALE
 		sy = sy or sx
 		ox = ox or 0
 		oy = oy or 0
@@ -251,8 +251,8 @@ end
 	while dof<8 do
 		mx = rx / 64
 		my = ry / 64
-		mp = my * block_width + mx
-		if mp < block_width*block_width and  map:is_solid(mx, my) then
+		mp = my * BLOCK_WIDTH + mx
+		if mp < BLOCK_WIDTH*BLOCK_WIDTH and  map:is_solid(mx, my) then
 			dof = 8
 			return {dist = dist(x,y,rx,ry) , hit = dist(x,y,rx,ry)>=distmax , y = ry , x = rx}
 		else

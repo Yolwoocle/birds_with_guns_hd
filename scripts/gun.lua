@@ -1,8 +1,8 @@
-require "scripts/utility"
-require "scripts/settings"
-require "scripts/damage_zone_list"
-require "scripts/damage_zone"
-require "scripts/bullet"
+require "scripts.utility"
+require "scripts.constants"
+require "scripts.damage_zone_list"
+require "scripts.damage_zone"
+require "scripts.bullet"
 local gun_loot_table = require "probability_tables/gun"
 
 function make_gun(a)

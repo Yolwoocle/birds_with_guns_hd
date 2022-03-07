@@ -1,4 +1,4 @@
-require "scripts/damage_zone"
+require "scripts.damage_zone"
 
 zone = {
 

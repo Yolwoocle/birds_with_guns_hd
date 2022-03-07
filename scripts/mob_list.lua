@@ -1,10 +1,11 @@
-require "scripts/mob"
-require "scripts/gun_list"
+require "scripts.mob"
+require "scripts.gun_list"
 
 mob_list = {
 	fox = make_mob({
 		name = "place_older",
-		anim_idle = spr_fox,
+		anim_idle = {spr_fox},
+		anim_walk = {spr_robot},
 		spr_hit = spr_fox_hit,
 		life = 3,	
 		spd = 40,--50,

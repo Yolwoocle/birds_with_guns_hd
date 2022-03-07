@@ -1,4 +1,4 @@
-require "scripts/utility"
+require "scripts.utility"
 
 function make_zone(a)
     local zone = {

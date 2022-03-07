@@ -1,10 +1,10 @@
-require "scripts/sprites"
-require "scripts/gun"
-require "scripts/utility"
-require "scripts/input"
-require "scripts/gun_list"
-require "scripts/collision"
-require "scripts/settings"
+require "scripts.sprites"
+require "scripts.gun"
+require "scripts.utility"
+require "scripts.input"
+require "scripts.gun_list"
+require "scripts.collision"
+require "scripts.constants"
 
 function init_player(n,x,y, spr, controle, nbcontroller)
 	local player = {
@@ -174,10 +174,13 @@ function update_player(self, dt)
 		end
 		
 		if self.revive_timer > self.max_revive_timer then
+			self:revive()
+			--[[
 			self.alive = true
 			self.life = 1
 			self:set_iframes()
 			self.revive_timer = 0
+			--]]
 		end
 	end
 

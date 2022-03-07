@@ -1,5 +1,5 @@
-require "scripts/utility"
-require "scripts/collision"
+require "scripts.utility"
+require "scripts.collision"
 
 function draw_3_slice(x, y, w, spr1, spr2, spr3)
 	if type(spr1)=='table' then  

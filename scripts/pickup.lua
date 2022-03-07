@@ -1,6 +1,6 @@
-require "scripts/utility"
-require "scripts/sprites"
-require "scripts/gun"
+require "scripts.utility"
+require "scripts.sprites"
+require "scripts.gun"
 
 function make_pickups()
 	local p = {

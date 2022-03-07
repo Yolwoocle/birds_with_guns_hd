@@ -1,5 +1,5 @@
-require "scripts/waves"
-require "scripts/utility"
+require "scripts.waves"
+require "scripts.utility"
 local CameraManager = require "scripts/camera_manager"
 
 function make_game()
@@ -19,7 +19,7 @@ function init_game(self)
 	_shot_ = {}
 	sp_mark = {}
 
-	number_of_players = 2
+	number_of_players = 1
 
 	players = {}
 	for i =1,number_of_players do
@@ -39,17 +39,17 @@ function init_game(self)
 		end
 
 		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
-		local ply = init_player(i, 84, 18*85+i*16, birds_spr[i], control_scheme, nbcontroller)
+		local ply = init_player(i, 84, MAIN_PATH_PIXEL_Y+72+i*16, birds_spr[i], control_scheme, nbcontroller)
 		table.insert(players, ply)
 		players[i].anim_walk = birds_spr[i]
 		players[i].anim_idle = birds_spr[i]
 	end
 
 	camera = init_camera()
-	camera.lock_x = false
+	camera:set_target(0, MAIN_PATH_PIXEL_Y)
+	camera.lock_x = true
 	camera.lock_y = true
-	camera:set_pos(0, 16*18*7)
-	camera.fake_y = 16*18*5 
+	camera.fake_y = MAIN_PATH_PIXEL_Y 
 --	camera_manager = CameraManager:new(camera, players)
 
 	zones = {}

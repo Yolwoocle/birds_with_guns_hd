@@ -1,8 +1,8 @@
-require "scripts/utility"
+require "scripts.utility"
 
 local distr = {
-    fox = 5,
-    robot = 20,
+    fox = 20,
+    robot = 5,
 }
 
 return distr
