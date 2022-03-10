@@ -16,7 +16,7 @@ require "scripts.game_main"
 require "scripts.pickup"
 require "scripts.particles"
 require "scripts.waves"
-require "scripts.level_editor/main"
+require "scripts.level_editor.main"
 require "scripts.menu"
 gifcat = require("gifcat")
 
@@ -29,6 +29,8 @@ function love.load()
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	
+	input = make_input_manager()
+
 	gifcat.init()
 
 	res_1080p_4 = 480, 270
@@ -62,18 +64,13 @@ function love.load()
 
 	notification = ""
 
-	updatejoystick()
-	init_keybinds()
-	init_joystickbinds()
-	init_button_last_state_table()
-
 	init_menu_manager()
 	game = make_game()
 end
 
 function love.update(dt)
+	input:update(dt)
 	gifcat.update(dt)
-	updatejoystick()
 	if map_edit_mode then
 		update_map_edit(dt)
 	else
@@ -83,12 +80,11 @@ function love.update(dt)
 			menu_manager:update(dt)
 		end
 	end
-	--input_manager:update(dt)
 end
 
 function love.draw()
     love.graphics.setCanvas(canvas)
-    love.graphics.clear()
+    love.graphics.clear(0,0,0)
     love.graphics.translate(0, 0)
     
 	if map_edit_mode then

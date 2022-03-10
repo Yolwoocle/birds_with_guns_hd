@@ -5,6 +5,7 @@ local CameraManager = require "scripts/camera_manager"
 function make_game()
     local game = {
         init = init_game,
+		begin = begin_game,
 		update = update_game,
         draw = draw_game,
 		keypressed = game_keypressed,
@@ -19,46 +20,17 @@ function init_game(self)
 	_shot_ = {}
 	sp_mark = {}
 
-	number_of_players = 1
-
-	players = {}
-	for i =1,number_of_players do
-		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
-			control_scheme = "keyboard+mouse"
-			nbcontroller = 1
-		elseif i == 2 then
-			control_scheme = "keyboard"
-
-		elseif i == 3 then 
-			control_scheme = "joystick"
-			nbcontroller=1
-			
-		elseif i == 4 then 
-			control_scheme = "joystick"
-			nbcontroller=2
-		end
-
-		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
-		local ply = init_player(i, 84, MAIN_PATH_PIXEL_Y+72+i*16, birds_spr[i], control_scheme, nbcontroller)
-		table.insert(players, ply)
-		players[i].anim_walk = birds_spr[i]
-		players[i].anim_idle = birds_spr[i]
-	end
-
 	camera = init_camera()
 	camera:set_target(0, MAIN_PATH_PIXEL_Y)
 	camera.lock_x = true
 	camera.lock_y = true
 	camera.fake_y = MAIN_PATH_PIXEL_Y 
---	camera_manager = CameraManager:new(camera, players)
+	
+	map = init_map(600, 300)
 
 	zones = {}
 	mobs = {}
 	pickups = make_pickups()
-	
-	map = init_map(600, 300)
-	seed = love.math.random()*40000
-	map:generate_map(seed)
 
 	bullets = {}
 	_shot = {}
@@ -69,12 +41,38 @@ function init_game(self)
 	perf = {}
 	g = 0
 
+	players = {}
+end
+
+function begin_game(self, nb_ply, schemes)
+	seed = love.math.random()*40000
+	map:generate_map(seed)
+
+	number_of_players = nb_ply or 1
+
+	schemes = schemes or {"keyboard+mouse", "keyboard", "joystick", "joystick"}
+	players = {}
+	for i = 1,number_of_players do
+		local control_scheme = schemes[i]
+		local nbcontroller = 1
+		
+		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
+		
+		--FIXME: player initplayers[i]
+		local ply = init_player(i, 84+i*32, MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2, birds_spr[i], control_scheme, nbcontroller)
+		ply.anim_walk = birds_spr[i]
+		ply.anim_idle = birds_spr[i]
+		
+		table.insert(players, ply)
+	end
+--	camera_manager = CameraManager:new(camera, players)
+
 	hud = make_hud()
 	hud:make_bar("life_bar", 6,6, 10,10, spr_hp_bar, spr_hp_bar_empty, spr_icon_heart)
 	hud:make_bar("ammo_bar", 6,26, nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
 	hud:make_img("gun_1", 78,6, spr_missing)
 	hud:make_img("gun_2", 78,6, spr_missing)
-	hud:make_imgs("gun_list", 78,40, {spr_missing})
+	hud:make_imgs("gun_list", 78,40, {spr_missing})--]]
 	spawn_location = {}
 end
 

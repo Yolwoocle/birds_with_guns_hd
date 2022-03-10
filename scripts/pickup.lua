@@ -85,7 +85,7 @@ end
 
 function spawn_random_loot(self, x, y)
 	if love.math.random() <= 0.1 then
-		self:spawn("gun", get_random_gun(), x, y)
+		--self:spawn("gun", get_random_gun(), x, y)
 		
 	elseif love.math.random() <= 0.1 then
 		self:spawn("life", 2, x, y)

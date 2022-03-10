@@ -19,7 +19,26 @@ function init_menu_manager()
 			{"new super birds with guns bros 2 HD ultra 3D"},
 			{"featuring dante from devil may cry series"},
 			{""},
-			{"PLAY", callback_set_menu('none')},
+			{"1 PLAYER", function() 
+				menu_manager:resume()
+				game:begin(1)
+			end},
+			{"2 PLAYERS - keyboard+mouse", function() 
+				menu_manager:resume()
+				game:begin(2, {"keyboard+mouse", "keyboard"})
+			end},
+			{"2 PLAYERS - split keyboard", function() 
+				menu_manager:resume()
+				game:begin(2, {"keyboard", "keyboard"})
+			end},
+			{"3 PLAYERS", function() 
+				menu_manager:resume()
+				game:begin(3)
+			end},
+			{"4 PLAYERS", function() 
+				menu_manager:resume()
+				game:begin(4)
+			end},
 			{"OPTIONS", callback_set_menu('options')},
 		}, function()
 			camera_rect_color("fill", 0, 0, window_w, window_h, {0,0,0,0.5})
@@ -110,14 +129,22 @@ function init_menu_manager()
 
 	m.toggle_pause = function(self)
 		if self.curmenu_name == "pause" then
-			self.curmenu_name = "none"
-			mouse_visible = false --TODO: should be settings.mouse_visible
-			love.mouse.setVisible(false)
-		else
-			self.curmenu_name = "pause"
-			mouse_visible = true
-			love.mouse.setVisible(true)
+			self:resume()
+		elseif self.curmenu_name == "none" then
+			self:pause()
 		end
+	end
+
+	m.pause = function(self)
+		self.curmenu_name = "pause"
+		mouse_visible = true
+		love.mouse.setVisible(true)
+	end
+	
+	m.resume = function(self)
+		self.curmenu_name = "none" 
+		mouse_visible = false --TODO: should be settings.mouse_visible
+		love.mouse.setVisible(false)
 	end
 
 	menu_manager = m  
@@ -140,8 +167,10 @@ function make_menu(items, custom_bg)
 	end
 
 	m.update = function(self, dt)
+		local btn_fire = input:button_pressed("fire", 1)
+		
 		for i,item in ipairs(self.items) do
-			if item:touches_mouse() and love.mouse.isDown(1) then--and button_pressed("fire") then
+			if item:touches_mouse() and btn_fire then
 				item:on_click()
 			end
 		end
@@ -224,7 +253,7 @@ function make_menu_item(n, x, y, text, on_click, display_val, is_hoverable)
 	end
 
 	it.touches_mouse = function(self)
-		local mx, my = get_mouse_pos()
+		local mx, my = input:get_mouse_pos()
 		local coll = coll_rect_point(self.x, self.y, self.ox, self.oy, mx, my)
 		self.is_selected = coll 
 		return coll

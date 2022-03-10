@@ -122,6 +122,8 @@ function camera_set_scale(self, sx, sy)
 end
 
 function kick_camera(self, dir, dist, offset_ang)
+	dist = dist / number_of_players
+
 	local oa = offset_ang or 1 
 	self.kick_dir = dir + love.math.random()*oa - oa/2
 	self.kick_dist = dist
@@ -131,7 +133,8 @@ function kick_camera(self, dir, dist, offset_ang)
 end
 
 function shake_camera(self, r)
-	self.shake_rad = r
+	r = r / number_of_players
+	self.shake_rad = r 
 end
 
 function get_bounds(self)

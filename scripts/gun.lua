@@ -48,7 +48,7 @@ function make_gun(a)
 
 		knockback = a.knockback or 300,
 
-		do_muzzle_flash = a.do_muzzle_flash,
+		do_muzzle_flash = ternary(a.do_muzzle_flash, false, true),
 
 		charge				= a.charge 				or false,
 		charge_curve		= a.charge_curve		or 2,

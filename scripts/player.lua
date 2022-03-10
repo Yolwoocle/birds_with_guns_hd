@@ -83,6 +83,7 @@ function init_player(n,x,y, spr, controle, nbcontroller)
 		max_pickup_cd = 1,
 
 		get_nearest_enemy = get_nearest_enemy,
+		get_autoaim = get_autoaim,
 		autoaim_max_dist = 360,
 		last_autoaim_dist = math.huge,
 		spr_cu = sprs_cursor[n],
@@ -99,7 +100,6 @@ function init_player(n,x,y, spr, controle, nbcontroller)
 		draw = draw_player,
 
 		--TODO: add keybinds
-		input_device = {keybinds,controle,nbcontroller}, --"keyboard+mouse" "keyboard" "joystick"
 		show_cu = true,
 
 		debugcanvas = love.graphics.newCanvas(),
@@ -132,7 +132,7 @@ function update_player(self, dt)
 		self.looking_up = self.rot > pi
 
 		-- Update gun
-		if button_pressed("alt", self.n,self.input_device) then
+		if input:button_pressed("alt", self.n) then
 			self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
 			self.gun = self.guns[self.gun_n]
 			self.gun.cooldown_timer = math.min(self.gun.cooldown_timer + 0.25,self.gun.cooldown)
@@ -140,7 +140,7 @@ function update_player(self, dt)
 			for k = #_shot , 1 , -1 do
 				v = _shot[k]
 				if v.player == self then
-					table.remove(_shot , k)
+					table.remove(_shot, k)
 				end
 			end
 
@@ -267,72 +267,17 @@ function player_draw_cursor(self)
 end
 
 function player_movement(self, dt)
-	local j
-	local joystick
-	if self.input_device[2] == "joystick" then
-		j = joysticks[self.input_device[3]]
-		if j then 
-			joystick = {} 
-			joystick.x = j:getAxis(1)
-			joystick.y = j:getAxis(2)
-		else
-			joystick = nil
-		end
-	else
-		joystick = nil
-	end
-	local inp = self.input_device
-
-	local dir_vector = {x = 0, y = 0}
-	self.walk_dir = {x=0, y=0}
 	self.is_walking = false
-	if button_down("left", self.n, self.input_device) or (joystick and joystick.x<-joystick_deadzone) then
-		if (joystick and joystick.x < -joystick_deadzone) then 
-			dir_vector.x = dir_vector.x + joystick.x
-		else
-			dir_vector.x = dir_vector.x - 1
-		end
-		self.is_walking = true
-		self.walk_dir.x = self.walk_dir.x - 1
-	end
-	if button_down("right", self.n, self.input_device) or (joystick and joystick.x>joystick_deadzone) then
-		if (joystick and joystick.x > joystick_deadzone) then 
-			dir_vector.x = dir_vector.x + joystick.x
-		else
-			dir_vector.x = dir_vector.x + 1
-		end
-		self.is_walking = true
-		self.walk_dir.x = self.walk_dir.x + 1
-	end
-	if button_down("up", self.n,inp) or (joystick and joystick.y<-joystick_deadzone) then
-		if (joystick and joystick.y<-joystick_deadzone) then 
-			dir_vector.y = dir_vector.y + joystick.y
-		else
-			dir_vector.y = dir_vector.y - 1
-		end
-		self.is_walking = true
-	end
-	if button_down("down", self.n,inp) or (joystick and joystick.y>joystick_deadzone) then
-		if (joystick and joystick.y>joystick_deadzone) then 
-			dir_vector.y = dir_vector.y + joystick.y
-		else
-			dir_vector.y = dir_vector.y + 1
-		end
+	
+	local dir_x, dir_y = input:get_movement_axis(self.n)
+	self.walk_dir = {x=dir_x, y=dir_y}
+
+	if not (dir_x == 0 and dir_y == 0) then
 		self.is_walking = true
 	end
 
-	self.walk_dir = dir_vector
-	if dir_vector.x == 0 and dir_vector.y == 0 then
-		self.is_walking = false
-	end
-	-- We normalise the direction vector to avoid faster speed in diagonals
-	local norm = math.sqrt(dir_vector.x * dir_vector.x + dir_vector.y * dir_vector.y) + 0.0001 -- utiliser la fonction dist()
-
-	dir_vector.x = dir_vector.x / norm
-	dir_vector.y = dir_vector.y / norm
-
-	self.dx = self.dx + (dir_vector.x * self.speed)
-	self.dy = self.dy + (dir_vector.y * self.speed)
+	self.dx = self.dx + (dir_x * self.speed)
+	self.dy = self.dy + (dir_y * self.speed)
 	
 	-- Idk why this friction works but thanks stackoverflow
 	local fricratio = 1 / (1 + dt * self.friction);
@@ -348,20 +293,23 @@ function aim_player(self, dt)
 	--	mmx, mmy = get_mouse_pos(self.input_device, camera , self)
 	--end
 
-	mmx, mmy = get_world_cursor_pos(self, self.input_device,dt, camera)
+	local mmx, mmy = input:get_world_cursor_pos(self.n, self)
 
 	self.cu_x = mmx or self.cu_x
 	self.cu_y = mmy or self.cu_x
 
 	self.rot = math.atan2(mmy - self.y, mmx - self.x)
 	self.shoot = false
+
+	-- Firing
+	-- god why is this code such a mess 
 	if self.gun.cooldown_timer <= 0 then
 
 		local button_active = false
 		if self.gun.is_auto then
-			button_active = button_down("fire", self.n,self.input_device)
+			button_active = input:button_down("fire", self.n)
 		else
-			button_active = button_pressed("fire", self.n,self.input_device)
+			button_active = input:button_pressed("fire", self.n)
 		end
 
 		if (not self.gun.charge and button_active) 
@@ -370,7 +318,7 @@ function aim_player(self, dt)
 
 				if self.gun.charge then
 					local avancement = (self.gun.dt/self.gun.charge_time)^self.gun.charge_curve
-					if self.gun.save_rafale then
+					if self.gun.save_burst then
 						load_save_gun_stats(self)
 					end
 
@@ -386,7 +334,7 @@ function aim_player(self, dt)
 				self.gun.dt = 0
 				
 			end
-		elseif button_down("fire", self.n,self.input_device) and self.gun.charge then
+		elseif input:button_down("fire", self.n,self.input_device) and self.gun.charge then
 			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
 		end
 	end
@@ -415,10 +363,11 @@ function get_autoaim(self)
 			y = self.cu_y
 		end
 	end
+
 	local dt = love.timer.getDelta()
 	x = lerp(self.cu_x, x, 0.1)
 	y = lerp(self.cu_y, y, 0.1)
-	return x-camera.x, y-camera.y
+	return x, y
 end
 
 function animate_player(self)
@@ -531,7 +480,7 @@ end
 
 function save_gun_stats(self)
 	-- WHY IS THIS A METHOD OF PLAYER
-	self.gun.save_rafale 	 	= self.gun.rafale
+	self.gun.save_burst 	 	= self.gun.burst
 	self.gun.save_bullet_spd  	= self.gun.bullet_spd
 	self.gun.save_laser_length 	= self.gun.laser_length
 	self.gun.save_nbshot 	 	= self.gun.nbshot
@@ -539,7 +488,7 @@ function save_gun_stats(self)
 	self.gun.save_scattering	= self.gun.scattering
 	self.gun.save_offset_spd  	= self.gun.offset_spd
 	self.gun.save_life 		 	= self.gun.life			
-	self.gun.save_rafaledt	 	= self.gun.rafaledt 
+	self.gun.save_burstdt	 	= self.gun.burstdt 
 	self.gun.save_spdslow 	 	= self.gun.spdslow	
 	self.gun.save_scale 		= self.gun.scale
 	self.gun.save_damage 		= self.gun.damage
@@ -547,7 +496,7 @@ function save_gun_stats(self)
 end
 
 function load_save_gun_stats(self)
-	self.gun.rafale 	 	= self.gun.save_rafale
+	self.gun.burst 	 	= self.gun.save_burst
 	self.gun.bullet_spd  	= self.gun.save_bullet_spd
 	self.gun.laser_length 	= self.gun.save_laser_length
 	self.gun.nbshot 	 	= self.gun.save_nbshot
@@ -555,7 +504,7 @@ function load_save_gun_stats(self)
 	self.gun.scattering		= self.gun.save_scattering
 	self.gun.offset_spd  	= self.gun.save_offset_spd
 	self.gun.life 			= self.gun.save_life			
-	self.gun.rafaledt	 	= self.gun.save_rafaledt 
+	self.gun.burstdt	 	= self.gun.save_burstdt 
 	self.gun.spdslow 	 	= self.gun.save_spdslow	
 	self.gun.scale 			= self.gun.save_scale
 	self.gun.damage 		= self.gun.save_damage
@@ -563,7 +512,7 @@ function load_save_gun_stats(self)
 end
 
 function advancementtoactive(self,avancement)
-	self.gun.rafale 	 		= self.gun.rafale 		+ floor( self.gun.charge_nbrafale 		* avancement)
+	self.gun.burst 	 		= self.gun.burst 		+ floor( self.gun.charge_nbburst 		* avancement)
 	self.gun.bullet_spd   = self.gun.bullet_spd 	+ self.gun.charge_bullet_spd 			* avancement
 	self.gun.laser_length = self.gun.laser_length	+ self.gun.charge_laser_length 			* avancement
 	self.gun.nbshot 		 	= self.gun.nbshot 		+ floor( self.gun.charge_nbshot 		* avancement)
@@ -571,7 +520,7 @@ function advancementtoactive(self,avancement)
 	self.gun.scattering	  = self.gun.scattering	+ self.gun.charge_scattering			* avancement	 		 
 	self.gun.offset_spd   = self.gun.offset_spd 	+ self.gun.charge_ospd 					* avancement
 	self.gun.bullet_life  = self.gun.bullet_life  + self.gun.charge_life 					* avancement
-	self.gun.rafaledt	 		= self.gun.rafaledt		+ self.gun.charge_rafaledt				* avancement
+	self.gun.burstdt	 		= self.gun.burstdt		+ self.gun.charge_burstdt				* avancement
 	self.gun.spdslow 	 		= self.gun.spdslow 	 	+ self.gun.charge_spdslow 				* avancement
 	self.gun.scale 				= self.gun.scale        + self.gun.charge_scale					* avancement
 	self.gun.damage				= self.gun.damage		+ self.gun.charge_damage				* avancement

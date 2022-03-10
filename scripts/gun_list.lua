@@ -41,7 +41,7 @@ guns = {
 		spdslow = .93,
 		scattering = 1,
 		cooldown = 0.5,
-		screenkick = 3,
+		screenkick = 1,
 		damage = .34,
 		bullet_life = 0.4,
 	},
@@ -169,7 +169,7 @@ guns = {
 		type = "bullet",
 		spr = spr_paper_plane_gun,
 		spr_bullet = spr_paper_plane,
-		scale = 1.30,
+		scale = 1,
 		damage = 2,
 
 		cooldown = 0.2,
@@ -179,7 +179,7 @@ guns = {
 		bounce = 1,
 		is_auto = true,
 
-		screenkick = 5,
+		screenkick = 1,
 	
 		update_option = function(self,dt)
 			if self.turn_dir == nil then
@@ -280,6 +280,18 @@ guns = {
 		
 		scale = 1,
 		cooldown = 3,
+		make_shot = default_shoot,
+		scale = 1.5,
+	}),	
+	cactus_machinegun = make_gun({
+		name = "Cactus Machinegun",
+		type = "bullet",
+		spr_bullet = spr_bullet_red,
+		spr = spr_shotgun,
+		bullet_spd = 100,
+		
+		scale = 1,
+		cooldown = 0.1,
 		make_shot = default_shoot,
 		scale = 1.5,
 	}),	
