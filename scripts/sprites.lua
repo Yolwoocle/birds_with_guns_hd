@@ -35,6 +35,11 @@ spr_bar_small_ammo = load_image("ui/small_ammo_bar")
 spr_bar_small_life = load_image("ui/small_life_bar") 
 spr_bar_small_empty = load_image("ui/small_empty_bar") 
 
+spr_symb_walk = load_image("ui/symbol_walk")
+spr_symb_aim = load_image("ui/symbol_aim")
+spr_symb_shoot = load_image("ui/symbol_shoot")
+spr_symb_switch_gun = load_image("ui/symbol_switch_gun")
+
 -- Button prompts
 sprs_buttons = {}
 sprs_buttons.keyboard = {
@@ -155,12 +160,16 @@ anim_duck_walk = load_image_table("players/duck/duck_walk_bad_",8)
 
 
 -- Enemies
+spr_fox = load_image("fox_1")
 anim_fox = {
 	load_image("fox_1")
 }
 spr_fox_hit = load_image("enemies/fox_1_hit")
+
 spr_robot = load_image("enemies/robot/robot_1")
 spr_robot_hit = load_image("enemies/robot/robot_1_hit")
+
+spr_cactus = load_image("enemies/cactus/cactus_1")
 
 -- Pickups
 spr_pick_ammo = load_image("pickups/ammo")
@@ -189,18 +198,13 @@ spr_revolver_big = load_image("guns/gun_revolver")
 spr_firework_launcher_big = load_image("guns/firework_launcher_big")
 
 -- Tiles
-spr_ground_dum = load_image("dummy_ground")
 spr_wall_1 = load_image("tiles/wall_1")
-sprs_floor_wood = {
-	load_image("tiles/floor_wood_1"),
-	load_image("tiles/floor_wood_2"),
-	load_image("tiles/floor_wood_3"),
-	load_image("tiles/floor_wood_4"),
-	w = 2, h = 2,
-}
-spr_ground_1 = load_image("tiles/floor_plain_1")
 spr_ground_wood = load_image("tiles/floor_wood_single")
-sprs_floor_wood_detail = load_image_table("scrapped/floor_wood_detail", 4, 2,2)
+sprs_floor_wood = load_image_table("tiles/floor_wood/floor_wood_1_", 5, 2,2)
+sprs_floor_concrete = load_image_table("tiles/tile_concrete_", 5)
+sprs_floor_carpet = load_image_table("tiles/carpet/tile_carpet_F_", 5)
+spr_floor_carpet = load_image("tiles/carpet/tile_carpet_single")
+
 sprs_shelf = load_image_table("tiles/shelf2_", 4)
 spr_door = load_image("tiles/door_1")
 spr_pot_cactus = load_image("tiles/pot_cactus")
@@ -208,8 +212,6 @@ sprs_seat = load_image_table("tiles/seat_", 4)
 
 --spr_wall_dum = load_image("scrapped/dummy_wall")
 sprs_box = load_image_table("tiles/box_", 3)
-sprs_floor_concrete = load_image_table("tiles/tile_concrete_", 5)
-sprs_floor_carpet = load_image_table("tiles/tile_carpet_", 5)
 
 spr_chain = load_image("tiles/chain")
 spr_floor_metal = load_image("tiles/floor_metal")

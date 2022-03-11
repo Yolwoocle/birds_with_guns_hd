@@ -19,12 +19,12 @@ function init_map(w, h)
 	map.draw_with_y_sorted_objs = draw_with_y_sorted_objs
 	map.chr_to_tile_number = chr_to_tile_number
 	map.palette = {
-		[0] = make_tile(0, ' ', spr_ground_dum, {
+		[0] = make_tile(0, ' ', spr_empty, {
 			is_solid=true, is_destructible=false, is_transparent=false
 		}),
-		make_tile(1, '.', sprs_floor_concrete, {
+		make_tile(1, '.', spr_floor_carpet, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
-			type="multi_tile", random_var = {30, 2, 2, 1, 1}
+			type="multi_tile", 
 		}),
 		make_tile(2, '#', spr_wall_1, {
 			is_solid=true, is_destructible=false, is_transparent=false, 
@@ -55,7 +55,7 @@ function init_map(w, h)
 			is_solid=true, is_destructible=false, is_transparent=true,
 			oy=7,
 		}),
-		make_tile(10, '_', spr_ground_wood, {
+		make_tile(10, '_', sprs_floor_concrete[1], {
 			is_solid=false, is_destructible=false, is_transparent=false,
 		}),
 		make_tile(11, '=', spr_missing, {
@@ -147,6 +147,7 @@ function draw_with_y_sorted_objs(self, objs)
 end
 
 function make_tile(n, symb, spr, a)
+	spr = spr or spr_missing
 	local tile = {
 		n = n,
 		symb = symb,
@@ -159,9 +160,35 @@ function make_tile(n, symb, spr, a)
 		ox = a.ox or 0, 
 		oy = a.oy or 0, 
 
-		draw = draw_tile,
-		get_random_var = get_random_var,
+		draw = function(self, x, y, var, is_background_layer, floor_spr)
+			local spr
+			local floor_spr = floor_spr or spr_floor_carpet
+			if type(self.spr) == "table" then 
+				spr = self.spr[var]
+			else
+				spr = self.spr
+			end
+			if spr == nil then  spr = spr_missing  end
+			
+			if self.is_transparent and is_background_layer then
+				love.graphics.draw(floor_spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1)
+			end
+			-- TODO: optimise map by baking into canvas & update on change
+			love.graphics.draw(spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1, self.ox, self.oy)
+		end,
+
+		get_random_var = function(self)
+			if not self.random_var then
+				return nil
+			end
+			return random_weighted(self.random_var)
+		end,
+		
+		get_spr = function()
+
+		end,
 	}
+
 	if type(spr) == "table" then
 		spr = spr[1]
 	end
@@ -173,23 +200,6 @@ function make_tile(n, symb, spr, a)
 	end
 	return tile
 end
-function draw_tile(self, x, y, var, is_background_layer, floor_spr)
-	-- self refers to tile
-	local spr
-	local floor_spr = floor_spr or sprs_floor_concrete[1]
-	if type(self.spr) == "table" then 
-		spr = self.spr[var]
-	else
-		spr = self.spr
-	end
-	if spr == nil then  spr = spr_missing  end
-	
-	if self.is_transparent and is_background_layer then
-		love.graphics.draw(floor_spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1)
-	end
-	-- TODO: optimise map by baking into canvas & update on change
-	love.graphics.draw(spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1, self.ox, self.oy)
-end
 
 function chr_to_tile_number(self,chr)
 	for i,tile in pairs(self.palette) do
@@ -198,13 +208,6 @@ function chr_to_tile_number(self,chr)
 		end
 	end
 	return 0
-end
-
-function get_random_var(self)
-	if not self.random_var then
-		return nil
-	end
-	return random_weighted(self.random_var)
 end
 
 function set_tile(self, x, y, elt, var)

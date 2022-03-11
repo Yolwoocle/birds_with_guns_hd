@@ -45,6 +45,7 @@ function init_camera()
 		get_bounds = get_bounds,
 		manage_camera_lock = manage_camera_lock,
 		clamp_to_allowed_coordinates = clamp_to_allowed_coordinates,
+		within_mob_loading_zone = within_mob_loading_zone,
 	}
 	return camera
 end
@@ -122,6 +123,8 @@ function camera_set_scale(self, sx, sy)
 end
 
 function kick_camera(self, dir, dist, offset_ang)
+	dist = dist / number_of_players
+
 	local oa = offset_ang or 1 
 	self.kick_dir = dir + love.math.random()*oa - oa/2
 	self.kick_dist = dist
@@ -131,7 +134,8 @@ function kick_camera(self, dir, dist, offset_ang)
 end
 
 function shake_camera(self, r)
-	self.shake_rad = r
+	r = r / number_of_players
+	self.shake_rad = r 
 end
 
 function get_bounds(self)
@@ -154,6 +158,9 @@ function manage_camera_lock(self)
 		-- If players exit the beginning room, exit x-lock
 		if p.x > ROOM_PIXEL_W then
 			self.lock_x = false
+			for k,p in pairs(players) do
+				p:on_leave_start_area()
+			end
 		end
 
 		-- Move if on branch
@@ -170,4 +177,12 @@ function manage_camera_lock(self)
 			self.target_y = MAIN_PATH_PIXEL_Y
 		end
 	end
+end
+
+function within_mob_loading_zone(self, mob)
+	local border_x = 16*8
+	local border_y = 16*2
+	local vx = (self.x-border_x < mob.x and mob.x < self.x+window_w+border_x)
+	local vy = (self.y-border_y < mob.y and mob.y < self.y+window_h+border_y)
+	return vx and vy
 end

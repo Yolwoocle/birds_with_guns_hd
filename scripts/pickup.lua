@@ -2,6 +2,8 @@ require "scripts.utility"
 require "scripts.sprites"
 require "scripts.gun"
 
+--TODO: rework pickups
+
 function make_pickups()
 	local p = {
 		table = {},
@@ -15,14 +17,22 @@ function make_pickups()
 end
 
 function is_picked(self, obj)
+	local col 
+
 	if self.type == "ammo" then
 		self.delete = true
 		obj.gun.ammo = obj.gun.ammo + floor(self.q * obj.gun.max_ammo) 
+		col = color(blue_bullet)
+
 	elseif self.type == "life" then
 		self.delete = true
 		obj.life = obj.life + self.q
+		col = color(red_heart)
+
 	elseif self.type == "gun" then
 		switch_weapon(self , obj)
+		col = color(0x8b9bb4)
+
 	elseif self.type == "modifier" then
 		self.delete = true
 		local modif_lis = modifiers[self.q]
@@ -40,6 +50,11 @@ function is_picked(self, obj)
 
 		debugg = modif_lis[rnd][1]
 
+	end
+
+	for i=1,5 do 
+		--local ox, oy = love.math.random(-10,10), love.math.random(-10,10)
+		--particles:make_circ(self.x + ox, self.y + oy, love.math.random(4,12), col)
 	end
 end
 
@@ -85,7 +100,7 @@ end
 
 function spawn_random_loot(self, x, y)
 	if love.math.random() <= 0.1 then
-		self:spawn("gun", get_random_gun(), x, y)
+		--self:spawn("gun", get_random_gun(), x, y)
 		
 	elseif love.math.random() <= 0.1 then
 		self:spawn("life", 2, x, y)

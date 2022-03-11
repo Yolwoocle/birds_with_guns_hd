@@ -33,7 +33,7 @@ function make_mob(a)
 		closest_p 	 = a.closest_p 		or 50,
 		far_p		 = a.far_p			or 60,
 		shoot_dist	 = a.shoot_dist		or 60,
-		see_dist 	 = a.see_dist 		or 80,
+		see_dist 	 = a.see_dist or math.huge, --or 80,
 		escape_aftershoot = a.escape_aftershoot or false,
 		
 		hit_w = a.hit_w or 12,
@@ -94,7 +94,7 @@ end
 function update_mob(self, dt)
 	self.distplayer = inf
 	for _,p in ipairs(players) do
-		nwd =  dist(p.x,p.y,self.x,self.y)
+		local nwd =  dist(p.x,p.y,self.x,self.y)
 		if nwd < self.distplayer then
 			self.distplayer = nwd
 			self.player = p
@@ -190,7 +190,6 @@ function update_mob(self, dt)
 	self.dy = self.dy + self.knockback_y
 	self.knockback_x = self.knockback_x * 0.6 --FIXME: dt mob kb
 	self.knockback_y = self.knockback_y * 0.6
-
 
 	if collide_object(self,1) then
 		if not( sgn(self.dx) == sgn(self.dx_idle)) then

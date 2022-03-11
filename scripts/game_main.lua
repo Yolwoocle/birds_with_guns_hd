@@ -5,6 +5,12 @@ local CameraManager = require "scripts/camera_manager"
 function make_game()
     local game = {
         init = init_game,
+		begin = begin_game,
+		begin_1p = begin_game_1p,
+		begin_2p_mouse = begin_game_2p_mouse,
+		begin_2p_kb = begin_game_2p_kb,
+		begin_3p = begin_game_3p,
+		begin_4p = begin_game_4p,
 		update = update_game,
         draw = draw_game,
 		keypressed = game_keypressed,
@@ -19,38 +25,13 @@ function init_game(self)
 	_shot_ = {}
 	sp_mark = {}
 
-	number_of_players = 1
-
-	players = {}
-	for i =1,number_of_players do
-		if i == 1 then --"keyboard+mouse" "keyboard" "joystick"
-			control_scheme = "keyboard+mouse"
-			nbcontroller = 1
-		elseif i == 2 then
-			control_scheme = "keyboard"
-
-		elseif i == 3 then 
-			control_scheme = "joystick"
-			nbcontroller=1
-			
-		elseif i == 4 then 
-			control_scheme = "joystick"
-			nbcontroller=2
-		end
-
-		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
-		local ply = init_player(i, 84, MAIN_PATH_PIXEL_Y+72+i*16, birds_spr[i], control_scheme, nbcontroller)
-		table.insert(players, ply)
-		players[i].anim_walk = birds_spr[i]
-		players[i].anim_idle = birds_spr[i]
-	end
-
 	camera = init_camera()
 	camera:set_target(0, MAIN_PATH_PIXEL_Y)
 	camera.lock_x = true
 	camera.lock_y = true
 	camera.fake_y = MAIN_PATH_PIXEL_Y 
---	camera_manager = CameraManager:new(camera, players)
+	
+	map = init_map(600, 300)
 
 	zones = {}
 	mobs = {}
@@ -59,10 +40,6 @@ function init_game(self)
 	interactable_liste.end_of_level:spawn()
 
 	pickups = make_pickups()
-	
-	map = init_map(600, 300)
-	seed = love.math.random()*40000
-	map:generate_map(seed)
 
 	bullets = {}
 	_shot = {}
@@ -73,12 +50,50 @@ function init_game(self)
 	perf = {}
 	g = 0
 
+	players = {}
+end
+
+function begin_game_1p(self)
+	self:begin(1)
+	input:init_users_1p()
+end
+function begin_game_2p_kb(self)
+	self:begin(2)
+	input:init_users_2p_kb()
+end
+function begin_game_2p_mouse(self)
+	self:begin(2)
+	input:init_users_2p_mouse()
+end
+
+function begin_game(self, nb_ply)
+	seed = love.math.random()*40000
+	map:generate_map(seed)
+
+	number_of_players = nb_ply or 1
+
+	players = {}
+	for i = 1,number_of_players do
+		local nbcontroller = 1
+		
+		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
+		
+		local x = 84+i*32
+		local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
+		local ply = init_player(i, x, y, birds_spr[i])
+		ply.anim_walk = birds_spr[i]
+		ply.anim_idle = birds_spr[i]
+		
+		table.insert(players, ply)
+	end
+--	camera_manager = CameraManager:new(camera, players)
+
 	hud = make_hud()
 	hud:make_bar("life_bar", 6,6, 10,10, spr_hp_bar, spr_hp_bar_empty, spr_icon_heart)
 	hud:make_bar("ammo_bar", 6,26, nil,nil, spr_ammo_bar, spr_hp_bar_empty, spr_icon_ammo)
 	hud:make_img("gun_1", 78,6, spr_missing)
 	hud:make_img("gun_2", 78,6, spr_missing)
-	hud:make_imgs("gun_list", 78,40, {spr_missing})
+	hud:make_imgs("gun_list", 78,40, {spr_missing})--]]
 	spawn_location = {}
 end
 
@@ -141,7 +156,7 @@ function update_game(self, dt)
 	end
 
 	for i = #_shot , 1 , -1 do
-		v = _shot[i]
+		local v = _shot[i]
 		-- Summon shots
 		if v.time <= 0 then
 			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset,nil,v.spr))
@@ -154,22 +169,16 @@ function update_game(self, dt)
 			v.time=v.time-dt
 		end
 	end
-	--for i,v in ipairs(toremove) do
-	--	table.remove(_shot, v-i+1)
-	--end
-	nb_delet = 0
-	--for i,b in ipairs(bullets) do
 	for i = #bullets, 1, -1 do
-		b = bullets[i]
+		local b = bullets[i]
 		b:update(dt,i)
 		damage_everyone(b,i)
 	end
 
-	--for i,m in ipairs(mobs) do
 	for i = #mobs, 1, -1 do
-		m = mobs[i]
+		local m = mobs[i]
 		m:update(dt)
-		if m.life<=0 then
+		if m.life<=0 and camera:within_mob_loading_zone(m) then
 			table.remove(mobs , i)
 		end
 	end

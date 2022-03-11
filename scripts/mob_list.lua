@@ -5,9 +5,9 @@ mob_list = {
 	fox = make_mob({
 		name = "place_older",
 		anim_idle = {spr_fox},
-		anim_walk = {spr_robot},
+		anim_walk = {spr_fox},
 		spr_hit = spr_fox_hit,
-		life = 3,	
+		life = 2,	
 		spd = 40,--50,
 		w = 4,
 		h = 4,
@@ -31,8 +31,16 @@ mob_list = {
 		spr = spr_robot,
 		spr_hit = spr_robot_hit,
 		anim_walk = {spr_robot},
-		life = 20,
+		life = 10,
 		gun = guns.robot_shotgun,
+	},
+	cactus = make_mob{
+		spr_hit = spr_robot_hit,
+		anim_walk = {spr_cactus},
+		life = 10,
+		gun = guns.cactus_machinegun,
+		shoot_dist = 8*16,
+		see_dist = 10000,
 	},
 
 	knight = make_mob({

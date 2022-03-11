@@ -2,7 +2,6 @@ function make_setting(val, name, description)
     return {val=val, name=name, description=description}
 end
 
---TODO: move some of these to constants.lua
 mouse_enabled = true
 mouse_visible = true
 

@@ -21,8 +21,22 @@ function draw_3_slice(x, y, w, spr1, spr2, spr3)
 	love.graphics.draw(spr3, x, y)
 end
 
+function draw_icon(type, icon, x, y)
+	local spr_type = sprs_buttons[type]
+	if not spr_type then  print("draw_icon: invalid type") return  end 
+	local spr = spr_type[icon]
+	if not spr then  print("draw_icon: invalid icon") return  end 
+
+	draw_centered(spr, x, y)
+end
+
+function draw_icon_camera(type, icon, x, y)
+	draw_icon(type, icon, x + camera.x, y + camera.y)
+end
+
 --------------------------
 -- vvvv DEPRECATED vvvv --
+--      DO NOT USE      --
 --------------------------
 function make_hud()
 	return {

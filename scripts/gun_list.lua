@@ -7,7 +7,7 @@ guns = {
 		name = "revolver",
 		spr = spr_revolver,
 		screenkick = 4,
-		max_ammo = 300,
+		max_ammo = 150,
 		bullet_spd = 700,
 		cooldown = 0.15,
 		is_auto = false,
@@ -19,9 +19,10 @@ guns = {
 		name = "laser pistol",
 		type = "laser",
 		category = "persistent",
+		spr = spr_water_gun,
 		spr_bullet = spr_laser,
+
 		laser_length = 300,
-		spr = spr_revolver,
 		screenkick = 5,
 		bullet_life = .1,
 		cooldown = 1,
@@ -36,13 +37,16 @@ guns = {
 	shotgun = make_gun{
 		name = "shotgun",
 		spr = spr_shotgun,
+
 		nbshot = 10,
 		offset_spd = 300,
-		spdslow = .93,
+		spdslow = .96,
 		scattering = 1,
+		max_ammo = 80,
+
 		cooldown = 0.5,
-		screenkick = 3,
-		damage = .34,
+		screenkick = 1,
+		damage = 0.5,
 		bullet_life = 0.4,
 	},
 	assault_rifle = make_gun{
@@ -169,7 +173,7 @@ guns = {
 		type = "bullet",
 		spr = spr_paper_plane_gun,
 		spr_bullet = spr_paper_plane,
-		scale = 1.30,
+		scale = 1,
 		damage = 2,
 
 		cooldown = 0.2,
@@ -179,7 +183,7 @@ guns = {
 		bounce = 1,
 		is_auto = true,
 
-		screenkick = 5,
+		screenkick = 1,
 	
 		update_option = function(self,dt)
 			if self.turn_dir == nil then
@@ -280,6 +284,18 @@ guns = {
 		
 		scale = 1,
 		cooldown = 3,
+		make_shot = default_shoot,
+		scale = 1.5,
+	}),	
+	cactus_machinegun = make_gun({
+		name = "Cactus Machinegun",
+		type = "bullet",
+		spr_bullet = spr_bullet_red,
+		spr = spr_shotgun,
+		bullet_spd = 100,
+		
+		scale = 1,
+		cooldown = 0.1,
 		make_shot = default_shoot,
 		scale = 1.5,
 	}),	

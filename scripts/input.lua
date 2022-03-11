@@ -1,46 +1,249 @@
-function init_keybinds() 
-	keybinds = {
-		left  = {{"a"},{"left"}}, 
-		right = {{"d"},{"right"}}, 
-		up    = {{"w"},{"up"}},
-		down  = {{"s"},{"down"}},
-		fire  = {{"c"},{"m"}},
-		alt   = {{"v"},{","}},
-		middlems = {{"t"},{"p"}},
-	}
+------ Aiming methods ------
+local function aim_mouse(self, player)
+	local mx, my = input:get_mouse_pos()
+	return mx + camera.x, my + camera.y
 end
-function init_joystickbinds()
-	joystickbinds = {
-		left  = {{"dpleft"}, {"dpleft"}}, 
-		right = {{"dpright"}, {"dpright"}}, 
-		up    = {{"dpup"}, {"dpup"}},
-		down  = {{"dpdown"}, {"dpdown"}},
-		fire  = {{"triggerleft"}, {"triggerleft"}},
-		alt   = {{"triggerright"}, {"triggerright"}},
-		middlems = {{},{}},
+local function aim_keyboard(self, player)
+	return player:get_autoaim()
+end
+local function aim_controller(self, player)
+	
+end
+
+SCHEME_P1_REGULAR = {
+	type = "keyboard",
+	left  = {"a", "left"},
+	right = {"d", "right"}, 
+	up    = {"w", "up"},
+	down  = {"s", "down"},
+	fire  = {"c", "rshift"},
+	alt   = {"x", "v"},
+	middle = {"z"},
+}
+SCHEME_P1_SPLIT = {
+	type = "keyboard",
+	left  = {"a"},
+	right = {"d"}, 
+	up    = {"w"},
+	down  = {"s"},
+	fire  = {"c", "z"},
+	alt   = {"v", "x"},
+	middle = {"t"},
+}
+SCHEME_P2_SPLIT = {
+	type = "keyboard",
+	left  = {"left"},  
+	right = {"right"}, 
+	up    = {"up"},
+	down  = {"down"},
+	fire  = {"l"},
+	alt   = {"k"},
+	middle = {"."},
+}
+SCHEME_CONTROLLER = {
+	type = "controller",
+	left  = {"dpleft"}, 
+	right = {"dpright"}, 
+	up    = {"dpup"},
+	down  = {"dpdown"},
+	fire  = {"triggerleft"},
+	alt   = {"triggerright"},
+	middlems = {},
+}
+
+------------------------
+------ INPUT USER ------
+------------------------ 
+
+local function make_input_user(type, aim_method, keybinds)
+	return {
+		type = type,
+		aim_method = aim_method,
+		keybinds = keybinds,
 	}
 end
 
---TODO: IMPORTANT: completely rework this fucking mess, use an input_manager object.
-function init_button_last_state_table()
-	button_last_state = {}
-	for key,_ in pairs(keybinds) do
-		button_last_state[key] = {}
-		for i=1,4 do
-			button_last_state[key][i] = false
-		end 
+---- Keyboard ----
+
+local function make_kb_input_user(keybinds, aim_method)
+	aim_method = aim_method or "keyboard"
+	local ip = make_input_user("keyboard", aim_method, keybinds)
+
+	ip.get_movement_axis = function(self)
+		local x, y = 0, 0
+		if self:button_down("left", n)  then  x = x-1  end
+		if self:button_down("right", n) then  x = x+1  end
+		if self:button_down("up", n)    then  y = y-1  end
+		if self:button_down("down", n)  then  y = y+1  end
+		x, y = normalize_vect(x, y)
+		return x, y
 	end
+
+	ip.button_down = function(self, cmd)
+		local keys = self.keybinds[cmd]
+		for _,k in pairs(keys) do
+			if love.keyboard.isScancodeDown(k) then
+				return true
+			end 
+		end
+		return false
+	end
+
+	-- Aim method
+	ip.get_world_cursor_pos = aim_keyboard
+	if aim_method == "keyboard" then
+		ip.get_world_cursor_pos = aim_keyboard
+		
+	elseif aim_method == "mouse" then
+		ip.get_world_cursor_pos = aim_mouse
+
+	end
+
+	return ip
 end
 
+--------------------------
+------ INPUT PLAYER ------
+--------------------------
 
-function button_down(command, player_n, input_device)
-	if not(input_device[2] == "joystick" and not(joysticks[input_device[3]])) then
-		player_n = player_n or 1
+function make_input_manager()
+	local i = {}
+	i.init = function(self)
+		self:init_users()
+		self:init_last_button_state_table()
+--		self:init_joystickbinds()
+	end
+
+	i.update = function(self)
+	end
+
+	i.init_users = function(self) 
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "mouse"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(SCHEME_CONTROLLER),
+			[4] = make_kb_input_user(SCHEME_CONTROLLER),
+		}
+	end
+
+	i.init_users_1p = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_REGULAR, "mouse"),
+		}
+	end
+	i.init_users_2p_mouse = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "mouse"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+	i.init_users_2p_kb = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+	i.init_users_3p = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+	i.init_users_4p = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[4] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+
+	i.configure_user = function(self, n, val)
+		self.users[n] = val
+	end
+
+	i.get_user = function(self, n)
+		if not n then  return  end
+		return self.users[n]
+	end
+
+	i.get_keybinds = function(self, n)
+		return self:get_user(n).keybinds
+	end
+
+	i.get_input_type = function(self, n)
+		return self:get_user(n).type
+	end
+
+	i.init_last_button_state_table = function(self)
+		self.last_button_state = {}
+		for n=1,4 do
+			self.last_button_state[n] = {}
+			for key,_ in pairs(self:get_keybinds(n)) do
+				self.last_button_state[n][key] = false
+			end 
+		end
+	end
+
+	i.button_down = function(self, cmd, n)
+		n = n or 1
+
+		-- Mouse 
+		if cmd == "fire" and n == 1 and love.mouse.isDown(1) then  return true  end
+		if cmd == "alt"  and n == 1 and love.mouse.isDown(2) then  return true  end
+
+		return self:get_user(n):button_down(cmd)
+	end
+
+	i.button_pressed = function(self, cmd, n)
+		local btnd = self:button_down(cmd, n)
+		local last_btnd = self.last_button_state[n][cmd]
+		if btnd then 
+			if not last_btnd then 
+				self.last_button_state[n][cmd] = true
+				return true 
+			end
+		else
+			self.last_button_state[n][cmd] = false
+		end
+		return false
+	end
+
+	i.get_movement_axis = function(self, n)
+		return self:get_user(n):get_movement_axis()
+	end
+
+	i.get_world_cursor_pos = function(self, n, player)
+		return self:get_user(n):get_world_cursor_pos(player)
+	end
+
+	i.get_mouse_pos = function(self)
+		local mx, my = love.mouse.getPosition()
+		mx, my = floor(mx/screen_sx), floor(my/screen_sy)
+		mx, my = mx + screen_ox, my + screen_oy
+		return mx, my
+	end
+
+	i.get_world_mouse_pos = function(self)
+		local mx, my = self:get_mouse_pos()
+		return mx + camera.x, my + camera.y
+	end
+
+	i:init()
+
+	return i
+end
+
+--[[
+function button_down(command, user_n, input_device)
+	if not(input_device[2] == "joystick" and not(joysticks[input_device[3] ])) then
+		user_n = user_n or 1
 
 		local mouse_fire = (input_device[2] == "keyboard+mouse" and love.mouse.isDown(1))
-		local joy_fire = (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("rightshoulder"))
+		local joy_fire = (input_device[2] == "joystick" and joysticks[input_device[3] ]:isGamepadDown("rightshoulder"))
 		if command == "fire" and (mouse_fire or joy_fire)then
-			if joystick and joysticks[input_device[3]]:isGamepadDown("rightshoulder") then
+			if joystick and joysticks[input_device[3] ]:isGamepadDown("rightshoulder") then
 				keymode = "joystick"
 			else
 				keymode = "keyboard"
@@ -51,7 +254,7 @@ function button_down(command, player_n, input_device)
 		end
 		
 		local mouse_alt = (input_device[2] == "keyboard+mouse" and love.mouse.isDown(2))
-		local joy_alt = (input_device[2] == "joystick" and joysticks[input_device[3]]:isGamepadDown("leftshoulder"))
+		local joy_alt = (input_device[2] == "joystick" and joysticks[input_device[3] ]:isGamepadDown("leftshoulder"))
 		if command == "alt" and (mouse_alt or joy_alt) then
 			return true
 		end
@@ -62,7 +265,7 @@ function button_down(command, player_n, input_device)
 		end
 
 		if input_device[2] == "keyboard+mouse" or input_device[2] == "keyboard" then--and not (command == "middlems") then --FI XME: and not command == "middlems" ajouter ca de facon propre
-			local keys = input_device[1][command][player_n]
+			local keys = input_device[1][command][user_n]
 			for _,k in pairs(keys) do
 				if love.keyboard.isScancodeDown(k) then
 					return true
@@ -74,7 +277,7 @@ function button_down(command, player_n, input_device)
 			local dp = joystickbinds[command][1]
 			for _,d in pairs(dp) do
 				if not(command == "fire" or command == "alt" or command == "middlems") then
-					if  joysticks[input_device[3]]:isGamepadDown(d) then -- joysticks[input_device[3]]:getAxis(1)
+					if  joysticks[input_device[3] ]:isGamepadDown(d) then -- joysticks[input_device[3] ]:getAxis(1)
 						return true
 					end
 				end
@@ -133,17 +336,17 @@ function get_world_cursor_pos(ply, input_device,dt, camera)
 end
 
 function get_mouse_pos()
-	--FIXME: won't work if the screen has borders
 	local mx, my = love.mouse.getPosition()
 	mx, my = floor(mx/screen_sx), floor(my/screen_sy)
+	mx, my = mx + screen_ox, my + screen_oy
 	return mx, my
 end
 
 function get_joystick_cursor_pos(input_device,ply,dt)
 	--??????
-	if not(input_device[2] == "joystick" and not(joysticks[input_device[3]])) then
-		local joyx = joysticks[input_device[3]]:getAxis(3)
-		local joyy = joysticks[input_device[3]]:getAxis(4)
+	if not(input_device[2] == "joystick" and not(joysticks[input_device[3] ])) then
+		local joyx = joysticks[input_device[3] ]:getAxis(3)
+		local joyy = joysticks[input_device[3] ]:getAxis(4)
 
 		local qdsf = dist(joyy,joyx,0,0)
 		if qdsf > joystick_deadzone2 then
@@ -159,3 +362,4 @@ function get_joystick_cursor_pos(input_device,ply,dt)
 	end
 	
 end
+--]]
