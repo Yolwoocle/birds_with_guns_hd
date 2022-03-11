@@ -5,7 +5,7 @@ function make_interactable(a)
 
         condition           = a.condition           or function (self, dt)
                                                             for i,p in ipairs(players) do
-                                                                if p.fire then
+                                                                if p.shoot and dist_sq(p.x,p.y,self.x,self.y)<30^2 then
                                                                     return true
                                                                 end
                                                             end
