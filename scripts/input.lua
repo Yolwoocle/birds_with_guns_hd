@@ -26,7 +26,7 @@ SCHEME_P1_SPLIT = {
 	right = {"d"}, 
 	up    = {"w"},
 	down  = {"s"},
-	fire  = {"c"},
+	fire  = {"c", "z"},
 	alt   = {"v", "x"},
 	middle = {"t"},
 }
@@ -36,8 +36,8 @@ SCHEME_P2_SPLIT = {
 	right = {"right"}, 
 	up    = {"up"},
 	down  = {"down"},
-	fire  = {"m"},
-	alt   = {","},
+	fire  = {"l"},
+	alt   = {"k"},
 	middle = {"."},
 }
 SCHEME_CONTROLLER = {
@@ -126,12 +126,54 @@ function make_input_manager()
 		}
 	end
 
+	i.init_users_1p = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_REGULAR, "mouse"),
+		}
+	end
+	i.init_users_2p_mouse = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "mouse"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+	i.init_users_2p_kb = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+	i.init_users_3p = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+	i.init_users_4p = function(self)
+		self.users = {
+			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[4] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+		}
+	end
+
+	i.configure_user = function(self, n, val)
+		self.users[n] = val
+	end
+
+	i.get_user = function(self, n)
+		if not n then  return  end
+		return self.users[n]
+	end
+
 	i.get_keybinds = function(self, n)
-		return self.users[n].keybinds
+		return self:get_user(n).keybinds
 	end
 
 	i.get_input_type = function(self, n)
-		return self.users[n].type
+		return self:get_user(n).type
 	end
 
 	i.init_last_button_state_table = function(self)
@@ -151,7 +193,7 @@ function make_input_manager()
 		if cmd == "fire" and n == 1 and love.mouse.isDown(1) then  return true  end
 		if cmd == "alt"  and n == 1 and love.mouse.isDown(2) then  return true  end
 
-		return self.users[n]:button_down(cmd)
+		return self:get_user(n):button_down(cmd)
 	end
 
 	i.button_pressed = function(self, cmd, n)
@@ -169,11 +211,11 @@ function make_input_manager()
 	end
 
 	i.get_movement_axis = function(self, n)
-		return self.users[n]:get_movement_axis()
+		return self:get_user(n):get_movement_axis()
 	end
 
 	i.get_world_cursor_pos = function(self, n, player)
-		return self.users[n]:get_world_cursor_pos(player)
+		return self:get_user(n):get_world_cursor_pos(player)
 	end
 
 	i.get_mouse_pos = function(self)
@@ -294,7 +336,6 @@ function get_world_cursor_pos(ply, input_device,dt, camera)
 end
 
 function get_mouse_pos()
-	--FIXME: won't work if the screen has borders
 	local mx, my = love.mouse.getPosition()
 	mx, my = floor(mx/screen_sx), floor(my/screen_sy)
 	mx, my = mx + screen_ox, my + screen_oy

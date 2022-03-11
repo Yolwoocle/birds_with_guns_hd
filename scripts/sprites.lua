@@ -35,6 +35,11 @@ spr_bar_small_ammo = load_image("ui/small_ammo_bar")
 spr_bar_small_life = load_image("ui/small_life_bar") 
 spr_bar_small_empty = load_image("ui/small_empty_bar") 
 
+spr_symb_walk = load_image("ui/symbol_walk")
+spr_symb_aim = load_image("ui/symbol_aim")
+spr_symb_shoot = load_image("ui/symbol_shoot")
+spr_symb_switch_gun = load_image("ui/symbol_switch_gun")
+
 -- Button prompts
 sprs_buttons = {}
 sprs_buttons.keyboard = {

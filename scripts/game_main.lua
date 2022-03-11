@@ -6,6 +6,11 @@ function make_game()
     local game = {
         init = init_game,
 		begin = begin_game,
+		begin_1p = begin_game_1p,
+		begin_2p_mouse = begin_game_2p_mouse,
+		begin_2p_kb = begin_game_2p_kb,
+		begin_3p = begin_game_3p,
+		begin_4p = begin_game_4p,
 		update = update_game,
         draw = draw_game,
 		keypressed = game_keypressed,
@@ -44,22 +49,34 @@ function init_game(self)
 	players = {}
 end
 
-function begin_game(self, nb_ply, schemes)
+function begin_game_1p(self)
+	self:begin(1)
+	input:init_users_1p()
+end
+function begin_game_2p_kb(self)
+	self:begin(2)
+	input:init_users_2p_kb()
+end
+function begin_game_2p_mouse(self)
+	self:begin(2)
+	input:init_users_2p_mouse()
+end
+
+function begin_game(self, nb_ply)
 	seed = love.math.random()*40000
 	map:generate_map(seed)
 
 	number_of_players = nb_ply or 1
 
-	schemes = schemes or {"keyboard+mouse", "keyboard", "joystick", "joystick"}
 	players = {}
 	for i = 1,number_of_players do
-		local control_scheme = schemes[i]
 		local nbcontroller = 1
 		
 		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
 		
-		--FIXME: player initplayers[i]
-		local ply = init_player(i, 84+i*32, MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2, birds_spr[i], control_scheme, nbcontroller)
+		local x = 84+i*32
+		local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
+		local ply = init_player(i, x, y, birds_spr[i])
 		ply.anim_walk = birds_spr[i]
 		ply.anim_idle = birds_spr[i]
 		
@@ -131,7 +148,7 @@ function update_game(self, dt)
 	end
 
 	for i = #_shot , 1 , -1 do
-		v = _shot[i]
+		local v = _shot[i]
 		-- Summon shots
 		if v.time <= 0 then
 			table.insert(bullets,make_bullet(v.gun,v.player,v.player.rot,v.offset,nil,v.spr))
@@ -144,22 +161,16 @@ function update_game(self, dt)
 			v.time=v.time-dt
 		end
 	end
-	--for i,v in ipairs(toremove) do
-	--	table.remove(_shot, v-i+1)
-	--end
-	nb_delet = 0
-	--for i,b in ipairs(bullets) do
 	for i = #bullets, 1, -1 do
-		b = bullets[i]
+		local b = bullets[i]
 		b:update(dt,i)
 		damage_everyone(b,i)
 	end
 
-	--for i,m in ipairs(mobs) do
 	for i = #mobs, 1, -1 do
-		m = mobs[i]
+		local m = mobs[i]
 		m:update(dt)
-		if m.life<=0 then
+		if m.life<=0 and camera:within_mob_loading_zone(m) then
 			table.remove(mobs , i)
 		end
 	end

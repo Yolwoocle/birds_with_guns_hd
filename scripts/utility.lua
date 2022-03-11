@@ -8,6 +8,15 @@ ceil = math.ceil
 max = math.max
 min = math.min
 
+function color(hex)
+	if not hex then  return white  end
+	if type(hex) ~= "number" then  return white  end
+
+	local b = hex % 256;  hex = (hex - b) / 256
+	local g = hex % 256;  hex = (hex - b) / 256
+	local r = hex % 256
+	return {r/255, g/255, b/255}
+end
 red = {1,0,0}
 orange = {1,0.5,0}
 yellow = {1,1,0}
@@ -20,6 +29,9 @@ black = {0,0,0}
 grey = {0.5,0.5,0.5}   
 gray = grey --<o/ dab on the haters
 brown = {0.5,0.2,0}
+
+blue_bullet = color(0x0095e9)
+red_heart = color(0xff0044)
 
 function draw_centered(spr, x, y, r, sx, sy, ox, oy, color)
 	local w = spr:getWidth() or 0
@@ -97,12 +109,6 @@ function setColor(hex)
 	love.graphics.setColor(color(hex))
 end
 
-function color(hex)
-	local r = bit.rshift(hex, 16)
-	local g = bit.rshift(hex, 8) % 256
-	local b =            hex     % 256 
-	return {r/255, g/255, b/255}
-end
 
 function sgn(n)
 	if n >= 0 then

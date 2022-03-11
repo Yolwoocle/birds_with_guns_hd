@@ -10,7 +10,8 @@ function init_particles()
 	return ptc
 end
 
-function make_circ_particle(self, x, y, r, dx, dy, spd_fric, rad_fric)
+function make_circ_particle(self, x, y, r, col, dx, dy, spd_fric, rad_fric)
+	col = col or {1,1,1}
 	spd_fric = spd_fric or 1
 	rad_fric = rad_fric or spd_fric
 	local ptc = {

@@ -7,7 +7,7 @@ guns = {
 		name = "revolver",
 		spr = spr_revolver,
 		screenkick = 4,
-		max_ammo = 300,
+		max_ammo = 150,
 		bullet_spd = 700,
 		cooldown = 0.15,
 		is_auto = false,
@@ -19,9 +19,10 @@ guns = {
 		name = "laser pistol",
 		type = "laser",
 		category = "persistent",
+		spr = spr_water_gun,
 		spr_bullet = spr_laser,
+
 		laser_length = 300,
-		spr = spr_revolver,
 		screenkick = 5,
 		bullet_life = .1,
 		cooldown = 1,
@@ -36,13 +37,16 @@ guns = {
 	shotgun = make_gun{
 		name = "shotgun",
 		spr = spr_shotgun,
+
 		nbshot = 10,
 		offset_spd = 300,
-		spdslow = .93,
+		spdslow = .96,
 		scattering = 1,
+		max_ammo = 80,
+
 		cooldown = 0.5,
 		screenkick = 1,
-		damage = .34,
+		damage = 0.5,
 		bullet_life = 0.4,
 	},
 	assault_rifle = make_gun{

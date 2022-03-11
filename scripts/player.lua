@@ -6,132 +6,155 @@ require "scripts.gun_list"
 require "scripts.collision"
 require "scripts.constants"
 
-function init_player(n,x,y, spr, controle, nbcontroller)
-	local player = {
-		n = n,
-		x = x or 32,
-		y = y or 32,
-		w = 7,
-		h = 7,
-		dx = 0,
-		dy = 0,
-		walk_dir = {x=0, y=0},
-		sx = 1,
-		sy = 1,
-		ox = 0,
-		oy = 0,
+function init_player(n,x,y, spr, a)
+	a = a or {}
 
-		speed = 64,
-		friction = 20, --FIXME:dt ply fric
-		bounce = 0.6,
-		is_walking = false,
-		is_enemy = false,
+	local p = {}
+	p.n = n
+	p.x = x or 32
+	p.y = y or 32
+	p.w = 7
+	p.h = 7
+	p.dx = 0
+	p.dy = 0
+	p.walk_dir = {x=0, y=0}
+	p.sx = 1
+	p.sy = 1
+	p.ox = 0
+	p.oy = 0
 
-		life = 5,
-		alive = true, 
-		max_life = 5,
-		iframes = 2,
-		iframes_timer = 0,
-		iframes_flashing_time = 0.1,
-		set_iframes = set_iframes,
+	p.speed = 64
+	p.friction = 20 --FIXME:dt ply fric
+	p.bounce = 0.6
+	p.is_walking = false
+	p.is_enemy = false
 
-		hit_w = 4,
-		hit_h = 4,
-		revive_timer = 0,
-		max_revive_timer = 3,
-		revive_radius = 64,
+	p.life = 5
+	p.alive = true
+	p.max_life = 5
+	p.iframes = 2
+	p.iframes_timer = 0
+	p.iframes_flashing_time = 0.1
+	p.set_iframes = set_iframes
 
-		spr = spr,
-		spr_dead = spr_pigeon_dead,
-		rot = 0,
-		looking_up = false,
-		flip = -1,
+	p.hit_w = 4
+	p.hit_h = 4
+	p.revive_timer = 0
+	p.max_revive_timer = 3
+	p.revive_radius = 64
 
-		anim_sprs = nil,
-		anim_walk = anim_duck_walk,
-		anim_idle = anim_duck_walk,--anim_pigeon_idle,
-		anim_frame = 0,
-		anim_frame_len = .05, --70 ms
-		animate = animate_player,
+	p.spr = spr
+	p.spr_dead = spr_pigeon_dead
+	p.rot = 0
+	p.looking_up = false
+	p.flip = -1
+	p.outline_color = (a.outline_color or COLORS_PLAYERS[n]) or white
+	p.show_tutorial = true
+	p.show_player_number = true
 
-		bounce_a = 0,
-		bounce_y = 0,
-		bounce_squash = 1,
+	p.anim_sprs = nil
+	p.anim_walk = anim_duck_walk
+	p.anim_idle = anim_duck_walk --anim_pigeon_idle
+	p.anim_frame = 0
+	p.anim_frame_len = .05 --70 ms
+	p.animate = animate_player
 
-		gun = nil,
-		gun_dist = 14,
-		guns = {
-			copy(guns.revolver), 
-			copy(guns.shotgun), 
-			copy(guns.paper_plane_gun), 
-			copy(guns.fire_extinguisher), 
-			copy(guns.assault_rifle), 
-			copy(guns.firework_launcher), 
-			copy(guns.laser)
-		},
-		gun_n = 1,
-		--methods
-		set_gun = ply_set_gun,
-		update_gun = ply_update_gun,
-		set_gun = ply_get_gun,
-		damage = damage_player,
-		kill = kill_player,
-		revive = revive_player,
+	p.bounce_a = 0
+	p.bounce_y = 0
+	p.bounce_squash = 1
 
-		get_pickups = player_get_pickups,
-		pickup_cd = 0,
-		max_pickup_cd = 1,
-
-		get_nearest_enemy = get_nearest_enemy,
-		get_autoaim = get_autoaim,
-		autoaim_max_dist = 360,
-		last_autoaim_dist = math.huge,
-		spr_cu = sprs_cursor[n],
-		cu_x = x,
-		cu_y = y+10,
-		dircux = 0,
-		dircuy = 0,
-		
-		draw_hud = draw_player_hud,
-		update_cursor = player_update_cursor,
-		draw_cursor = player_draw_cursor,
-
-		update = update_player,
-		draw = draw_player,
-
-		--TODO: add keybinds
-		show_cu = true,
-
-		debugcanvas = love.graphics.newCanvas(),
+	p.gun = nil
+	p.gun_dist = 14
+	p.guns = {
+		copy(guns.revolver), 
+		copy(guns.shotgun), 
+		copy(guns.paper_plane_gun), 
+		copy(guns.fire_extinguisher), 
+		copy(guns.assault_rifle), 
+		copy(guns.firework_launcher), 
+		copy(guns.laser)
 	}
-	player.anim_sprs = player.anim_idle
+	p.gun_n = 1
+	--methods
+	p.set_gun = ply_set_gun
+	p.update_gun = ply_update_gun
+	p.set_gun = ply_get_gun
+	p.damage = damage_player
+	p.kill = kill_player
+	p.revive = revive_player
 
-	player.gun = player.guns[1]
+	p.get_pickups = player_get_pickups
+	p.pickup_cd = 0
+	p.max_pickup_cd = 1
 
-	return player
-end
+	p.get_nearest_enemy = get_nearest_enemy
+	p.get_autoaim = get_autoaim
+	p.autoaim_max_dist = 360
+	p.last_autoaim_dist = math.huge
+	p.spr_cu = sprs_cursor[n]
+	p.cu_x = x
+	p.cu_y = y+10
+	p.dircux = 0
+	p.dircuy = 0
+	
+	p.update_cursor = player_update_cursor
+	p.draw_cursor = player_draw_cursor
 
-function update_player(self, dt)
-	if self.alive then 
-		-- Movement
-		player_movement(self,dt)
-		-- Collisions
-		--self.dx = round_if_near_zero(self.dx)
-		--self.dy = round_if_near_zero(self.dy)
-		collide_object(self, 0.01)
-		--collision_response(self, map)
-		
-		-- Apply movement 
+	p.apply_movement = function(self, dt)
 		self.x = self.x + self.dx * dt
 		self.y = self.y + self.dy * dt
+	end
 
-		-- Aiming
-		self:update_cursor(dt)
-		aim_player(self, dt)
-		self.rot = self.rot % pi2
-		self.looking_up = self.rot > pi
+	p.aim = function(self, dt)
+		--TODO: rework ply aiming
+		local mmx, mmy = input:get_world_cursor_pos(self.n, self)
 
-		-- Update gun
+		self.cu_x = mmx or self.cu_x
+		self.cu_y = mmy or self.cu_x
+
+		self.rot = math.atan2(mmy - self.y, mmx - self.x)
+		self.shoot = false
+
+		-- Firing
+		-- god why is this code such a mess 
+		if self.gun.cooldown_timer <= 0 then
+
+			local button_active = false
+			if self.gun.is_auto then
+				button_active = input:button_down("fire", self.n)
+			else
+				button_active = input:button_pressed("fire", self.n)
+			end
+
+			if (not self.gun.charge and button_active) 
+			or ((prevfire and not button_active) and self.gun.charge) then
+				if self.gun.ammo > 0 then
+
+					if self.gun.charge then
+						local avancement = (self.gun.dt/self.gun.charge_time)^self.gun.charge_curve
+						if self.gun.save_burst then
+							load_save_gun_stats(self)
+						end
+
+						save_gun_stats(self)
+
+						advancementtoactive(self,avancement)--tf is advancement
+					end
+
+					self.shoot = true
+					self.gun:shoot()
+					camera:kick(self.rot + pi, self.gun.screenkick)
+					--kick_camera(self, dir, dist, offset_ang)
+					self.gun.dt = 0
+					
+				end
+			elseif input:button_down("fire", self.n,self.input_device) and self.gun.charge then
+				self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
+			end
+		end
+	end
+
+	p.switch_guns = function(self)
 		if input:button_pressed("alt", self.n) then
 			self.gun_n = mod_plus_1(self.gun_n + 1, #self.guns)
 			self.gun = self.guns[self.gun_n]
@@ -143,120 +166,179 @@ function update_player(self, dt)
 					table.remove(_shot, k)
 				end
 			end
-
 		end
-		self.gun:update(dt, self)
+	end
 
-		-- Pickups
-		self.pickup_cd = max(0, self.pickup_cd - dt)
-		if self.pickup_cd <= 0 then
-			self:get_pickups()
-		end
-		
-		self:animate()
-	else -- If the player is dead
-		self.spr = self.spr_dead
+	p.on_leave_start_area = function(self)
+		self.show_tutorial = false
+		self.show_player_number = false
+	end
+	p.is_off_screen = function(self)
+		local x = (self.x < camera.x - self.w) or (camera.x + self.w < self.x)
+	end
 
-		-- Reviving
-		--- Get all near players
-		local n = 0
-		for _,p in pairs(players) do
-			local near = dist_sq(self.x, self.y, p.x, p.y) <= sqr(self.revive_radius) 
-			if near and p.n ~= self.n and p.alive then
-				n = n + 1
+	p.update = function(self, dt)
+		if self.alive then 
+			player_movement(self,dt)
+			collide_object(self, 0.01)
+			--collision_response(self, map)
+			
+			-- Apply movement 
+			self:apply_movement(dt)
+
+			-- Aiming
+			self:update_cursor(dt)
+			self:aim(dt)
+			self.rot = self.rot % pi2
+			self.looking_up = self.rot > pi
+
+			-- Update gun
+			self:switch_guns()
+			self.gun:update(dt, self)
+
+			-- Pickups
+			self.pickup_cd = max(0, self.pickup_cd - dt)
+			if self.pickup_cd <= 0 then
+				self:get_pickups()
+			end
+			
+			self:animate()
+		else -- If the player is dead
+			self.spr = self.spr_dead
+
+			-- Reviving
+			--- Get all near players
+			local n = 0
+			for _,p in pairs(players) do
+				local near = dist_sq(self.x, self.y, p.x, p.y) <= sqr(self.revive_radius) 
+				if near and p.n ~= self.n and p.alive then
+					n = n + 1
+				end
+			end
+			print(n)
+			if n > 0 then
+				self.revive_timer = self.revive_timer + dt*n
+			else
+				self.revive_timer = max(self.revive_timer - dt, 0)
+			end
+			
+			if self.revive_timer > self.max_revive_timer then
+				self:revive()
+				--[[
+				self.alive = true
+				self.life = 1
+				self:set_iframes()
+				self.revive_timer = 0
+				--]]
 			end
 		end
-		print(n)
-		if n > 0 then
-			self.revive_timer = self.revive_timer + dt*n
-		else
-			self.revive_timer = max(self.revive_timer - dt, 0)
-		end
-		
-		if self.revive_timer > self.max_revive_timer then
-			self:revive()
-			--[[
-			self.alive = true
-			self.life = 1
-			self:set_iframes()
-			self.revive_timer = 0
-			--]]
+
+		-- Default bahviour that will always be executed
+		-- Life, damage
+		self.life = clamp(0, self.life, self.max_life)
+		self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
+
+		self.iframes_timer = self.iframes_timer - dt
+		self.invincible = self.iframes_timer > 0 
+
+		if self.life <= 0 then
+			self:kill()
 		end
 	end
 
-	-- Default bahviour that will always be executed
-	-- Life, damage
-	self.life = clamp(0, self.life, self.max_life)
-	self.gun.ammo = clamp(0, self.gun.ammo, self.gun.max_ammo)
+	p.draw = function(self)
+		draw_shadow(self)
 
-	self.iframes_timer = self.iframes_timer - dt
-	self.invincible = self.iframes_timer > 0 
+		local ft = self.iframes_flashing_time
+		-- Flashing
+		local is_drawn = true
+		if self.invincible then
+			is_drawn = (self.iframes_timer % (2*ft)) <= ft
+		end
 
-	if self.life <= 0 then
-		self:kill()
+		-- Draw player
+		if is_drawn then
+			if self.looking_up then  self.gun:draw(self)  end
+			draw_centered(self.spr, self.x-self.ox, self.y-self.oy, 0, self.sx*self.gun.flip, self.sy)
+			if not self.looking_up then  self.gun:draw(self)  end
+		end
+		love.graphics.setColor(1,1,1) 
 	end
-end
-
-function draw_player(self)
-	draw_shadow(self)
-
-	local ft = self.iframes_flashing_time
-	-- Flashing
-	local is_drawn = true
-	if self.invincible then
-		is_drawn = (self.iframes_timer % (2*ft)) <= ft
-	end
-
-	-- Draw player
-	if is_drawn then
-		if self.looking_up then  self.gun:draw(self)  end
-		draw_centered(self.spr, self.x-self.ox, self.y-self.oy, 0, self.sx*self.gun.flip, self.sy)
-		if not self.looking_up then  self.gun:draw(self)  end
-	end
-	love.graphics.setColor(1,1,1) 
-end
-
-function draw_player_hud(self)
-	-- HUD
-	local s = 8
-	local oy = 38
-
-	--- Health bar
-	for i=1, self.max_life do
-		local spr = (i <= self.life) and spr_heart or spr_heart_empty
-		
-		local w = (self.max_life*s)/2
-		local x = self.x - w + (i-1)*s + s/2
-		draw_centered(spr, floor(x), floor(self.y-oy))
-	end
-
-	--- Ammo bar
-	local spr = spr_bar_small_empty
-	local h = spr:getHeight()
-	local x,y = floor(self.x - 10), floor(self.y - oy + 8)
-	local sprw = spr:getWidth() - 4
-	local w = floor((self.gun.ammo / self.gun.max_ammo) * sprw)
-
-	love.graphics.draw(spr_ammo, x-11, y)
-	love.graphics.draw(spr, x, y)
-	local buffer_quad = love.graphics.newQuad(2, 0, w, h, spr:getDimensions())
-	love.graphics.draw(spr_bar_small_ammo, buffer_quad, x+2, y)
 	
-	love.graphics.setFont(font_small)
-	love.graphics.print(self.gun.ammo, x+5, y-1)
-	love.graphics.setFont(font_default)
+	p.draw_hud = function(self)
+		-- HUD
+		local s = 8
+		local oy = 38
 
-	-- "P1", "P2"... icon
-	local cx, cy = 12, 10
-	local x = floor(clamp(camera.x + cx, self.x, camera.x + window_w - cy))
-	local y = floor(clamp(camera.y + cy, self.y-oy-12, camera.y + window_h - cy))
-	draw_centered(sprs_icon_ply[self.n], x, y)
+		--- Health bar
+		for i=1, self.max_life do
+			local spr = (i <= self.life) and spr_heart or spr_heart_empty
+			
+			local w = (self.max_life*s)/2
+			local x = self.x - w + (i-1)*s + s/2
+			draw_centered(spr, floor(x), floor(self.y-oy))
+		end
 
-	-- Cursor is *always* above everything else
-	self:draw_cursor()
+		--- Ammo bar
+		local spr = spr_bar_small_empty
+		local h = spr:getHeight()
+		local x,y = floor(self.x - 10), floor(self.y - oy + 8)
+		local sprw = spr:getWidth() - 4
+		local w = floor((self.gun.ammo / self.gun.max_ammo) * sprw)
+
+		love.graphics.draw(spr_ammo, x-11, y)
+		love.graphics.draw(spr, x, y)
+		local buffer_quad = love.graphics.newQuad(2, 0, w, h, spr:getDimensions())
+		love.graphics.draw(spr_bar_small_ammo, buffer_quad, x+2, y)
+		
+		love.graphics.setFont(font_small)
+		love.graphics.print(self.gun.ammo, x+5, y-1)
+		love.graphics.setFont(font_default)
+
+		-- "P1", "P2"... icon
+		local cx, cy = 12, 10
+		local x = floor(clamp(camera.x + cx, self.x, camera.x + window_w - cy))
+		local y = floor(clamp(camera.y + cy, self.y-oy-12, camera.y + window_h - cy))
+		if self.show_player_number then
+			draw_centered(sprs_icon_ply[self.n], x, y)
+		end
+
+		-- Cursor is *always* above everything else
+		self:draw_cursor()
+
+		-- Tutorial (TEMPORARY)
+		local x = self.x
+		local y = self.y+oy+6
+		if self.show_tutorial then
+			draw_centered(spr_symb_walk, x-22, y-8)
+			-- Arrows
+			local ax = x + 12
+			local o = 12
+			local keybinds = input:get_user(self.n).keybinds
+			draw_icon("keyboard", keybinds.down[1], ax, y)
+			draw_icon("keyboard", keybinds.left[1], ax-o, y)
+			draw_icon("keyboard", keybinds.right[1], ax+o, y)
+			draw_icon("keyboard", keybinds.up[1], ax, y-o)
+			
+			draw_centered(spr_symb_shoot, x-22, y+16)
+			draw_icon("keyboard", keybinds.fire[1], ax, y+16)
+
+			draw_centered(spr_symb_switch_gun, x-22, y+32)
+			draw_icon("keyboard", keybinds.alt[1], ax, y+32)
+		end
+	end
+
+
+	p.show_cu = true	
+	p.anim_sprs = p.anim_idle
+
+	p.gun = p.guns[1]
+
+	return p
 end
-function player_update_cursor(self)
 
+
+function player_update_cursor(self)
 end
 function player_draw_cursor(self)
 	-- Cursor
@@ -280,64 +362,9 @@ function player_movement(self, dt)
 	self.dy = self.dy + (dir_y * self.speed)
 	
 	-- Idk why this friction works but thanks stackoverflow
-	local fricratio = 1 / (1 + dt * self.friction);
+	local fricratio = 1 / (1 + dt * self.friction);--FIXME:dt ply
 	self.dx = self.dx * fricratio
 	self.dy = self.dy * fricratio 
-end
-
-function aim_player(self, dt)
-	--print(self.input_device[2])
-	--love.event.quit()
-	--if self.input_device[2] == "keyboard" then --input_device
-	--else
-	--	mmx, mmy = get_mouse_pos(self.input_device, camera , self)
-	--end
-
-	local mmx, mmy = input:get_world_cursor_pos(self.n, self)
-
-	self.cu_x = mmx or self.cu_x
-	self.cu_y = mmy or self.cu_x
-
-	self.rot = math.atan2(mmy - self.y, mmx - self.x)
-	self.shoot = false
-
-	-- Firing
-	-- god why is this code such a mess 
-	if self.gun.cooldown_timer <= 0 then
-
-		local button_active = false
-		if self.gun.is_auto then
-			button_active = input:button_down("fire", self.n)
-		else
-			button_active = input:button_pressed("fire", self.n)
-		end
-
-		if (not self.gun.charge and button_active) 
-		or ((prevfire and not button_active) and self.gun.charge) then
-			if self.gun.ammo > 0 then
-
-				if self.gun.charge then
-					local avancement = (self.gun.dt/self.gun.charge_time)^self.gun.charge_curve
-					if self.gun.save_burst then
-						load_save_gun_stats(self)
-					end
-
-					save_gun_stats(self)
-
-					advancementtoactive(self,avancement)--tf is advancement
-				end
-
-				self.shoot = true
-				self.gun:shoot()
-				camera:kick(self.rot + pi, self.gun.screenkick)
-				--kick_camera(self, dir, dist, offset_ang)
-				self.gun.dt = 0
-				
-			end
-		elseif input:button_down("fire", self.n,self.input_device) and self.gun.charge then
-			self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
-		end
-	end
 end
 
 
@@ -426,6 +453,7 @@ end
 function revive_player(self, life)
 	life = life or self.max_life
 	self.life = life
+	self.alive = true
 end
 
 function ply_set_gun(self, gun)

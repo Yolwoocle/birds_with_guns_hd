@@ -165,8 +165,8 @@ function make_bullet(self, p, angle, spread, type, spr)
 
 	local bullet = {
 		category = self.category,
-		x = p.x + math.cos(angle + offsetangle * self.flip) * dist,
-		y = p.y + math.sin(angle + offsetangle * self.flip) * dist,
+		x = p.x, --+ math.cos(angle + offsetangle * self.flip) * dist,
+		y = p.y, --+ math.sin(angle + offsetangle * self.flip) * dist,
 		spr = spr,
 		dx = math.cos(angle+scatter+spread) * spd,
 		dy = math.sin(angle+scatter+spread) * spd,

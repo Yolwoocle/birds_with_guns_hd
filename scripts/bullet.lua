@@ -30,7 +30,6 @@ function update_bullet(self, dt, i)
 			for _,k in pairs(todestroy) do 
 				interact_map(self, map, k.x, k.y)
 			end
-			
 		end
 	end
 
@@ -54,7 +53,7 @@ function update_laser(self, dt , i)
 		init_laser(self)
 	end
 
-	if self.category == "persistent" and button_down("fire", self.player.n,self.player.input_device) and self.gun.ammo>0 and self.gun == self.player.gun then
+	if self.category == "persistent" and input:button_down("fire", self.player.n) and self.gun.ammo>0 and self.gun == self.player.gun then
 		self.bounce = self.maxbounce
 		self.length = {}
 		self.life = self.life + dt

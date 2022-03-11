@@ -21,15 +21,15 @@ function init_menu_manager()
 			{""},
 			{"1 PLAYER", function() 
 				menu_manager:resume()
-				game:begin(1)
+				game:begin_1p()
 			end},
 			{"2 PLAYERS - keyboard+mouse", function() 
 				menu_manager:resume()
-				game:begin(2, {"keyboard+mouse", "keyboard"})
+				game:begin_2p_mouse()
 			end},
 			{"2 PLAYERS - split keyboard", function() 
 				menu_manager:resume()
-				game:begin(2, {"keyboard", "keyboard"})
+				game:begin_2p_kb()
 			end},
 			{"3 PLAYERS", function() 
 				menu_manager:resume()
