@@ -54,6 +54,10 @@ function init_game(self)
 
 	zones = {}
 	mobs = {}
+	interactables = {}
+
+	interactable_liste.end_of_level:spawn()
+
 	pickups = make_pickups()
 	
 	map = init_map(600, 300)
@@ -81,6 +85,10 @@ end
 local y_sort_buffer = {}
 
 function update_game(self, dt)
+	--debugg Zone
+
+	--make_interactable({})
+
 	-- Compute camera offset (e.g. from aiming)
 	local ox, oy = 0, 0
 	for i,p in ipairs(players) do
@@ -174,12 +182,16 @@ function update_game(self, dt)
 		damageinzone(z,i) 
 	end
 
+	for i,int in ipairs(interactables) do
+		int:update(dt,i)
+	end
+
 	prevfire = false
 	hud:update()
 
 	particles:update(dt)
 
-	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, players}
+	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, players, 	interactables}
 end
 
 function draw_game(self)
