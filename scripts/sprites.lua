@@ -197,6 +197,14 @@ spr_water_gun = load_image("guns/water_gun")
 spr_revolver_big = load_image("guns/gun_revolver")
 spr_firework_launcher_big = load_image("guns/firework_launcher_big")
 
+spr_bazooka = load_image("guns/bazooka") 
+spr_boxing_glove = load_image("guns/boxing_glove") 
+spr_flamethrower = load_image("guns/flamethrower") 
+spr_minigun = load_image("guns/gatling_gun") 
+spr_machinegun = load_image("guns/machinegun") 
+spr_ring_cannon = load_image("guns/ring_cannon") 
+spr_sniper = load_image("guns/sniper") 
+
 -- Tiles
 spr_wall_1 = load_image("tiles/wall_1")
 spr_ground_wood = load_image("tiles/floor_wood_single")

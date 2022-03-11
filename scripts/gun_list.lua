@@ -9,8 +9,36 @@ guns = {
 		screenkick = 4,
 		max_ammo = 150,
 		bullet_spd = 700,
-		cooldown = 0.15,
+		cooldown = 0.2,
 		is_auto = false,
+
+		make_shot = default_shoot,
+		scale = 1,
+	}),
+	machinegun = make_gun({
+		name = "machinegun",
+		spr = spr_machinegun,
+		screenkick = 3,
+		max_ammo = 1500,
+		bullet_spd = 700,
+		cooldown = 0.15,
+		is_auto = true,
+
+		make_shot = default_shoot,
+		scale = 1,
+	}),
+
+	minigun = make_gun({
+		name = "minigun",
+		spr = spr_minigun,
+		screenkick = 3,
+		max_ammo = 1500,
+		bullet_spd = 700,
+		cooldown = 0.05,
+		is_auto = true,
+
+		spread = 0.5,
+		scattering = 0.5,
 
 		make_shot = default_shoot,
 		scale = 1,
@@ -31,7 +59,7 @@ guns = {
 		damge_tick = 0.2,
 		damage = .34,
 		
-		scattering    = 0.1,
+		scattering = 0.1,
 		--bounce = 10,
 	},
 	shotgun = make_gun{

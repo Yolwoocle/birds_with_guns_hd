@@ -6,14 +6,18 @@ function make_game()
     local game = {
         init = init_game,
 		begin = begin_game,
+		-- PLEASE REMOVE, TEMPORARY :
 		begin_1p = begin_game_1p,
 		begin_2p_mouse = begin_game_2p_mouse,
 		begin_2p_kb = begin_game_2p_kb,
 		begin_3p = begin_game_3p,
 		begin_4p = begin_game_4p,
+		------
+
 		update = update_game,
         draw = draw_game,
 		keypressed = game_keypressed,
+		focus = game_focus,
     } 
 	game:init()
     return game
@@ -215,8 +219,20 @@ function draw_game(self)
 	debug_print(debugg)
 end
 
-function game_keypressed(key, scancode)
-	
+function game_keypressed(self, key, scancode)
+	if key == "m" then
+		if love.keyboard.isDown("lctrl") then
+			settings.sound_on = not settings.sound_on
+			notification = "Sound on: "..tostring(settings.sound_on)
+		end
+	end
+end
+function game_focus(self, focus)
+	if focus then
+
+	else
+		menu_manager:pause()
+	end
 end
 
 function y_sort_merge(all_objs)

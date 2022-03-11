@@ -158,6 +158,9 @@ function love.keyreleased(key)
 	end
 end
 
+function love.focus(focus)
+	if game then  game:focus(focus)  end
+end
 
 
 

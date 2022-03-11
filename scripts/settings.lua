@@ -18,6 +18,8 @@ settings = {
 
     screenshot_scale = make_setting{2, "Screenshot Scale",""},
     gif_scale = make_setting{2, "Gif Scale",""},
+
+    sound_on = make_setting{true, "Sound", ""}
 }
 
 function set_setting(name, val)
