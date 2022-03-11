@@ -18,6 +18,8 @@ require "scripts.particles"
 require "scripts.waves"
 require "scripts.level_editor.main"
 require "scripts.menu"
+require "scripts.interactable"
+require "scripts.interactable_list"
 gifcat = require("gifcat")
 
 function love.load()

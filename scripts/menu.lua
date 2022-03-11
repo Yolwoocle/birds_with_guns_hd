@@ -40,6 +40,7 @@ function init_menu_manager()
 				game:begin(4)
 			end},
 			{"OPTIONS", callback_set_menu('options')},
+			{"Quit", function() love.event.quit() end},
 		}, function()
 			camera_rect_color("fill", 0, 0, window_w, window_h, {0,0,0,0.5})
 		end),

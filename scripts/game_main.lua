@@ -17,7 +17,7 @@ function make_game()
 		update = update_game,
         draw = draw_game,
 		keypressed = game_keypressed,
-		focus = game_focus,
+		create_new_level = game_create_new_level,
     } 
 	game:init()
     return game
@@ -39,6 +39,10 @@ function init_game(self)
 
 	zones = {}
 	mobs = {}
+	interactables = {}
+
+	interactable_liste.end_of_level:spawn(100,MAIN_PATH_PIXEL_Y+100)
+
 	pickups = make_pickups()
 
 	bullets = {}
@@ -64,6 +68,23 @@ end
 function begin_game_2p_mouse(self)
 	self:begin(2)
 	input:init_users_2p_mouse()
+end
+
+function game_create_new_level(self)
+
+	mobs = {}
+	--pickups = {}
+	seed = love.math.random()*40000
+	map:generate_map(seed)
+
+	local x = 84
+	local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
+
+	for i,p in ipairs(players) do
+		p.x = x + 32*(i-1)
+		p.y = y
+	end
+
 end
 
 function begin_game(self, nb_ply)
@@ -100,6 +121,10 @@ end
 local y_sort_buffer = {}
 
 function update_game(self, dt)
+	--debugg Zone
+
+	--make_interactable({})
+
 	-- Compute camera offset (e.g. from aiming)
 	local ox, oy = 0, 0
 	for i,p in ipairs(players) do
@@ -187,19 +212,28 @@ function update_game(self, dt)
 		damageinzone(z,i) 
 	end
 
+	for i,int in ipairs(interactables) do
+		int:update(dt,i)
+	end
+
 	prevfire = false
 	hud:update()
 
 	particles:update(dt)
 
-	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, players}
+	y_sort_buffer = y_sort_merge{pickups, mobs, bullets, players, interactables}
 end
 
 function draw_game(self)
     camera:draw()
+
+	--for i,int in ipairs(interactables) do
+	--	int:draw()
+	--end
 	
 	map:draw_with_y_sorted_objs(y_sort_buffer)
 	pickups:draw()
+
 	draw_waves()
 	
 	for i,z in ipairs(zones) do
