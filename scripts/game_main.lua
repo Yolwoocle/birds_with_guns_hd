@@ -43,7 +43,7 @@ function init_game(self)
 	interactables = {}
 
 	for i = 0,10 do
-	interactable_liste.end_of_level:spawn(100+32*i,MAIN_PATH_PIXEL_Y+100) --chest
+	interactable_liste.chest:spawn(100+32*i,MAIN_PATH_PIXEL_Y+100) --chest
 	end
 
 	pickups = make_pickups()
@@ -74,7 +74,7 @@ function begin_game_2p_mouse(self)
 end
 
 function game_create_new_level(self)
-	
+
 	map = init_map(600, 300)
 	map:generate_map(seed)
 
