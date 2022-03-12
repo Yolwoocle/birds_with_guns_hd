@@ -12,7 +12,7 @@ function toggle_map_edit()
 		init_room_map(room_files[room_files_n])
 
     else
-        --mobs = {}
+        mobs = {}
         map = init_map(600, 300)
         map:generate_map(seed)
     end

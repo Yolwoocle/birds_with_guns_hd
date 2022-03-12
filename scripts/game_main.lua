@@ -42,7 +42,9 @@ function init_game(self)
 	mobs = {}
 	interactables = {}
 
-	interactable_liste.end_of_level:spawn(100,MAIN_PATH_PIXEL_Y+100)
+	for i = 0,10 do
+	interactable_liste.end_of_level:spawn(100+32*i,MAIN_PATH_PIXEL_Y+100) --chest
+	end
 
 	pickups = make_pickups()
 
@@ -72,20 +74,24 @@ function begin_game_2p_mouse(self)
 end
 
 function game_create_new_level(self)
-
-	mobs = {}
-	--pickups = {}
+	
 	map = init_map(600, 300)
-	seed = love.math.random()*40000
 	map:generate_map(seed)
 
-	local x = 84
-	local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
+	--mobs = {}
+	--pickups = {}
 
-	for i,p in ipairs(players) do
-		p.x = x + 32*(i-1)
-		p.y = y
-	end
+	--map = init_map(600, 300)
+	--seed = love.math.random()*40000
+	--map:generate_map(seed)
+
+	--local x = 84
+	--local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
+--
+	--for i,p in ipairs(players) do
+	--	p.x = x + 32*(i-1)
+	--	p.y = y
+	--end
 
 end
 
@@ -214,7 +220,8 @@ function update_game(self, dt)
 		damageinzone(z,i) 
 	end
 
-	for i,int in ipairs(interactables) do
+	for i = #interactables , 1 , -1 do
+		int = interactables[i]
 		int:update(dt,i)
 	end
 

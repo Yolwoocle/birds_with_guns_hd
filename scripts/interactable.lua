@@ -3,7 +3,7 @@ function make_interactable(a)
         name           		= a.name                or "interactable",
         spr 	       		= a.spr 	            or spr_revolver,
 
-        condition           = a.condition           or function (self, dt)
+        condition           = a.condition           or function (self, dt,i)
                                                             for i,p in ipairs(players) do
                                                                 if p.shoot and dist_sq(p.x,p.y,self.x,self.y)<30^2 then
                                                                     return true
@@ -11,7 +11,7 @@ function make_interactable(a)
                                                             end
                                                         end,
 
-        on_interaction      = a.on_interaction      or function (self, dt)
+        on_interaction      = a.on_interaction      or function (self, dt,i)
                                                         print("activated")
                                                         end,
         
@@ -35,8 +35,8 @@ function make_interactable(a)
         update = 
 
             function (self, dt , i)
-                if self:condition(dt) then
-                    self:on_interaction(dt)
+                if self:condition(dt,i) then
+                    self:on_interaction(dt,i)
                 end
             end,
 
