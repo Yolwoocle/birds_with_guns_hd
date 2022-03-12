@@ -253,6 +253,6 @@ function spawn_random_mob(x,y)
 	if mob then
 		local instance =  mob:spawn(x,y)
 		table.insert(mobs, instance)
-		print(instance.name, instance.rot)
+		--print(instance.name, instance.rot)
 	end
 end
