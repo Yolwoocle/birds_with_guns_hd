@@ -3,6 +3,7 @@ require "scripts.constants"
 require "scripts.damage_zone_list"
 require "scripts.damage_zone"
 require "scripts.bullet"
+require "scripts.sfx"
 local gun_loot_table = require "probability_tables/gun"
 
 function make_gun(a)
@@ -83,6 +84,8 @@ function make_gun(a)
 		ptc_type = a.ptc_type or "none",  
 		ptc_size = a.ptc_size or 10,
 
+		shoot_sfx = a.shoot_sfx or sfx_shot_1,
+
 		toshot = {},
 		shoot = shoot_gun,
 		update = update_gun,
@@ -113,12 +116,13 @@ function draw_gun(self, p)
 end
 
 function shoot_gun(self)
+	play_sfx(self.shoot_sfx)
+
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown+ (self.burst*self.burstdt)-self.burstdt
 end
 
 function default_shoot(g,p)
-
 	local shot = {}
 		nbshot = g.nbshot-1
 		for k=0,g.burst-1 do

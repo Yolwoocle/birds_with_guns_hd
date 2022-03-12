@@ -67,6 +67,8 @@ function init_player(n,x,y, spr, a)
 	p.gun_dist = 14
 	p.guns = {
 		copy(guns.revolver), 
+		copy(guns.machinegun),
+		copy(guns.minigun),
 		copy(guns.shotgun), 
 		copy(guns.paper_plane_gun), 
 		copy(guns.fire_extinguisher), 
