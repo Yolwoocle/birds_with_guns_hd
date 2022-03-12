@@ -18,7 +18,7 @@ function make_audio_manager()
 	end
 
 	a.play = function(self, sound)
-		if get_setting("sound_on") then
+		if get_setting("sound_on") and sound then
 			local source = sound:clone()
 			source:play()
 		end

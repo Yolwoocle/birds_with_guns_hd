@@ -84,7 +84,7 @@ function make_gun(a)
 		ptc_type = a.ptc_type or "none",  
 		ptc_size = a.ptc_size or 10,
 
-		shoot_sfx = a.shoot_sfx or sfx_shot_1,
+		shoot_sfx = a.shoot_sfx or nil,
 
 		toshot = {},
 		shoot = shoot_gun,

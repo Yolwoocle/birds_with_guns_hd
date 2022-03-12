@@ -189,9 +189,7 @@ function make_tile(n, symb, spr, a)
 		end,
 	}
 
-	if type(spr) == "table" then
-		spr = spr[1]
-	end
+	if type(spr) == "table" then  spr = spr[1]  end
 	if not a.ox then 
 		tile.ox = spr:getWidth() - BLOCK_WIDTH
 	end

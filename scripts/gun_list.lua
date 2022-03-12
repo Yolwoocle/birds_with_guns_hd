@@ -12,6 +12,8 @@ guns = {
 		cooldown = 0.2,
 		is_auto = false,
 
+		shoot_sfx = sfx_shot_1,
+
 		make_shot = default_shoot,
 		scale = 1,
 	}),
@@ -23,6 +25,8 @@ guns = {
 		bullet_spd = 700,
 		cooldown = 0.15,
 		is_auto = true,
+
+		shoot_sfx = sfx_shot_1,
 
 		make_shot = default_shoot,
 		scale = 1,
@@ -36,6 +40,8 @@ guns = {
 		bullet_spd = 700,
 		cooldown = 0.05,
 		is_auto = true,
+
+		shoot_sfx = sfx_shot_1,
 
 		spread = 0.5,
 		scattering = 0.5,
@@ -66,6 +72,8 @@ guns = {
 		name = "shotgun",
 		spr = spr_shotgun,
 
+		shoot_sfx = sfx_shot_2,
+
 		nbshot = 10,
 		offset_spd = 300,
 		spdslow = .96,
@@ -83,6 +91,8 @@ guns = {
 		cooldown = 0.4,
 		scattering = 0.2,
 		damage = 2,
+
+		shoot_sfx = sfx_shot_1,
 
 		scale = 1, 
 

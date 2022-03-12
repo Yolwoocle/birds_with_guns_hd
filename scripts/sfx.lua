@@ -12,5 +12,6 @@ end
 
 sfx_shot_1 = new_source("shot_1.wav", "static")
 sfx_shot_2 = new_source("shot_2.wav", "static")
+sfx_hurt = new_source("hurt.wav", "static")
 
 music_level_1 = new_source("music/level_1.mp3", "stream", {looping = true})
