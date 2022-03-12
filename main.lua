@@ -49,9 +49,9 @@ function love.load()
 	canvas = love.graphics.newCanvas(window_w, window_h)
 
 --	font_def = love.graphics.getFont()
-	font_small = love.graphics.newFont("assets/fonts/Kenney Mini.ttf", 8)
-	font_normal = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
-	font_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
+	font_kenney_mini = love.graphics.newFont("assets/fonts/Kenney Mini.ttf", 8)
+	font_kenney_pixel = love.graphics.newFont("assets/fonts/Kenney Pixel.ttf", 16)
+	font_kenney_thick = love.graphics.newFont("assets/fonts/Kenney Thick.ttf", 8)
 	
 	font_compass = love.graphics.newFont("assets/fonts/somepx/CompassPro.ttf", 16) 
 	font_equipment = love.graphics.newFont("assets/fonts/somepx/EquipmentPro.ttf", 16) 
@@ -59,7 +59,9 @@ function love.load()
 	font_futile = love.graphics.newFont("assets/fonts/somepx/FutilePro.ttf", 16) 
 	font_matchup = love.graphics.newFont("assets/fonts/somepx/MatchupPro.ttf", 16)
 	
-	font_4x4 = love.graphics.newFont("assets/fonts/4x4_mono.ttf", 16)
+	font_small = font_kenney_mini
+	font_normal = font_matchup
+	font_thick = font_futile
 
 	font_default = font_futile--font_matchup
 	love.graphics.setFont(font_default)
@@ -98,6 +100,9 @@ function love.draw()
 	end
 	menu_manager:draw()
 
+	local text = love.graphics.newText(font_normal, "Development version - "..os.date('%a %d-%b-%Y'))
+	love.graphics.draw(text, camera.x+window_w-text:getWidth(), camera.y)
+	
     -- Canvas for that sweet pixel art
     love.graphics.setCanvas()
     love.graphics.origin()
