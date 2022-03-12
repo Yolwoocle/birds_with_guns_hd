@@ -264,6 +264,8 @@ function generate_map(self, seed)
 	local layout_width = 12
 	local layout_height = 12
 
+	self.seed = seed
+
 	-- Init random number generator
 	local rng
 	if seed then

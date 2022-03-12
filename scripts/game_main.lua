@@ -74,8 +74,8 @@ function begin_game_2p_mouse(self)
 end
 
 function game_create_new_level(self)
-
 	map = init_map(600, 300)
+	local seed = love.math.random()*40000
 	map:generate_map(seed)
 
 	--mobs = {}
@@ -96,7 +96,7 @@ function game_create_new_level(self)
 end
 
 function begin_game(self, nb_ply)
-	seed = love.math.random()*40000
+	local seed = love.math.random()*40000
 	map:generate_map(seed)
 
 	number_of_players = nb_ply or 1
@@ -259,7 +259,6 @@ function draw_game(self)
 	debug_y = 0
 	debug_print("FPS. "..tostr(love.timer.getFPS()))
 	debug_print(notification)
-	debug_print(debugg)
 end
 
 function game_keypressed(self, key, scancode)

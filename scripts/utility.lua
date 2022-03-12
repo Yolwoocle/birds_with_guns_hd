@@ -184,7 +184,7 @@ function random_weighted(tab)
 		end
 		sum = sum - v
 	end
-	return nil
+	return tab[1]
 end
 
 function copy(t)
