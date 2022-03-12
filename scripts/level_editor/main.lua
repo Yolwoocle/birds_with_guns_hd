@@ -67,7 +67,7 @@ function update_map_edit(dt)
 		local doc1 = ""
 		--read the docs
 		io.input(file)
-		
+
 		txtline = by+1
 		local num_line = 0
 
