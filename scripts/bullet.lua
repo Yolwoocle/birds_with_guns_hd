@@ -23,12 +23,13 @@ function update_bullet(self, dt, i)
 
 	if self.bounce > 0 then
 		local coll, todestroy = collide_object(self, 1)
-		self.debug = {coll, todestroy}
+		--self.debug = {coll, todestroy}
 		if coll then
 			self.bounce = self.bounce-1
 
 			for _,k in pairs(todestroy) do 
 				interact_map(self, map, k.x, k.y)
+				interact_map(self, map, floor(k.x), floor(k.y))
 			end
 		end
 	end

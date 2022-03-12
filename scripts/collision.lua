@@ -290,7 +290,7 @@ function is_solid_rect(map, x, y, w, h)
 		local is_solid = map:is_solid(pos[1], pos[2])
 		collision_happened = collision_happened or is_solid
 		if collision_happened then
-			collision_coordinates = {x=floor(pos[1]), y=floor(pos[2])}
+			collision_coordinates = {x=pos[1], y=pos[2]}
 		end
 	end
 
