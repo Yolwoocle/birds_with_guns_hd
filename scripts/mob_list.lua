@@ -3,7 +3,7 @@ require "scripts.gun_list"
 
 mob_list = {
 	fox = make_mob({
-		name = "place_older",
+		name = "fox",
 		anim_idle = {spr_fox},
 		anim_walk = {spr_fox},
 		spr_hit = spr_fox_hit,
@@ -28,6 +28,7 @@ mob_list = {
 		far_p	  = 200,
 	}),
 	robot = make_mob{
+		name = "robot",
 		spr = spr_robot,
 		spr_hit = spr_robot_hit,
 		anim_walk = {spr_robot},
@@ -35,6 +36,7 @@ mob_list = {
 		gun = guns.robot_shotgun,
 	},
 	cactus = make_mob{
+		name = "cactus",
 		spr_hit = spr_robot_hit,
 		anim_walk = {spr_cactus},
 		life = 10,

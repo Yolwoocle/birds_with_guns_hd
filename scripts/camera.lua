@@ -161,6 +161,7 @@ function manage_camera_lock(self)
 			for k,p in pairs(players) do
 				p:on_leave_start_area()
 			end
+			audio:on_leave_start_area()
 		end
 
 		-- Move if on branch

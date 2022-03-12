@@ -20,6 +20,7 @@ require "scripts.level_editor.main"
 require "scripts.menu"
 require "scripts.interactable"
 require "scripts.interactable_list"
+require "scripts.audio"
 gifcat = require("gifcat")
 
 function love.load()
@@ -32,6 +33,7 @@ function love.load()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	
 	input = make_input_manager()
+	audio = make_audio_manager()
 
 	gifcat.init()
 
