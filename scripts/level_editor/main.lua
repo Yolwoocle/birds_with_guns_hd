@@ -72,7 +72,7 @@ function update_map_edit(dt)
 		txtline = by+1
 		local num_line = 0
 
-		for _line in io.lines(filename) do
+		for _line in io.lines(chemin) do
 			num_line = num_line+1
 
 			if not(num_line == txtline) then
@@ -95,7 +95,18 @@ function update_map_edit(dt)
 		--	end
 		--end
 
-		local doc2 = "\n"..io.read("*all")
+		local num_line = 0
+		local doc2 = ""
+
+		for _line in io.lines(chemin) do
+			num_line = num_line+1
+			if num_line > txtline then
+				doc2 = doc2.."\n".._line
+			end
+		end
+
+		--local doc2 = "\n"..io.read("*all")
+
 		line_start = string.sub(line, 1 ,bx*2) 
 		line_end = string.sub(line, bx*2+3 ,#line) 
 
