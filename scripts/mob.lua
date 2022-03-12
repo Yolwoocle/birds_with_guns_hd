@@ -22,6 +22,7 @@ function make_mob(a)
 		h       = a.h   or 6,
 		dx      = a.dx  or 0,
 		dy      = a.dy  or 0,
+		rot = 0,
 		dx_idle = 0,
 		dy_idle = 0,
 		dx_col = 0,
@@ -248,5 +249,10 @@ end
 function spawn_random_mob(x,y)
 	local mob_name = random_weighted(mob_distribution_table)
 	local mob = mob_list[mob_name]	
-	if mob then  table.insert(mobs, mob:spawn(x,y))  end
+
+	if mob then
+		local instance =  mob:spawn(x,y)
+		table.insert(mobs, instance)
+		print(instance.name, instance.rot)
+	end
 end

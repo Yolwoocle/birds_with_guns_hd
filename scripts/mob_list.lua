@@ -46,6 +46,7 @@ mob_list = {
 	},
 
 	knight = make_mob({
+		name = "knight",
 		spr = spr_crow,
 		life = 30,	
 		spd = 10,
@@ -69,7 +70,7 @@ mob_list = {
 	}),
 
 	shotgunboy = make_mob({
-		name = "place_older",
+		name = "shotgunboy",
 		spr = spr_penguin,
 		life = 10,	
 		spd = 50,
@@ -93,7 +94,7 @@ mob_list = {
 	}),
 
 	shotgunboy2 = make_mob({
-		name = "place_older",
+		name = "shotgunboy2",
 		spr = spr_water_gun,
 		life = 15,	
 		spd = 50,
