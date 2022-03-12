@@ -17,6 +17,7 @@ function make_game()
 		update = update_game,
         draw = draw_game,
 		keypressed = game_keypressed,
+		focus = game_focus,
 		create_new_level = game_create_new_level,
     } 
 	game:init()
