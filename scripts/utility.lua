@@ -182,6 +182,7 @@ function random_weighted(tab)
 		if love.math.random() <= v/sum then
 			return k
 		end
+		sum = sum - v
 	end
 	return nil
 end

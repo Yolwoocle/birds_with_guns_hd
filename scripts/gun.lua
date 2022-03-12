@@ -148,6 +148,7 @@ end
 
 function get_random_gun(diff) --TODO: gun difficulty
 	local gun_name = random_weighted(gun_loot_table)
+	print("gungame", gun_name, "gun", table_to_str(guns[gun_name]), "gunloot_table", table_to_str(gun_loot_table))
 	return guns[gun_name]
 end
 
