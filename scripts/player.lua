@@ -441,7 +441,9 @@ end
 
 function damage_player(self, dmg)
 	if self.alive and self.iframes_timer <= 0 then
+		audio:play(sfx_hurt)
 		camera:shake(5)
+		
 		self.life = self.life - dmg
 		self.iframes_timer = self.iframes
 	end
