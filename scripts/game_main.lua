@@ -74,24 +74,21 @@ function begin_game_2p_mouse(self)
 end
 
 function game_create_new_level(self)
+
+	mobs = {}
+	pickups.table = {}
+
 	map = init_map(600, 300)
-	local seed = love.math.random()*40000
+	seed = love.math.random()*40000
 	map:generate_map(seed)
 
-	--mobs = {}
-	--pickups = {}
+	local x = 84
+	local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
 
-	--map = init_map(600, 300)
-	--seed = love.math.random()*40000
-	--map:generate_map(seed)
-
-	--local x = 84
-	--local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
---
-	--for i,p in ipairs(players) do
-	--	p.x = x + 32*(i-1)
-	--	p.y = y
-	--end
+	for i,p in ipairs(players) do
+		p.x = x + 32*(i-1)
+		p.y = y
+	end
 
 end
 
