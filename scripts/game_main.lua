@@ -42,8 +42,8 @@ function init_game(self)
 	mobs = {}
 	interactables = {}
 
-	for i = 0,10 do
-	interactable_liste.end_of_level:spawn(100+32*i,MAIN_PATH_PIXEL_Y+100) --chest
+	for i = 0, 10 do
+		interactable_list.chest:spawn(100+32*i,MAIN_PATH_PIXEL_Y+100) --chest
 	end
 
 	pickups = make_pickups()

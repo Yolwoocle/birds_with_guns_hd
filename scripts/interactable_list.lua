@@ -2,7 +2,7 @@ require "scripts.sprites"
 require "scripts.interactable"
 require "scripts.utility"
 
-interactable_liste = {
+interactable_list = {
 
     end_of_level = make_interactable({
         on_interaction = 
