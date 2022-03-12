@@ -36,14 +36,14 @@ function update_map_edit(dt)
 	if not(input:button_down("alt")) then
 		tile_n = mod_plus_1(tile_n + wheel, #map.palette)
 		if not (wheel == 0) then
-			nb_variente=1
+			nb_variant=1
 		end
 	end
 
 	--switch betwin varients of tiles
 	if input:button_down("alt") then
 		if map.palette[tile_n].spr[1] then
-			nb_variente = mod_plus_1(nb_variente + wheel, #map.palette[tile_n].spr)
+			nb_variant = mod_plus_1(nb_variant + wheel, #map.palette[tile_n].spr)
 		end
 	end
 
@@ -54,14 +54,13 @@ function update_map_edit(dt)
 	--fast select 
 	if input:button_down("middle") and ongrid and notvoid then
 		tile_n = map.grid[by][bx][1]
-		nb_variente = map.grid[by][bx][2]
+		nb_variant = map.grid[by][bx][2]
 	end
 
 	--place block with left click
-	
 	if input:button_down("fire") and ongrid and notvoid then --not(floor((by+1)/19) == (by+1)/19)
 		local tile = map.palette[tile_n].n
-		map:set_tile(bx,by, tile_n, nb_variente)
+		map:set_tile(bx,by, tile_n, nb_variant)
 
 		local file = io.open(chemin, "r")
 		local line
@@ -83,9 +82,9 @@ function update_map_edit(dt)
 		line_start = string.sub(line, 1 ,bx*2) 
 		line_end = string.sub(line, bx*2+3 ,#line) 
 
-		local variente
-		if nb_variente == 1 then variente=" " else variente = nb_variente end
-		line_middle = map.palette[tile_n].symb..variente
+		local variant
+		if nb_variant == 1 then variant=" " else variant = nb_variant end
+		line_middle = map.palette[tile_n].symb..variant
 
 		line = line_start..line_middle..line_end
 		io.close(file)
@@ -97,7 +96,7 @@ function update_map_edit(dt)
 		io.write(line)
 		io.write(doc2)
 		io.close(file)
-		
+		--]]
 	end
 
 	local next = nil
@@ -124,8 +123,8 @@ function draw_map_edit()
 	draw_centered(spr_cursor, mx, my)
 	if map.palette[tile_n].spr[1] then
 
-		draw_centered_outline(map.palette[tile_n].spr[nb_variente], mx+12, my+12,0,1,1,2,black)
-		draw_centered(map.palette[tile_n].spr[nb_variente], mx+12, my+12)
+		draw_centered_outline(map.palette[tile_n].spr[nb_variant], mx+12, my+12,0,1,1,2,black)
+		draw_centered(map.palette[tile_n].spr[nb_variant], mx+12, my+12)
 
 	else
 
@@ -150,18 +149,18 @@ end
 function init_room_map(room_file)
 
 	camera = init_camera()
-		prevmx,prevmy = input:get_mouse_pos()
-		tile_n = 1
-		nb_variente = 1
-		--map.palette symb
-		--room_file = "lvl1_rooms_branch.txt" -- "lvl1_rooms_1.txt" "lvl1_rooms_branch.txt"
+	prevmx,prevmy = input:get_mouse_pos()
+	tile_n = 1
+	nb_variant = 1
+	--map.palette symb
+	--room_file = "lvl1_rooms_branch.txt" -- "lvl1_rooms_1.txt" "lvl1_rooms_branch.txt"
 
-		room_load = map:load_from_file(room_file)
-		chemin = love.filesystem.getSourceBaseDirectory( ).."/birds_with_guns_hd/assets/rooms/"..room_file
+	room_load = map:load_from_file(room_file)
+	chemin = love.filesystem.getSourceBaseDirectory( ).."/birds_with_guns_hd/assets/rooms/"..room_file
 
-		map = init_map(600, 1000)
-		for i,z in ipairs(room_load) do
-			map:write_room(room_load[i], 0 , (i-1)*map:get_room_height(z)+(i-1), rng)
+	map = init_map(600, 1000)
+	for i,z in ipairs(room_load) do
+		map:write_room(room_load[i], 0 , (i-1)*map:get_room_height(z)+(i-1), rng)
 
-		end
+	end
 end 
