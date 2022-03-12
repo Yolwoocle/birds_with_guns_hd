@@ -62,16 +62,16 @@ function update_map_edit(dt)
 		local tile = map.palette[tile_n].n
 		map:set_tile(bx,by, tile_n, nb_variant)
 
-		local file = io.open(chemin, "r")
 		local line
 		local doc1 = ""
 		--read the docs
+		
 		io.input(file)
 
 		txtline = by+1
 		local num_line = 0
 
-		for _line in io.lines(chemin) do
+		for _line in love.filesystem.lines(chemin_local) do
 			num_line = num_line+1
 
 			if not(num_line == txtline) then
@@ -97,7 +97,7 @@ function update_map_edit(dt)
 		local num_line = 0
 		local doc2 = ""
 
-		for _line in io.lines(chemin) do
+		for _line in love.filesystem.lines(chemin_local) do
 			num_line = num_line+1
 			if num_line > txtline then
 				doc2 = doc2.."\n".._line
@@ -114,15 +114,16 @@ function update_map_edit(dt)
 		line_middle = map.palette[tile_n].symb..variant
 
 		line = line_start..line_middle..line_end
-		io.close(file)
 
 		--write in doc
-		file = io.open(chemin, "w")
-		io.output(file)
-		io.write(doc1)
-		io.write(line)
-		io.write(doc2)
-		io.close(file)
+		print("chmin", chemin)
+		local file = io.open(chemin, "w")
+		if not file then  file = io.open(chemin_local, "w")  end
+		
+		file:write(doc1)
+		file:write(line)
+		file:write(doc2)
+		file:close()
 		--]]
 	end
 
@@ -183,6 +184,7 @@ function init_room_map(room_file)
 	--room_file = "lvl1_rooms_branch.txt" -- "lvl1_rooms_1.txt" "lvl1_rooms_branch.txt"
 
 	room_load = map:load_from_file(room_file)
+	chemin_local = "assets/rooms/"..room_file
 	chemin = love.filesystem.getSourceBaseDirectory( ).."/birds_with_guns_hd/assets/rooms/"..room_file
 
 	map = init_map(600, 1000)
