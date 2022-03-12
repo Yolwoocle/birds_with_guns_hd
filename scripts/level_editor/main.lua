@@ -23,17 +23,17 @@ function update_map_edit(dt)
 	local mid_screen = {x=camera.x - window_w/2, y=camera.y - window_h/2}
 	local input_device = {keybinds,"keyboard+mouse",1}
 	 prevmx,prevmy = mx,my
-	 mx,my=get_world_cursor_pos(mid_screen, input_device,dt, camera)
+	 mx,my=input:get_world_mouse_pos(mid_screen, input_device,dt, camera) -- get_world_cursor_pos
 	 mapmx,mapmy = floor(mx/BLOCK_WIDTH)*BLOCK_WIDTH, floor(my/BLOCK_WIDTH)*BLOCK_WIDTH,BLOCK_WIDTH,BLOCK_WIDTH
 
 	 --moove camera with right click
-	if button_down("alt", 1,input_device) then
+	if input:button_down("alt") then
 		camera_set_pos(camera, camera.x+prevmx - mx, camera.y+prevmy - my)
-		mx,my=get_world_cursor_pos(mid_screen, input_device,dt, camera)
+		mx,my=input:get_world_mouse_pos(mid_screen, input_device,dt, camera)
 	end
 
 	--switch betwin tiles
-	if not(button_down("alt", 1,input_device)) then
+	if not(input:button_down("alt")) then
 		tile_n = mod_plus_1(tile_n + wheel, #map.palette)
 		if not (wheel == 0) then
 			nb_variente=1
@@ -41,7 +41,7 @@ function update_map_edit(dt)
 	end
 
 	--switch betwin varients of tiles
-	if button_down("alt", 1,input_device) then
+	if input:button_down("alt") then
 		if map.palette[tile_n].spr[1] then
 			nb_variente = mod_plus_1(nb_variente + wheel, #map.palette[tile_n].spr)
 		end
@@ -52,14 +52,14 @@ function update_map_edit(dt)
 	local notvoid = ongrid and not(map.grid[by][bx][1]==0)
 
 	--fast select 
-	if button_down("middlems", 1,input_device) and ongrid and notvoid then
+	if input:button_down("middle") and ongrid and notvoid then
 		tile_n = map.grid[by][bx][1]
 		nb_variente = map.grid[by][bx][2]
 	end
 
 	--place block with left click
 	
-	if button_down("fire", 1, input_device) and ongrid and notvoid then --not(floor((by+1)/19) == (by+1)/19)
+	if input:button_down("fire") and ongrid and notvoid then --not(floor((by+1)/19) == (by+1)/19)
 		local tile = map.palette[tile_n].n
 		map:set_tile(bx,by, tile_n, nb_variente)
 
@@ -102,9 +102,9 @@ function update_map_edit(dt)
 
 	local next = nil
 
-	if button_pressed("up", 1, input_device) then 
+	if input:button_pressed("up") then --self:button_down("up"
         next = 1
-    elseif button_pressed("down", 1, input_device) then
+    elseif input:button_pressed("down") then
         next = -1
     end
 
@@ -150,7 +150,7 @@ end
 function init_room_map(room_file)
 
 	camera = init_camera()
-		prevmx,prevmy = get_mouse_pos()
+		prevmx,prevmy = input:get_mouse_pos()
 		tile_n = 1
 		nb_variente = 1
 		--map.palette symb

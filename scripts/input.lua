@@ -190,13 +190,15 @@ function make_input_manager()
 		n = n or 1
 
 		-- Mouse 
-		if cmd == "fire" and n == 1 and love.mouse.isDown(1) then  return true  end
-		if cmd == "alt"  and n == 1 and love.mouse.isDown(2) then  return true  end
+		if cmd == "fire" 	and n == 1 and love.mouse.isDown(1) then  return true  end
+		if cmd == "alt"  	and n == 1 and love.mouse.isDown(2) then  return true  end
+		if cmd == "middle"  and n == 1 and love.mouse.isDown(3) then  return true  end
 
 		return self:get_user(n):button_down(cmd)
 	end
 
 	i.button_pressed = function(self, cmd, n)
+		n = n or 1
 		local btnd = self:button_down(cmd, n)
 		local last_btnd = self.last_button_state[n][cmd]
 		if btnd then 

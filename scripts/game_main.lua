@@ -71,6 +71,7 @@ function game_create_new_level(self)
 
 	mobs = {}
 	--pickups = {}
+	map = init_map(600, 300)
 	seed = love.math.random()*40000
 	map:generate_map(seed)
 
