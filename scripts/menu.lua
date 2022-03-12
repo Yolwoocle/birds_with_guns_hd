@@ -140,12 +140,16 @@ function init_menu_manager()
 		self.curmenu_name = "pause"
 		mouse_visible = true
 		love.mouse.setVisible(true)
+
+		audio:on_pause()
 	end
 	
 	m.resume = function(self)
 		self.curmenu_name = "none" 
 		mouse_visible = false --TODO: should be settings.mouse_visible
 		love.mouse.setVisible(false)
+	
+		audio:on_unpause()
 	end
 
 	menu_manager = m  

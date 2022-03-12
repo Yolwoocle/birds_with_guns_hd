@@ -116,7 +116,7 @@ function draw_gun(self, p)
 end
 
 function shoot_gun(self)
-	play_sfx(self.shoot_sfx)
+	audio:play(self.shoot_sfx)
 
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown+ (self.burst*self.burstdt)-self.burstdt
@@ -147,9 +147,7 @@ end
 ---------------
 
 function get_random_gun(diff) --TODO: gun difficulty
-	print("gun loot table "..table_to_str(gun_loot_table))
 	local gun_name = random_weighted(gun_loot_table)
-	print(gun_name)
 	return guns[gun_name]
 end
 
