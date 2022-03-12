@@ -137,7 +137,7 @@ function draw_laser(self)
 		local scmax = (-(-self.maxlife/-2)^2)+(-self.maxlife/-2)*self.maxlife
 		local scaleof = ((-(self.life^2)+self.life*self.maxlife)/scmax)
 		if self.category == "persistent" then
-			scaleof = 1
+			scaleof = .75+self.time_since_creation%30*2
 		end
 
 		draw_line_spr(v.x1, v.y1, v.x, v.y, self.spr, self.scale*scaleof)
