@@ -81,6 +81,7 @@ function init_map(w, h)
 	map.generate_path = generate_path
 	map.spawn_mob = tile_spawn_mob
 	
+	map.room_connector = map:load_from_file("connector_wagon.txt")[1]
 	map.lvl1_rooms = map:load_from_file("lvl1_rooms.txt")
 	map.lvl1_rooms_branch = map:load_from_file("lvl1_rooms_branch.txt")
 	--map.lvl_arena = map:load_from_file("arena.txt")
@@ -287,12 +288,20 @@ function generate_map(self, seed)
 
 	-- Write main path
 	local room_id = 1
+	local cur_x = 0
 	local w,h = ROOM_W, ROOM_H
 	for ix=1,layout_width-1 do
-		layout[MAIN_PATH_Y][ix] = 1 
-		room_id = room_id + 1
+		layout[MAIN_PATH_Y][ix] = 1  
 		self:write_room(rooms[room_id], ix*w, MAIN_PATH_Y*h, rng)
+		
+		room_id = room_id + 1
+		cur_x = cur_x + self:get_room_width(rooms[room_id])
 	end
+	-- Connector wagon
+	local x, y = cur_x, MAIN_PATH_Y*h
+	self:write_room(self.room_connector, x, y)
+	interactable_list.end_of_level:spawn(x*BLOCK_WIDTH, y*BLOCK_WIDTH + ROOM_PIXEL_H/2)
+
 	-- Starting area
 	self:write_room(rooms_source[1], 0, MAIN_PATH_Y*h, rng)
 
