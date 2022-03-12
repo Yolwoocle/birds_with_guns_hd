@@ -69,15 +69,31 @@ function update_map_edit(dt)
 		io.input(file)
 		
 		txtline = by+1
+		local num_line = 0
 
-		for l=1,txtline do
-			local linetxt = io.read("*line")
-			if not(l==txtline) then
-				doc1 = doc1..linetxt.."\n"
+		for _line in io.lines(filename) do
+			num_line = num_line+1
+
+			if not(num_line == txtline) then
+				doc1 = doc1.._line.."\n"
 			else
-				line = linetxt
+				line = _line
+			end
+
+			if num_line == txtline then
+				break 
 			end
 		end
+
+		--for l=1,txtline do
+		--	local linetxt = io.read("*line")
+		--	if not(l==txtline) then
+		--		doc1 = doc1..linetxt.."\n"
+		--	else
+		--		line = linetxt
+		--	end
+		--end
+
 		local doc2 = "\n"..io.read("*all")
 		line_start = string.sub(line, 1 ,bx*2) 
 		line_end = string.sub(line, bx*2+3 ,#line) 

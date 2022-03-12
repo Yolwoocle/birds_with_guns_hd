@@ -14,7 +14,20 @@ interactable_list = {
     chest = make_interactable({
         name = "chest",
         spr = spr_chest,
+
+        condition = 
+
+        function (self, dt,i)
+            for i,b in ipairs(bullets) do
+                if dist_sq(b.x,b.y,self.x,self.y)<15^2 then
+                    table.remove(bullets,i)
+                    return true
+                end
+            end
+        end,
+
         on_interaction = 
+
         function (self, dt, i)
             --pickups:spawn("gun", guns.machinegun, self.x, self.y)
             pickups:spawn("gun", get_random_gun(), self.x, self.y)

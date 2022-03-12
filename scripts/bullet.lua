@@ -29,7 +29,6 @@ function update_bullet(self, dt, i)
 
 			for _,k in pairs(todestroy) do 
 				interact_map(self, map, k.x, k.y)
-				interact_map(self, map, floor(k.x), floor(k.y))
 			end
 		end
 	end
