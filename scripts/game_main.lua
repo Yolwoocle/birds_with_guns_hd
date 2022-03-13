@@ -261,7 +261,7 @@ end
 function game_keypressed(self, key, scancode)
 	if key == "m" then
 		if love.keyboard.isDown("lctrl") then
-			set_setting("sound_on", not get_setting(sound_on))
+			set_setting("sound_on", not get_setting("sound_on"))
 			notification = "Sound on: "..tostring(settings.sound_on)
 		end
 	end

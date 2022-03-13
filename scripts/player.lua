@@ -68,13 +68,6 @@ function init_player(n,x,y, spr, a)
 	p.guns = {
 		copy(guns.revolver), 
 		copy(guns.machinegun),
-		copy(guns.minigun),
-		copy(guns.shotgun), 
-		copy(guns.paper_plane_gun), 
-		copy(guns.fire_extinguisher), 
-		copy(guns.assault_rifle), 
-		copy(guns.firework_launcher), 
-		copy(guns.laser)
 	}
 	p.gun_n = 1
 	--methods

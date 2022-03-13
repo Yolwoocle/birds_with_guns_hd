@@ -1,7 +1,9 @@
 function make_interactable(a)
 	local interactable = {
 		name = a.name or "interactable",
-		spr = a.spr or spr_revolver,
+		spr = a.spr or spr_missing,
+
+		init = a.init or function(self)  end,
 
 		condition = a.condition or function (self, dt,i)
 			for i,p in ipairs(players) do
@@ -36,6 +38,7 @@ function make_interactable(a)
 
 	}
 
+	interactable:init()
 	return interactable
 end
 

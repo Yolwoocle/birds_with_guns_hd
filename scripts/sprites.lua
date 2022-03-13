@@ -220,6 +220,7 @@ spr_pot_cactus = load_image("tiles/pot_cactus")
 sprs_seat = load_image_table("tiles/seat_", 4)
 
 spr_chest = load_image("tiles/chest_1")
+spr_end_of_level = load_image("end_of_level")
 
 --spr_wall_dum = load_image("scrapped/dummy_wall")
 sprs_box = load_image_table("tiles/box_", 3)
