@@ -16,6 +16,7 @@ end
 
 spr_missing = load_image("missing")
 spr_empty = load_image("empty")
+spr_empty_16x16 = load_image("empty_16x16")
 
 -- UI
 spr_cursor = load_image("cursor")

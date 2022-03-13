@@ -162,7 +162,7 @@ end
 
 function random_pos_neg(n)
 	-- Random number between -n and n
-	return math.random(2*n) - n
+	return math.random()*2*n - n
 end
 random_neighbor = random_pos_neg 
 
@@ -394,4 +394,13 @@ function normalize_vect(x, y)
 	if x==0 and y==0 then  return 0,0  end
 	local a = math.atan2(y, x)
 	return math.cos(a), math.sin(a)
+end
+
+function concat(...)
+	local args = {...}
+	local s = ""
+	for _,v in pairs(args) do
+		s = s..tostring(v)
+	end
+	return s
 end

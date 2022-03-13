@@ -153,7 +153,7 @@ function love.keypressed(key, scancode, isrepeat)
 		love.event.quit("restart")
 
 	elseif key == "f6" then
-		toggle_map_edit()
+		--toggle_map_edit()
 	end
 end
 

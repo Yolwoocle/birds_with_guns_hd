@@ -19,12 +19,11 @@ function init_map(w, h)
 	map.draw_with_y_sorted_objs = draw_with_y_sorted_objs
 	map.chr_to_tile_number = chr_to_tile_number
 	map.palette = {
-		[0] = make_tile(0, ' ', spr_empty, {
+		[0] = make_tile(0, ' ', spr_empty_16x16, {
 			is_solid=true, is_destructible=false, is_transparent=false
 		}),
 		make_tile(1, '.', spr_floor_carpet, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
-			type="multi_tile", 
 		}),
 		make_tile(2, '#', spr_wall_1, {
 			is_solid=true, is_destructible=false, is_transparent=false, 
@@ -58,12 +57,19 @@ function init_map(w, h)
 		make_tile(10, '_', sprs_floor_concrete[1], {
 			is_solid=false, is_destructible=false, is_transparent=false,
 		}),
-		make_tile(11, '=', spr_missing, {
+		make_tile(11, '=', spr_missing, { --Opening
 			is_solid=false, is_destructible=false, is_transparent=false,
 			tile_to_write_when_placed=2,
 		}),
+		make_tile(12, '$', spr_missing, { --Treasure
+			is_solid=false, is_destructible=false, is_transparent=false,
+			on_placed = function(self, map, x, y)
+				map:set_tile(x, y, 1)
+				interactable_list.chest:spawn(x*BLOCK_WIDTH, y*BLOCK_WIDTH)
+			end,
+		}),
 	}
-	map.tile_size = map.palette[0].spr:getWidth() * PIXEL_SCALE
+	map.tile_size = map.palette[0]:get_spr():getWidth() * PIXEL_SCALE
 
 	map.get_tile = get_tile
 	map.set_tile = set_tile
@@ -80,6 +86,7 @@ function init_map(w, h)
 	map.load_from_file = load_from_file
 	map.generate_path = generate_path
 	map.spawn_mob = tile_spawn_mob
+	map.generate_object = generate_object
 	
 	map.room_connector = map:load_from_file("connector_wagon.txt")[1]
 	map.lvl1_rooms = map:load_from_file("lvl1_rooms.txt")
@@ -148,55 +155,63 @@ function draw_with_y_sorted_objs(self, objs)
 end
 
 function make_tile(n, symb, spr, a)
+	if type(spr) ~= "table" then   spr = {spr}   end
+ 
 	spr = spr or spr_missing
-	local tile = {
-		n = n,
-		symb = symb,
-		type = a.type,
-		spr = spr or spr_missing,
-		is_solid = a.is_solid,
-		is_destructible = a.is_destructible,
-		is_transparent  = a.is_transparent,
-		random_var = a.random_var,
-		ox = a.ox or 0, 
-		oy = a.oy or 0, 
+	local tile = {}
+	tile.n = n
+	tile.symb = symb
+	tile.type = a.type
+	tile.spr = spr or spr_missing
+	tile.is_solid = a.is_solid
+	tile.is_destructible = a.is_destructible
+	tile.is_transparent  = a.is_transparent
+	tile.random_var = a.random_var
 
-		draw = function(self, x, y, var, is_background_layer, floor_spr)
-			local spr
-			local floor_spr = floor_spr or spr_floor_carpet
-			if type(self.spr) == "table" then 
-				spr = self.spr[var]
-			else
-				spr = self.spr
-			end
-			if spr == nil then  spr = spr_missing  end
-			
-			if self.is_transparent and is_background_layer then
-				love.graphics.draw(floor_spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1)
-			end
-			-- TODO: optimise map by baking into canvas & update on change
-			love.graphics.draw(spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1, self.ox, self.oy)
-		end,
-
-		get_random_var = function(self)
-			if not self.random_var then
-				return nil
-			end
-			return random_weighted(self.random_var)
-		end,
-		
-		get_spr = function()
-
-		end,
-	}
-
-	if type(spr) == "table" then  spr = spr[1]  end
+	-- Offsets
+	tile.ox = a.ox or 0
+	tile.oy = a.oy or 0
 	if not a.ox then 
-		tile.ox = spr:getWidth() - BLOCK_WIDTH
+		tile.ox = spr[1]:getWidth() - BLOCK_WIDTH
 	end
 	if not a.oy then 
-		tile.oy = spr:getHeight() - BLOCK_WIDTH 
+		tile.oy = spr[1]:getHeight() - BLOCK_WIDTH 
 	end
+
+	-- Methods
+	tile.on_placed = a.on_placed
+
+	tile.draw = function(self, x, y, var, is_background_layer, floor_spr)
+		local floor_spr = floor_spr or spr_floor_carpet
+		
+		local spr = self:get_spr(var)
+		if spr == nil then  spr = spr_missing  end
+		
+		-- Floor tile if transparent
+		if self.is_transparent and is_background_layer then
+			love.graphics.draw(floor_spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1)
+		end
+
+		love.graphics.draw(spr, x*BLOCK_WIDTH, y*BLOCK_WIDTH, 0,1,1, self.ox, self.oy)
+	end
+
+	tile.get_random_var = function(self)
+		if not self.random_var then
+			return nil
+		end
+		return random_weighted(self.random_var)
+	end
+		
+	tile.get_spr = function(self, var)
+		var = var or 1
+		var = max(var, 1)
+		local spr = self.spr[var]
+		if spr then	
+			return spr
+		end
+		return spr_missing
+	end
+	
 	return tile
 end
 
@@ -214,7 +229,7 @@ function set_tile(self, x, y, elt, var)
 	y = floor(y)
 	var = var or 1
 	if x<0 or self.width<x or y<0 or self.height<y then
-		error("set_tile coordinates outside map bounds")--TODO: we should probably log that instead of crashing
+		print(concat("set_tile coordinates outside map bounds: (",x,",",y,")"))
 	end
 
 	-- Doors between rooms
@@ -224,6 +239,9 @@ function set_tile(self, x, y, elt, var)
 
 	self.grid[floor(y)][floor(x)][1] = elt
 	self.grid[floor(y)][floor(x)][2] = var
+
+	local tile = self.palette[elt]
+	if tile.on_placed then   tile:on_placed(self, x, y)   end
 end
 
 function get_tile(self, x, y)
@@ -338,32 +356,32 @@ function generate_map(self, seed)
 				--  X---==----
 				--(upper_x, bottom_y)
 				---- Entrance
-				local upper_x = ix*w 
+				local entr_x = ix*w 
 				local upper_y = branch_y*h
 				local bottom_y = branch_y*h + h - 1 
 				if dir == -1 then
-					self:set_tile(upper_x+14, bottom_y,   1)
-					self:set_tile(upper_x+14, bottom_y+1, 1)
-					self:set_tile(upper_x+15, bottom_y,   1)
-					self:set_tile(upper_x+15, bottom_y+1, 1)
+					self:set_tile(entr_x+14, bottom_y,   1)
+					self:set_tile(entr_x+14, bottom_y+1, 1)
+					self:set_tile(entr_x+15, bottom_y,   1)
+					self:set_tile(entr_x+15, bottom_y+1, 1)
 				else
-					self:set_tile(upper_x+14, upper_y,   1)
-					self:set_tile(upper_x+14, upper_y-1, 1)
-					self:set_tile(upper_x+15, upper_y,   1)
-					self:set_tile(upper_x+15, upper_y-1, 1)
+					self:set_tile(entr_x+14, upper_y,   1)
+					self:set_tile(entr_x+14, upper_y-1, 1)
+					self:set_tile(entr_x+15, upper_y,   1)
+					self:set_tile(entr_x+15, upper_y-1, 1)
 				end
 				---- Exit 
-				upper_x = (ix+pathlen-1)*w
+				local exit_x = (ix+pathlen-1)*w
 				if dir == -1 then
-					self:set_tile(upper_x+14, bottom_y,   1)
-					self:set_tile(upper_x+14, bottom_y+1, 1)
-					self:set_tile(upper_x+15, bottom_y,   1)
-					self:set_tile(upper_x+15, bottom_y+1, 1)
+					self:set_tile(exit_x+14, bottom_y,   1)
+					self:set_tile(exit_x+14, bottom_y+1, 1)
+					self:set_tile(exit_x+15, bottom_y,   1)
+					self:set_tile(exit_x+15, bottom_y+1, 1)
 				else
-					self:set_tile(upper_x+14, upper_y,   1)
-					self:set_tile(upper_x+14, upper_y-1, 1)
-					self:set_tile(upper_x+15, upper_y,   1)
-					self:set_tile(upper_x+15, upper_y-1, 1)
+					self:set_tile(exit_x+14, upper_y,   1)
+					self:set_tile(exit_x+14, upper_y-1, 1)
+					self:set_tile(exit_x+15, upper_y,   1)
+					self:set_tile(exit_x+15, upper_y-1, 1)
 				end
 
 				ix = ix + pathlen
@@ -415,9 +433,15 @@ function write_room(self, room, x, y, rng)
 			local tile = self:get_room_tile(room, ix, iy)
 			self:set_tile(x+ix, y+iy, tile[1], tile[2])
 			if rng then
-				self:spawn_mob(rng, x+ix, y+iy)
+				self:generate_object(rng, x+ix, y+iy)
 			end
 		end
+	end
+end
+function generate_object(self, rng, x, y)
+	--Generate monsters, loot, etc.
+	if rng then
+		self:spawn_mob(rng, x, y)
 	end
 end
 
@@ -477,7 +501,7 @@ function load_from_file(self, file)
 				rooms[room][y][x] = {tile, var}
 				x = x + 1
 
-				-- Flag openings 
+				-- Opening flags 
 				if chr == "=" then
 					if y == 0 then
 						rooms[room].open_up = true

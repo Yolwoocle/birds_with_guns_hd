@@ -1,11 +1,11 @@
 require "scripts.utility"
 
-map_edit_mode = false
+map_edit_mode = false 
 local wheel = 0
 function toggle_map_edit()
 	map_edit_mode = not map_edit_mode 
 
-	if map_edit_mode==true then
+	if map_edit_mode then
 		room_files_n = 1
 		room_files = {"lvl1_rooms.txt","lvl1_rooms_branch.txt","lvl1_rooms_branch_old.txt"}
 
@@ -34,7 +34,7 @@ function update_map_edit(dt)
 
 	--switch betwin tiles
 	if not(input:button_down("alt")) then
-		tile_n = mod_plus_1(tile_n + wheel, #map.palette)
+		tile_n = (tile_n + wheel) % (#map.palette + 1)
 		if not (wheel == 0) then
 			nb_variant=1
 		end
@@ -137,11 +137,9 @@ function update_map_edit(dt)
     end
 
 	if next then
-	room_files_n = mod_plus_1(room_files_n+next, #room_files)
-	init_room_map(room_files[room_files_n])
+		room_files_n = mod_plus_1(room_files_n+next, #room_files)
+		init_room_map(room_files[room_files_n])
 	end
-
-
 end
 
 function draw_map_edit()
@@ -150,21 +148,15 @@ function draw_map_edit()
 
 	love.graphics.rectangle("line", mapmx,mapmy ,BLOCK_WIDTH ,BLOCK_WIDTH)
 	draw_centered(spr_cursor, mx, my)
-	if map.palette[tile_n].spr[1] then
 
-		draw_centered_outline(map.palette[tile_n].spr[nb_variant], mx+12, my+12,0,1,1,2,black)
-		draw_centered(map.palette[tile_n].spr[nb_variant], mx+12, my+12)
+	local tile_obj = map.palette[tile_n] 
+	local tile_spr = map.palette[tile_n]:get_spr(nb_variant) 
+	draw_centered_outline(tile_spr, mx+12, my+12,0,1,1,2,black)
+	draw_centered(tile_spr, mx+12, my+12)
 
-	else
-
-		draw_centered_outline(map.palette[tile_n].spr, mx+12, my+12,0,1,1,2,black)
-		draw_centered(map.palette[tile_n].spr, mx+12, my+12)
-
-	end
+	love.graphics.print(concat(tile_obj.n, " ", tile_obj.symb), mx+24, my+12)
 	--love.graphics.print(wheel, 10, 10)
 	wheel = 0
-	love.graphics.print(tostring(debugg),camera.x,camera.y)
-	love.graphics.print("debugg",10,10)
 end
 
 function love.wheelmoved(x, y)

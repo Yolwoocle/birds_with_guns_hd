@@ -43,10 +43,10 @@ function init_game(self)
 	interactables = {}
 
 	for i = 0, 10 do
-		interactable_list.chest:spawn(100+32*i,MAIN_PATH_PIXEL_Y+100) --chest
-	end
+		--interactable_list.chest:spawn(100+32*i,MAIN_PATH_PIXEL_Y+100) --chest
+	end 
 
-	pickups = make_pickups()
+	pickups = make_pickups() 
 
 	bullets = {}
 	_shot = {}
@@ -133,7 +133,7 @@ function update_game(self, dt)
 	-- Compute camera offset (e.g. from aiming)
 	local ox, oy = 0, 0
 	for i,p in ipairs(players) do
-		local o = 0.1--p.gun.camera_offset or 0
+		local o = 0.2/number_of_players --p.gun.camera_offset or 0
 		local cx = p.cu_x - p.x
 		local cy = p.cu_y - p.y
 		ox = ox + cx * o
