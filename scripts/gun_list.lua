@@ -125,6 +125,7 @@ guns = {
 
 		ptc_type = nil,--"circle",
 		max_ammo = 3000,
+		show_ammo_as_percentage = true,
 
 		update_option = function(self,dt)
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))

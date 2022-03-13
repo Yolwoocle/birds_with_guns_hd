@@ -1,4 +1,5 @@
 require "scripts.sfx"
+require "scripts.utility"
 
 function make_audio_manager()
 	local a = {}	
@@ -17,11 +18,24 @@ function make_audio_manager()
 
 	end
 
-	a.play = function(self, sound)
-		if get_setting("sound_on") and sound then
-			local source = sound:clone()
+	a.play = function(self, snd)
+		if get_setting("sound_on") and snd then
+			local source = snd:clone()
 			source:play()
 		end
+	end
+
+	a.play_pitch = function(self, snd, pitch)
+		if not snd then      return   end
+		if pitch <= 0 then   return   end
+		snd:setPitch(pitch)
+		self:play(snd)
+		--snd:setPitch(1)
+	end
+	a.play_random_pitch = function(self, snd, var)
+		var = var or 0.2
+		local pitch = 1 + random_neighbor(var)
+		self:play_pitch(snd, pitch)
 	end
 
 	a.set_music = function(self, name)

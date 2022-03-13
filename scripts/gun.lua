@@ -31,6 +31,7 @@ function make_gun(a)
 		cooldown      = a.cooldown      or 0.2,
 		ammo	      = a.max_ammo      or 100,
 		max_ammo      = a.max_ammo      or 100,
+		show_ammo_as_percentage = a.show_ammo_as_percentage or false,
 		spawn_x	      = a.spawn_x	    or spr:getWidth(),
 		spawn_y	      = a.spawn_y	    or 0,--spr:getHeight()/2,
 		burst	      = a.burst	    or 1, 
@@ -87,6 +88,13 @@ function make_gun(a)
 		shoot_sfx = a.shoot_sfx or nil,
 
 		toshot = {},
+		get_ammo_display_value = function(self)
+			if self.show_ammo_as_percentage then 
+				return concat(round(100 * self.ammo/self.max_ammo), " %")
+			else
+				return self.ammo 
+			end
+		end,
 		shoot = shoot_gun,
 		update = update_gun,
 		draw = draw_gun,
@@ -116,7 +124,7 @@ function draw_gun(self, p)
 end
 
 function shoot_gun(self)
-	audio:play(self.shoot_sfx)
+	audio:play_random_pitch(self.shoot_sfx, 0)--0.3)
 
 	self.ammo = self.ammo - 1
 	self.cooldown_timer = self.cooldown+ (self.burst*self.burstdt)-self.burstdt

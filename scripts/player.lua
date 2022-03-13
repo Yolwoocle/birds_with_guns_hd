@@ -210,16 +210,15 @@ function init_player(n,x,y, spr, a)
 
 			-- Reviving
 			--- Get all near players
-			local n = 0
+			local number_of_nearby_players = 0
 			for _,p in pairs(players) do
 				local near = dist_sq(self.x, self.y, p.x, p.y) <= sqr(self.revive_radius) 
 				if near and p.n ~= self.n and p.alive then
-					n = n + 1
+					number_of_nearby_players = number_of_nearby_players + 1
 				end
 			end
-			print(n)
-			if n > 0 then
-				self.revive_timer = self.revive_timer + dt*n
+			if number_of_nearby_players > 0 then
+				self.revive_timer = self.revive_timer + dt*number_of_nearby_players
 			else
 				self.revive_timer = max(self.revive_timer - dt, 0)
 			end
@@ -294,7 +293,7 @@ function init_player(n,x,y, spr, a)
 		love.graphics.draw(spr_bar_small_ammo, buffer_quad, x+2, y)
 		
 		love.graphics.setFont(font_small)
-		love.graphics.print(self.gun.ammo, x+5, y-1)
+		love.graphics.print(self.gun:get_ammo_display_value(), x+5, y-1)
 		love.graphics.setFont(font_default)
 
 		-- "P1", "P2"... icon
