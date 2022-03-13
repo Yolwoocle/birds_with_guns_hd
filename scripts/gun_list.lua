@@ -25,6 +25,7 @@ guns = {
 		bullet_spd = 700,
 		cooldown = 0.15,
 		is_auto = true,
+		damage = 1,
 
 		shoot_sfx = sfx_shot_1,
 
@@ -82,7 +83,7 @@ guns = {
 
 		cooldown = 0.5,
 		screenkick = 1,
-		damage = 0.5,
+		damage = 0.7,
 		bullet_life = 0.4,
 	},
 	assault_rifle = make_gun{
@@ -90,7 +91,7 @@ guns = {
 		spr = spr_assault_rifle,
 		cooldown = 0.4,
 		scattering = 0.2,
-		damage = 2,
+		damage = 1,
 
 		shoot_sfx = sfx_shot_1,
 
@@ -107,12 +108,12 @@ guns = {
 		spr_bullet = spr_fire_extinguisher_smoke,
 		nbshot = 10,
 		damage = 0.1,
-		bullet_life = .5,
 		is_auto = true,
-		knockback = 10,
+		knockback = 1,
 
 		spdslow = 1,
-		bullet_spd = 200,
+		bullet_spd = 400,
+		bullet_life = .25,
 		screenkick = -0.2,
 		screenkick_shake = 20,
 
@@ -175,6 +176,7 @@ guns = {
 		make_shot = default_shoot,
 		bullet_life = 1.5,
 		ptc_type = "circle",
+		damage = 1,
 
 		on_death = function(self , k)
 			obj = copy(self.player)
@@ -206,6 +208,7 @@ guns = {
 		offset_spd = 100,
 		bullet_life = .75,
 
+		damage = 0.4
 	}),
 	paper_plane_gun = make_gun{
 		name = "paper plane gun",
@@ -213,7 +216,7 @@ guns = {
 		spr = spr_paper_plane_gun,
 		spr_bullet = spr_paper_plane,
 		scale = 1,
-		damage = 2,
+		damage = 0.7,
 
 		cooldown = 0.2,
 		max_ammo = 100,
