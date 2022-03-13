@@ -118,6 +118,7 @@ function update_map_edit(dt)
 		local file = io.open(chemin, "w")
 		if not file then  file = io.open(chemin_local, "w")  end
 		
+		--file:output(file)
 		file:write(doc1)
 		file:write(line)
 		file:write(doc2)
