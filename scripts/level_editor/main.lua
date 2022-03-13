@@ -65,7 +65,7 @@ function update_map_edit(dt)
 		local line
 		local doc1 = ""
 		--read the docs
-		
+
 		io.input(file)
 
 		txtline = by+1
@@ -162,8 +162,8 @@ function draw_map_edit()
 	end
 	--love.graphics.print(wheel, 10, 10)
 	wheel = 0
-	love.graphics.print(tostring(debugg),camera.x,camera.y)
-	love.graphics.print("debugg",10,10)
+	love.graphics.print(room_files[room_files_n],camera.x+2,camera.y)
+
 end
 
 function love.wheelmoved(x, y)
