@@ -431,13 +431,17 @@ function animate_player(self)
 	end
 end
 
+function set_iframes(frames)
+	self.iframes_timer = frames
+end
+
 function damage_player(self, dmg)
 	if self.alive and self.iframes_timer <= 0 then
 		audio:play(sfx_hurt)
 		camera:shake(5)
 		
 		self.life = self.life - dmg
-		self.iframes_timer = self.iframes
+		self:set_iframes(self.iframes)
 	end
 end
 
@@ -450,6 +454,8 @@ function revive_player(self, life)
 	life = life or self.max_life
 	self.life = life
 	self.alive = true
+	
+	self.show_cu = true
 end
 
 function ply_set_gun(self, gun)
