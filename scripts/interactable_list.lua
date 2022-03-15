@@ -46,6 +46,7 @@ interactable_list = {
 		on_interaction = function (self, dt, i)
 			--pickups:spawn("gun", guns.machinegun, self.x, self.y)
 			pickups:spawn("gun", get_random_gun(), self.x, self.y)
+			pickups:spawn("modifier", math.random(1,3), self.x+64, self.y-1)
 			table.remove(interactables,i)
 		end,
 	}),
