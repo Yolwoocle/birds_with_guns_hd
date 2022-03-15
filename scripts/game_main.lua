@@ -102,7 +102,7 @@ function begin_game(self, nb_ply)
 	for i = 1,number_of_players do
 		local nbcontroller = 1
 		
-		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
+		birds_spr = {{spr_logo}, anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
 		
 		local x = 84+i*32
 		local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2

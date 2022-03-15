@@ -19,6 +19,8 @@ spr_empty = load_image("empty")
 spr_empty_16x16 = load_image("empty_16x16")
 
 -- UI
+spr_logo = load_image("ui/logo")
+
 spr_cursor = load_image("cursor")
 sprs_cursor = load_image_table("ui/cursors/cursor_p", 4)
 spr_hp_bar = load_image("hp_bar")
