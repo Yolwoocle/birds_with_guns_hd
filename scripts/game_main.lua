@@ -83,6 +83,7 @@ function game_create_new_level(self)
 
 	local x = 84
 	local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
+	pickups:spawn("modifier", math.random(1,3), x+64, y+32)
 
 	for i,p in ipairs(players) do
 		p.x = x + 32*(i-1)
