@@ -72,19 +72,20 @@ guns = {
 	shotgun = make_gun{
 		name = "shotgun",
 		spr = spr_shotgun,
+		max_ammo = 80,
 
 		shoot_sfx = sfx_shot_2,
 
 		nbshot = 10,
 		offset_spd = 300,
+		bullet_spd = 700,
 		spdslow = .96, 
 		scattering = 1,
-		max_ammo = 80,
+		bullet_life = 0.4,
 
 		cooldown = 0.5,
 		screenkick = 1,
 		damage = 0.7,
-		bullet_life = 0.4,
 	},
 	assault_rifle = make_gun{
 		name = "assault rifle",

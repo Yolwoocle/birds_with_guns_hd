@@ -1,8 +1,8 @@
---- Code and Design
+--- Code and Design ---
 Léo Bernard ☺
 Gaspard Delpiano-Manfrini ☻
 
---- Art, animations
+--- Art, animations ---
 Léo Bernard
 With the help from Guillaume Tran
 
@@ -10,17 +10,20 @@ With the help from Guillaume Tran
 Simon T.
 
 --- Special thanks ---
-Azure
+#Azure
 Made using LÖVE: https://love2d.org/
 The lovely PICO-8 community
 
---- Assets ---
+--- Additional assets ---
 Kenney assets: https://www.kenney.nl/
 
-Font: 
+Fonts: 
 Eeve Somepx
 @somepx
 info@somepx.com
 
-# Sound effects
-Sound effects obtained from https://www.zapsplat.com/
+--- Sound effects ---
+#Sound effects obtained from https://www.zapsplat.com/
+
+--- Open source libraries ---
+bump.lua by Enrique García Cota (kikito) https://github.com/kikito/bump.lua

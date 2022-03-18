@@ -1,53 +1,64 @@
 require "scripts.utility"
 require "scripts.constants"
 
-function init_camera()
-	local camera = {
-		fake_x = 0,
-		fake_y = 0,
-		target_x = 0,
-		target_y = 0,
-		offset_x = 0,
-		offset_y = 0,
-		x = 0,
-		y = 0,
-		sx = 1,
-		sy = 1,
+function make_camera()
+	local cam = {}
+	cam.fake_x = 0
+	cam.fake_y = 0
+	cam.target_x = 0
+	cam.target_y = 0
+	cam.offset_x = 0
+	cam.offset_y = 0
+	cam.x = 0
+	cam.y = 0
+	cam.sx = 1
+	cam.sy = 1
 
-		min_x = 0,
-		max_x = 2^16,
-		min_y = 0,
-		max_y = 2^16,
+	cam.min_x = 0
+	cam.max_x = 2^16
+	cam.min_y = 0
+	cam.max_y = 2^16
 
-		shake = shake_camera,
-		shake_x = 0,
-		shake_y = 0,
-		shake_rad = 0,
-		shake_fric = 50,
+	cam.shake = shake_camera
+	cam.shake_x = 0
+	cam.shake_y = 0
+	cam.shake_rad = 0
+	cam.shake_fric = 50
 
-		kick = kick_camera,
-		kick_fric = 0.9,
-		kick_x = 0,
-		kick_y = 0,
-		
-		lock_x = false,
-		lock_y = false,
+	cam.kick = kick_camera
+	cam.kick_fric = 0.9
+	cam.kick_x = 0
+	cam.kick_y = 0
+	
+	cam.lock_x = false
+	cam.lock_y = false
 
-		smoothing = 10,
-		aim_offset = 0.8,
+	cam.smoothing = 10
+	cam.aim_offset = 0.8
 
-		update = update_camera,
-		draw = draw_camera,
-		set_pos = camera_set_pos,
-		set_target = camera_set_target,
-		set_offset = camera_set_offset,
-		set_scale = camera_set_scale,
-		get_bounds = get_bounds,
-		manage_camera_lock = manage_camera_lock,
-		clamp_to_allowed_coordinates = clamp_to_allowed_coordinates,
-		within_mob_loading_zone = within_mob_loading_zone,
-	}
-	return camera
+	cam.init = init_camera
+	cam.update = update_camera
+	cam.draw = draw_camera
+	cam.set_pos = camera_set_pos
+	cam.set_target = camera_set_target
+	cam.set_offset = camera_set_offset
+	cam.set_scale = camera_set_scale
+	cam.get_bounds = get_bounds
+	cam.manage_camera_lock = manage_camera_lock
+	cam.clamp_to_allowed_coordinates = clamp_to_allowed_coordinates
+	cam.within_mob_loading_zone = within_mob_loading_zone
+
+	cam:init()
+
+	return cam
+end
+
+function init_camera(self)
+	local y = MAIN_PATH_PIXEL_Y - (window_h-ROOM_PIXEL_H)/2
+	self:set_target(0, y)
+	self.lock_x = true
+	self.lock_y = true
+	self.fake_y = y
 end
 
 function update_camera(self, dt)
@@ -165,6 +176,7 @@ function manage_camera_lock(self)
 		end
 
 		-- Move if on branch
+		--[[
 		if p.y < MAIN_PATH_PIXEL_Y then 
 			self.target_y = MAIN_PATH_PIXEL_Y - ROOM_PIXEL_H
 		end
@@ -177,6 +189,7 @@ function manage_camera_lock(self)
 		if y1 < p.y and p.y < y2 then 
 			self.target_y = MAIN_PATH_PIXEL_Y
 		end
+		--]]
 	end
 end
 

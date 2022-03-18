@@ -4,13 +4,7 @@ require "scripts.files"
 require "scripts.utility"
 
 function init_map(w, h)
-	local map = {grid = {}}
-	for i=0, h-1 do
-		map.grid[i] = {}
-		for j=0, w-1 do
-			map.grid[i][j] = {0, 0}
-		end
-	end
+	local map = {}
 	map.width = w
 	map.height = h
 	
@@ -20,7 +14,7 @@ function init_map(w, h)
 	map.chr_to_tile_number = chr_to_tile_number
 	map.palette = {
 		[0] = make_tile(0, ' ', spr_empty_16x16, {
-			is_solid=true, is_destructible=false, is_transparent=false
+			is_solid=false, is_destructible=false, is_transparent=false
 		}),
 		make_tile(1, '.', spr_floor_carpet, {
 			is_solid=false, is_destructible=false, is_transparent=false, 
@@ -65,19 +59,36 @@ function init_map(w, h)
 			is_solid=false, is_destructible=false, is_transparent=false,
 			on_placed = function(self, map, x, y)
 				map:set_tile(x, y, 1)
-				interactable_list.chest:spawn(x*BLOCK_WIDTH, y*BLOCK_WIDTH)
+				interactable_list.chest:spawn((x+.5)*BLOCK_WIDTH, (y+.5)*BLOCK_WIDTH)
 			end,
 		}),
 	}
 	map.tile_size = map.palette[0]:get_spr():getWidth() * PIXEL_SCALE
 
+	-- Initialize map grid
+	map.grid = {}
+	for i=0, h-1 do
+		map.grid[i] = {}
+		for j=0, w-1 do
+			map.grid[i][j] = {
+				type = TYPE_GRID_TILE,
+				tile_obj = map.palette[0],
+				[1] = 0, 
+				[2] = 0
+			}
+		end
+	end
+
+	-- Tile management methods
 	map.get_tile = get_tile
+	map.get_grid_tile = get_grid_tile
 	map.set_tile = set_tile
 	map.is_solid = is_solid
 	map.valid_tile = valid_tile
 	map.generate_map = generate_map
 	map.draw_room = draw_room
 	
+	-- Rooms
 	map.rooms = {}
 	map.write_room = write_room
 	map.get_room_tile = get_room_tile
@@ -225,23 +236,34 @@ function chr_to_tile_number(self,chr)
 end
 
 function set_tile(self, x, y, elt, var)
+	-- Sanitize inputs
 	x = floor(x)
-	y = floor(y)
+	y = floor(y)	
 	var = var or 1
+	if elt == 11 then   elt = 2   end -- Doors between rooms
 	if x<0 or self.width<x or y<0 or self.height<y then
-		print(concat("set_tile coordinates outside map bounds: (",x,",",y,")"))
+		warn(concat("set_tile coordinates outside map bounds: (",x,",",y,")"))
 	end
 
-	-- Doors between rooms
-	if elt == 11 then  
-		elt = 2
+	local new_tileobj = self.palette[elt]
+	local old_tileobj = self:get_tile(x,y)
+	local old_gridtile = self:get_grid_tile(x,y)
+
+	-- Update collision world
+	if new_tileobj.is_solid and not old_tileobj.is_solid then
+		collision:join_world(old_gridtile, x*BLOCK_WIDTH, y*BLOCK_WIDTH, BLOCK_WIDTH, BLOCK_WIDTH)
 	end
+	if not new_tileobj.is_solid and old_tileobj.is_solid then
+		collision:leave_world(old_gridtile)
+	end 
 
-	self.grid[floor(y)][floor(x)][1] = elt
-	self.grid[floor(y)][floor(x)][2] = var
+	-- Write to table
+	self.grid[y][x][1] = elt
+	self.grid[y][x][2] = var
+	self.grid[y][x].tileobj = self.palette[elt]
 
-	local tile = self.palette[elt]
-	if tile.on_placed then   tile:on_placed(self, x, y)   end
+	-- Run custom function if defined
+	if new_tileobj.on_placed then   new_tileobj:on_placed(self, x, y)   end
 end
 
 function get_tile(self, x, y)
@@ -253,10 +275,26 @@ function get_tile(self, x, y)
 		return default 
 	end
 	
+	-- Get the tile object from the palette
 	local tile = self.grid[floor(y)][floor(x)][1]
 	tile = self.palette[tile]
 
 	if tile == nil then  return default  end --error(tostr(a)) end
+	return tile
+end	
+function get_grid_tile(self, x, y)
+	-- Returns a table in the form {num, var}: 
+	-- num: ID of the tile
+	-- var: variation number
+	local default = self.palette[0]
+	if x == nil or y == nil 
+		or x < 0 or x >= self.width 
+		or y < 0 or y >= self.height
+	then 
+		return default
+	end
+	
+	local tile = self.grid[floor(y)][floor(x)]
 	return tile
 end	
 function is_solid(self, x, y)
@@ -333,7 +371,7 @@ function generate_map(self, seed)
 
 		local ix = rng:random(1,4)
 		while ix < layout_width do
-			if layout[branch_y][ix] then
+			if layout[branch_y][ix] and false --[[←←← REVOME THIS TO ENABLE BRANCHES]] then
 				local pathlen = rng:random(2,5)
 
 				-- Generate a branch

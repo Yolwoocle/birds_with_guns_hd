@@ -203,29 +203,8 @@ function append_list(ls1,ls2)
 	return ls1
 end
 
-function raycast(x,y,dx,dy,distmax,pas)
-	local pas = pas or 1
-	local dist = 0
-	local continue = true
-	while continue do
-		local length = distmax-dist
-		nextx = x+(dx*dist)
-		nexty = y+(dy*dist)
-		local newelt = {x=nextx , y=nexty ,life = length}
-		continue = not(checkdeath(newelt))
-		dist=dist+pas
-	end
-
-	if distmax-(dist-pas) <= 0 then
-		hit = true
-	else
-		hit = false
-	end
-
-	return {dist = dist - pas,hit = hit,y = nexty,x = nextx}
-end
 --FIXME: AdD GoOd RaYcASt !
---[[function raycast(x,y,dx,dy,distmax,pas)
+--[[function raycast(x,y,dx,dy,distmax,step)
 	local angle = math.atan2(dy,dx)
 	local invangle = -1/math.tan(angle)
 	local ry
@@ -403,4 +382,22 @@ function concat(...)
 		s = s..tostring(v)
 	end
 	return s
+end
+
+function is_in_table(tab, val)
+	for _,v in pairs(tab) do
+		if val == v then
+			return true
+		end
+	end
+	return false
+end
+
+function cols_has_type_of(tab, typ)
+	for _,item in pairs(tab) do
+		if item.other.type == typ then
+			return true
+		end
+	end
+	return false
 end

@@ -155,8 +155,13 @@ anim_pigeon_idle = {
 }
 anim_pigeon_walk = load_image_table("players/pigeon/pigeon_walk_", 10)
 spr_pigeon_dead = load_image("players/pigeon/pigeon_dead")
+spr_pigeon_idle = load_image("players/pigeon/pigeon_1")
+spr_pigeon_jump = load_image("players/pigeon/pigeon_2")
 
 anim_duck_walk = load_image_table("players/duck/duck_", 1)
+spr_duck_idle = load_image("players/duck/duck_1")
+spr_duck_jump = load_image("players/duck/duck_2")
+
 spr_penguin = load_image("players/penguin/penguin_1")
 spr_crow = load_image("players/crow_walk_1")
 anim_duck_walk = load_image_table("players/duck/duck_walk_bad_",8)

@@ -1,5 +1,53 @@
+local bump = require 'lib.bump.bump'
 require "scripts.utility"
 
+function make_collision_manager()
+	local c = {}
+	-- Collision is an adaptation of the bump.lua library: https://github.com/kikito/bump.lua
+
+	c.world = bump.newWorld(BLOCK_WIDTH)
+	c.join_world = function(self, o, x, y, w, h)
+		self.world:add(o, x,y,w,h)
+	end
+	c.object_join_world = function(self, o)
+		local x, y = o.x - o.w, o.y - o.h
+		local w, h = o.w * 2, o.h * 2
+		self.world:add(o, x,y,w,h)
+	end
+	c.leave_world = function(self, o)
+		self.world:remove(o)
+	end
+	c.move = function(self, o, goal_x, goal_y, filter)
+		return self.world:move(o, goal_x, goal_y, filter)
+	end 
+	c.move = function(self, o, goal_x, goal_y, filter)
+		-- Attempts to move object `o` and returns data about the collision
+		filter = filter or self.filter
+		goal_x = goal_x - o.w
+		goal_y = goal_y - o.h
+
+		local actual_x, actual_y, cols, len = self.world:move(o, goal_x, goal_y, filter)
+		return actual_x + o.w, actual_y + o.h, cols, len
+	end 
+
+	c.filter = function(item, other)
+		-- By default, do not react to collisions
+		local type = "cross"--"touch", "cross", "slide" or "bounce"
+
+		local colldata = other
+		-- We add an exception for map tiles & check if solid because i'm tired
+		if other.type == TYPE_GRID_TILE then
+			colldata = other.tileobj
+		end		
+
+		if colldata.is_solid then
+			type = "slide"
+		end
+		return type
+	end	
+
+	return c
+end
 
 function collision_response(obj, map)
 	-- Reference: https://www.amanotes.com/post/using-swept-aabb-to-detect-and-process-collision

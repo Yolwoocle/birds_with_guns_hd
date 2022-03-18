@@ -3,6 +3,89 @@ require "scripts.constants"
 require "scripts.damage_zone_list"
 require "scripts.damage_zone"
 
+function make_bullet(gun, p, angle, spread, type, spr)
+	--`p`: player or entity shooting
+	local spread = spread or 0
+	local offsetangle = math.atan2(-gun.spawn_y,gun.spawn_x)
+	local scatter = random_float(-gun.scattering/2, gun.scattering/2)
+	local spd = (gun.bullet_spd + random_neighbor(gun.offset_spd/2))
+	local oscale = random_float(0, gun.oscale)
+
+	local bullet = {
+		type = "bullet",
+		category = gun.category,
+		x = p.x, 
+		y = p.y, 
+		spr = spr,
+		dx = math.cos(angle+scatter+spread) * spd,
+		dy = math.sin(angle+scatter+spread) * spd,
+		sx = 1, 
+		sy = 1,
+		rot = angle+scatter+spread,
+		delete = false,
+		time_since_creation = 0,
+		damage_tick = gun.damage_tick,
+
+		spdslow = gun.spdslow,
+		life = gun.bullet_life,
+		maxlife = gun.bullet_life,
+		
+		gun = gun,
+		type = gun.type,
+		spr = gun.spr_bullet or spr_bullet,
+
+		player = p,
+		offsetangle = offsetangle,
+		dist = dist,
+		spd = spd,
+		scatter = scatter,
+		spread = spread,
+		scale = gun.scale + oscale,
+		damage = gun.damage,
+		bounce =  gun.bounce,
+		maxbounce = gun.bounce,
+		length = {},
+		on_death = gun.on_death,
+		knockback = gun.knockback,
+
+		is_enemy = p.is_enemy,
+
+		speed_max = gun.speed_max,
+		ptc_timer = 0,
+
+		update_option = gun.update_option,
+
+		do_muzzle_flash = gun.do_muzzle_flash,
+
+		w=1,--(self.scale + oscale),
+		h=1,--(self.scale + oscale),
+	}
+	if gun.type ==  "bullet" then
+		bullet.draw = draw_bullet
+		bullet.update = update_bullet
+
+	elseif gun.type ==  "laser" then
+		bullet.draw = draw_laser
+		bullet.update = update_laser
+		bullet.laser_length = gun.laser_length
+
+		bullet.do_init_laser = true
+	end
+
+	bullet.interact_map = interact_map
+
+	bullet.init = function(self)
+		--collision:object_join_world(self)
+		--TODO: Check if the area between the bullet and the gun muzzle is clear
+		--local dist = dist(self.x, self.y, self.gun.spawn_x+p.x, self.gun.spawn_y+p.y)
+		--local new_x = math.cos(angle + offsetangle * self.player.flip) * dist
+		--local new_y = math.sin(angle + offsetangle * self.player.flip) * dist
+	end
+	bullet:init()
+
+	return bullet
+end
+
 function update_bullet(self, dt, i)
 	-- Movement
 	self.rot = math.atan2(self.dy, self.dx)
@@ -21,6 +104,7 @@ function update_bullet(self, dt, i)
 
 	self.sx = (sqr(self.dx) + sqr(self.dy)) / sqr(self.spd)
 
+	-- Bounce
 	if self.bounce > 0 then
 		local coll, todestroy = collide_object(self, 1)
 		--self.debug = {coll, todestroy}
@@ -48,8 +132,8 @@ end
 function update_laser(self, dt , i)
 	self.active = false
 	self.time_since_creation = self.time_since_creation + dt
-	if self.init then
-		self.init = false
+	if self.do_init_laser then
+		self.do_init_laser = false
 		init_laser(self)
 	end
 
@@ -66,7 +150,7 @@ function update_laser(self, dt , i)
 
 		init_laser(self)
 		self.active = false
-		if self.time_since_creation >= self.damge_tick then
+		if self.time_since_creation >= self.damage_tick then
 			self.time_since_creation = 0
 			self.active = true
 		end
@@ -155,6 +239,28 @@ function interact_map(self, map, x, y)
 	end
 end
 
+function raycast(x,y,dx,dy,distmax,step)
+	local step = step or 1
+	local dist = 0
+	local continue = true
+	while continue do
+		local length = distmax-dist
+		nextx = x+(dx*dist)
+		nexty = y+(dy*dist)
+		local newelt = {x=nextx , y=nexty ,life = length}
+		continue = not(checkdeath(newelt))
+		dist=dist+step
+	end
+
+	if distmax-(dist-step) <= 0 then
+		hit = true
+	else
+		hit = false
+	end
+
+	return {dist = dist - step,hit = hit,y = nexty,x = nextx}
+end
+
 function checkdeath(self)
 	-- bullet
 	if self.life <= 0 then
@@ -181,9 +287,9 @@ function damage_everyone(self, k) -- problemes de remove des bullets avec index
 			end
 			local mapx, mapy = self.x / BLOCK_WIDTH, self.y / BLOCK_WIDTH
 			if map:is_solid(mapx, mapy) then
-			interact_map(self, map, mapx, mapy)
-			self:on_death(k)
-			return
+				interact_map(self, map, mapx, mapy)
+				self:on_death(k)
+				return
 			--nb_delet = nb_delet+1
 			end
 		end
