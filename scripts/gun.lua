@@ -55,7 +55,7 @@ function make_gun(a)
 		charge				= a.charge 				or false,
 		charge_curve		= a.charge_curve		or 2,
 		charge_time 		= a.charge_time 		or 1,
-		charge_nbburst 	= a.charge_nbburst 	or 0,
+		charge_nbburst 		= a.charge_nbburst 		or 0,
 		charge_bullet_spd 	= a.charge_bullet_spd 	or 0,
 		charge_laser_length = a.charge_laser_length or 0,
 		charge_nbshot 		= a.charge_nbshot 		or 0,
