@@ -21,21 +21,21 @@ require "scripts.menu"
 require "scripts.interactable"
 require "scripts.interactable_list"
 require "scripts.audio"
-gifcat = require("gifcat")
+--gifcat = require("gifcat")
 
 function love.load()
 	-- I am deeply sorry for these globals
 	keymode = "keyboard"
 	prevray = {}
 
-	love.window.setMode(0, 0, {fullscreen = true, resizable=false, vsync=true, minwidth=400, minheight=300})	
+	love.window.setMode(0, 0, {fullscreen = true, resizable=true, vsync=true, minwidth=400, minheight=300})	
 	screen_w, screen_h = love.graphics.getDimensions()
 	love.graphics.setDefaultFilter("nearest", "nearest")
 	
 	input = make_input_manager()
 	audio = make_audio_manager()
 
-	gifcat.init()
+	--gifcat.init()
 
 	res_1080p_4 = 480, 270
 	res_1080p_3 = 640, 360
@@ -76,7 +76,7 @@ end
 
 function love.update(dt)
 	input:update(dt)
-	gifcat.update(dt)
+	--gifcat.update(dt)
 	if map_edit_mode then
 		update_map_edit(dt)
 	else
@@ -142,8 +142,8 @@ function love.keypressed(key, scancode, isrepeat)
 		end
 	
 	elseif key == "f3" then
-		screenshot_clip()
-		notification = "Recording GIF..."
+		--screenshot_clip()
+		--notification = "Recording GIF..."
 
 	--remove for release
 	elseif key == "f4" then
@@ -161,9 +161,9 @@ function love.keyreleased(key)
 	if key == "f3" then
 		notification = "Finished recording GIF."
 		-- Stop writing to the gif. This finalizes the file and closes it.
-		curgif:close()
+		--curgif:close()
 		-- Set to nil so our program knows we aren't writing a gif.
-		curgif = nil
+		--curgif = nil
 	end
 end
 
@@ -174,7 +174,7 @@ end
 
 
 function love.quit()
-	gifcat.close()
+	--gifcat.close()
 end
 
 function love.threaderror(thread, errorstr)

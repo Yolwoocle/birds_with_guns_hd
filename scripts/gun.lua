@@ -42,7 +42,7 @@ function make_gun(a)
 		scattering    = a.scattering    or 0.3,
 		spread 	      = a.spread	    or pi/5, 
 		spdslow	      = a.spdslow	    or 1,
-		damge_tick    = a.damge_tick 	or .1,
+		damage_tick    = a.damage_tick 	or .1,
 		
 		scale 		  = a.scale			or 1,
 		oscale 		  = a.oscale        or 0,
@@ -114,8 +114,8 @@ function update_gun(self, dt, p)
 end
 
 function draw_gun(self, p)
-	local x = p.x + math.cos(p.rot) * p.gun_dist 
-	local y = p.y + math.sin(p.rot) * p.gun_dist 
+	local x = p.x + math.cos(p.rot) * p.gun_dist - p.ox
+	local y = p.y + math.sin(p.rot) * p.gun_dist - p.oy
 	draw_centered(p.gun.spr, x, y, p.rot, 1, p.gun.flip)
 
 	--local x = p.x + math.cos(p.rot+pi) * p.gun_dist 
@@ -160,84 +160,9 @@ function get_random_gun(diff) --TODO: gun difficulty
 	return guns[gun_name]
 end
 
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-------------------------------------------------------------------------------------------- BULLET -------------------------------------------------------------------------------------------
-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-function make_bullet(self, p, angle, spread, type, spr)
-	--/!\ THIS IS A METHOD OF GUN /!\
-	--`p`: player or entity shooting
-	local spread = spread or 0
-	local offsetangle = math.atan2(-self.spawn_y,self.spawn_x)
-	local dist = dist(self.spawn_x+p.x,self.spawn_y+p.y,p.x,p.y)
-	local scatter = random_float(-self.scattering/2,self.scattering/2)
-	local spd = (self.bullet_spd + random_pos_neg(self.offset_spd/2))
-	local oscale = random_float(0, self.oscale)
-
-	local bullet = {
-		category = self.category,
-		x = p.x, --+ math.cos(angle + offsetangle * self.flip) * dist,
-		y = p.y, --+ math.sin(angle + offsetangle * self.flip) * dist,
-		spr = spr,
-		dx = math.cos(angle+scatter+spread) * spd,
-		dy = math.sin(angle+scatter+spread) * spd,
-		sx = 1, 
-		sy = 1,
-		rot = angle+scatter+spread,
-		delete = false,
-		time_since_creation = 0,
-		damge_tick = self.damge_tick,
-
-		spdslow = self.spdslow,
-		life = self.bullet_life,
-		maxlife = self.bullet_life,
-		
-		type = self.type,
-		spr = self.spr_bullet or spr_bullet,
-		gun = self,
-
-		player = p,
-		offsetangle = offsetangle,
-		dist = dist,
-		spd = spd,
-		scatter = scatter,
-		spread = spread,
-		scale = self.scale + oscale,
-		damage = self.damage,
-		bounce =  self.bounce,
-		maxbounce = self.bounce,
-		length = {},
-		on_death = self.on_death,
-		knockback = self.knockback,
-
-		is_enemy = p.is_enemy,
-
-		speed_max = self.speed_max,
-		ptc_timer = 0,
-
-		update_option = self.update_option,
-
-		do_muzzle_flash = self.do_muzzle_flash,
-
-		w=1,--(self.scale + oscale),
-		h=1,--(self.scale + oscale),
-	}
-	if self.type ==  "bullet" then
-		bullet.draw = draw_bullet
-		bullet.update = update_bullet
-
-	elseif self.type ==  "laser" then
-		bullet.draw = draw_laser
-		bullet.update = update_laser
-		bullet.laser_length = self.laser_length
-
-		bullet.init = true
-	end
-
-	bullet.interact_map = interact_map
-
-	return bullet
-end
+------------------------------------------------------------
+-------------------------- BULLET --------------------------
+------------------------------------------------------------
 
 function init_laser(self)
 

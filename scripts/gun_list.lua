@@ -5,8 +5,8 @@ require "scripts.utility"
 guns = {
 	revolver = make_gun({
 		name = "revolver",
-		spr = spr_revolver,
-		screenkick = 4,
+		spr = spr_revolver, 
+		screenkick = 4, 
 		max_ammo = 150,
 		bullet_spd = 700,
 		cooldown = 0.2,
@@ -72,19 +72,20 @@ guns = {
 	shotgun = make_gun{
 		name = "shotgun",
 		spr = spr_shotgun,
+		max_ammo = 80,
 
 		shoot_sfx = sfx_shot_2,
 
 		nbshot = 10,
 		offset_spd = 300,
-		spdslow = .96,
+		bullet_spd = 700,
+		spdslow = .96, 
 		scattering = 1,
-		max_ammo = 80,
+		bullet_life = 0.4,
 
 		cooldown = 0.5,
 		screenkick = 1,
 		damage = 0.7,
-		bullet_life = 0.4,
 	},
 	assault_rifle = make_gun{
 		name = "assault rifle",
@@ -189,7 +190,7 @@ guns = {
 			--table.insert(zones, zone.explosion:spawn_zone( self.x, self.y))
 			table.remove(bullets, k)
 	   end
-	}),
+	}), 
 	firework_explosion = make_gun({
 		name = "firework_explosion", 
 		type = "bullet",
@@ -303,7 +304,7 @@ guns = {
 		burstdt  = .4,
 		bullet_life = 5,
 		scale = 1.5,
-	},
+	}, 
 
 	fox_revolver = make_gun({
 		name = "Fox revolver",
@@ -339,7 +340,7 @@ guns = {
 		scale = 1,
 		cooldown = 0.1,
 		make_shot = default_shoot,
-		scale = 1.5,
+		scale = 1.5, 
 	}),	
 }
 

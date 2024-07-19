@@ -5,11 +5,13 @@ require "scripts.input"
 require "scripts.gun_list"
 require "scripts.collision"
 require "scripts.constants"
+local gun_distrib = require "probability_tables.gun"
 
-function init_player(n,x,y, spr, a)
+function make_player(n,x,y, a)
 	a = a or {}
 
 	local p = {}
+	p.type = "player"
 	p.n = n
 	p.x = x or 32
 	p.y = y or 32
@@ -29,6 +31,7 @@ function init_player(n,x,y, spr, a)
 	p.is_walking = false
 	p.is_enemy = false
 
+	-- Life
 	p.life = 5
 	p.alive = true
 	p.max_life = 5
@@ -37,40 +40,58 @@ function init_player(n,x,y, spr, a)
 	p.iframes_flashing_time = 0.1
 	p.set_iframes = set_iframes
 
-	p.hit_w = 4
-	p.hit_h = 4
+	-- Reviving
 	p.revive_timer = 0
 	p.max_revive_timer = 3
 	p.revive_radius = 64
+	
+	-- Hitbox
+	p.hit_w = 4
+	p.hit_h = 4
 
-	p.spr = spr
-	p.spr_dead = spr_pigeon_dead
+	-- Collisions
+	p.is_solid = false
+
+	-- Visual information
 	p.rot = 0
 	p.looking_up = false
-	p.flip = -1
+	p.flip = 1
 	p.outline_color = (a.outline_color or COLORS_PLAYERS[n]) or white
 	p.show_tutorial = true
 	p.show_player_number = true
 
-	p.anim_sprs = nil
-	p.anim_walk = anim_duck_walk
+	-- Animation 
+	p.spr = a.spr_idle or spr_pigeon_idle
+	p.spr_idle = a.spr_idle or spr_pigeon_idle
+	p.spr_jump = a.spr_jump or spr_pigeon_jump
+	p.spr_dead = a.spr_dead or spr_pigeon_dead
 	p.anim_idle = anim_duck_walk --anim_pigeon_idle
+	p.anim_sprs = p.anim_idle
 	p.anim_frame = 0
 	p.anim_frame_len = .05 --70 ms
 	p.animate = animate_player
+	p.timer = 0
 
+	-- Animation > bounce + squash'&'stretch
 	p.bounce_a = 0
 	p.bounce_y = 0
 	p.bounce_squash = 1
+	p.reset_squash = reset_squash
 
+	-- Particles
+	p.ptc_timer = 0
+
+	-- Guns
 	p.gun = nil
 	p.gun_dist = 14
-	p.guns = {
-		copy(guns.revolver), 
-		copy(guns.machinegun),
-	}
+	p.guns = {}
+	for k,v in pairs(gun_distrib) do 
+		table.insert(p.guns, copy(guns[k]))
+	end
+	p.gun = p.guns[1]
 	p.gun_n = 1
-	--methods
+
+	-- Methods
 	p.set_gun = ply_set_gun
 	p.update_gun = ply_update_gun
 	p.set_gun = ply_get_gun
@@ -78,26 +99,59 @@ function init_player(n,x,y, spr, a)
 	p.kill = kill_player
 	p.revive = revive_player
 
+	-- Pickups
 	p.get_pickups = player_get_pickups
 	p.pickup_cd = 0
 	p.max_pickup_cd = 1
 
-	p.get_nearest_enemy = get_nearest_enemy
-	p.get_autoaim = get_autoaim
-	p.autoaim_max_dist = 360
-	p.last_autoaim_dist = math.huge
+	-- Cursor
 	p.spr_cu = sprs_cursor[n]
 	p.cu_x = x
 	p.cu_y = y+10
 	p.dircux = 0
 	p.dircuy = 0
-	
+	p.show_cu = true	
+	--- Cursor methods
 	p.update_cursor = player_update_cursor
 	p.draw_cursor = player_draw_cursor
+	
+	-- Autoaiming
+	p.autoaim_max_dist = 360
+	p.last_autoaim_dist = math.huge
+	--- Autoaiming methods
+	p.get_nearest_enemy = get_nearest_enemy
+	p.get_autoaim = get_autoaim
 
-	p.apply_movement = function(self, dt)
-		self.x = self.x + self.dx * dt
-		self.y = self.y + self.dy * dt
+	p.init = function(self)
+		collision:object_join_world(self)
+	end
+
+	p.move = function(self, dt)
+		self.is_walking = false
+		
+		local dir_x, dir_y = input:get_movement_axis(self.n)
+		self.walk_dir = {x=dir_x, y=dir_y}
+
+		if not (dir_x == 0 and dir_y == 0) then
+			self.is_walking = true
+		end
+
+		self.dx = self.dx + (dir_x * self.speed)
+		self.dy = self.dy + (dir_y * self.speed)
+		
+		-- Idk why this friction works but thanks stackoverflow
+		local fricratio = 1 / (1 + dt * self.friction);--FIXME:dt ply
+		self.dx = self.dx * fricratio
+		self.dy = self.dy * fricratio 
+
+		local goal_x = self.x + self.dx*dt
+		local goal_y = self.y + self.dy*dt
+		local actual_x, actual_y, cols, len = collision:move(self, goal_x, goal_y)
+		
+		-- Apply movement
+		-- Check if the collision is a tile
+		self.x = actual_x--self.x + self.dx * dt
+		self.y = actual_y--self.y + self.dy * dt
 	end
 
 	p.aim = function(self, dt)
@@ -108,6 +162,7 @@ function init_player(n,x,y, spr, a)
 		self.cu_y = mmy or self.cu_x
 
 		self.rot = math.atan2(mmy - self.y, mmx - self.x)
+		self.rot = self.rot % pi2
 		self.shoot = false
 
 		-- Firing
@@ -143,7 +198,7 @@ function init_player(n,x,y, spr, a)
 					self.gun.dt = 0
 					
 				end
-			elseif input:button_down("fire", self.n,self.input_device) and self.gun.charge then
+			elseif input:button_down("fire", self.n) and self.gun.charge then
 				self.gun.dt = math.min(self.gun.dt+dt,self.gun.charge_time)
 			end
 		end
@@ -173,13 +228,12 @@ function init_player(n,x,y, spr, a)
 	end
 
 	p.update = function(self, dt)
+		self.timer = self.timer + dt
+		self.ptc_timer = self.ptc_timer - dt
+
 		if self.alive then 
-			player_movement(self,dt)
-			collide_object(self, 0.01)
+			self:move(dt)
 			--collision_response(self, map)
-			
-			-- Apply movement 
-			self:apply_movement(dt)
 
 			-- Aiming
 			self:update_cursor(dt)
@@ -238,6 +292,7 @@ function init_player(n,x,y, spr, a)
 		if self.life <= 0 then
 			self:kill()
 		end
+		
 	end
 
 	p.draw = function(self)
@@ -253,7 +308,7 @@ function init_player(n,x,y, spr, a)
 		-- Draw player
 		if is_drawn then
 			if self.looking_up then  self.gun:draw(self)  end
-			draw_centered(self.spr, self.x-self.ox, self.y-self.oy, 0, self.sx*self.gun.flip, self.sy)
+			draw_centered(self.spr, self.x-self.ox, self.y-self.oy, 0, self.sx*self.flip, self.sy)
 			if not self.looking_up then  self.gun:draw(self)  end
 		end
 		love.graphics.setColor(1,1,1) 
@@ -297,9 +352,6 @@ function init_player(n,x,y, spr, a)
 			draw_centered(sprs_icon_ply[self.n], x, y)
 		end
 
-		-- Cursor is *always* above everything else
-		self:draw_cursor()
-
 		-- Tutorial (TEMPORARY)
 		local x = self.x
 		local y = self.y+oy+6
@@ -322,12 +374,7 @@ function init_player(n,x,y, spr, a)
 		end
 	end
 
-
-	p.show_cu = true	
-	p.anim_sprs = p.anim_idle
-
-	p.gun = p.guns[1]
-
+	p:init()
 	return p
 end
 
@@ -341,26 +388,6 @@ function player_draw_cursor(self)
 		draw_centered(spr, self.cu_x, self.cu_y)
 	end
 end
-
-function player_movement(self, dt)
-	self.is_walking = false
-	
-	local dir_x, dir_y = input:get_movement_axis(self.n)
-	self.walk_dir = {x=dir_x, y=dir_y}
-
-	if not (dir_x == 0 and dir_y == 0) then
-		self.is_walking = true
-	end
-
-	self.dx = self.dx + (dir_x * self.speed)
-	self.dy = self.dy + (dir_y * self.speed)
-	
-	-- Idk why this friction works but thanks stackoverflow
-	local fricratio = 1 / (1 + dt * self.friction);--FIXME:dt ply
-	self.dx = self.dx * fricratio
-	self.dy = self.dy * fricratio 
-end
-
 
 function get_autoaim(self)
 	local ne = self:get_nearest_enemy()
@@ -392,11 +419,15 @@ function get_autoaim(self)
 end
 
 function animate_player(self)
-	-- Flip player if looking left (why is flip in player.gun but whatever)
-	self.flip = self.gun.flip
+	-- Flip player if looking left
+	local flip = (self.rot - pi/2) % pi2 <= pi
+	self.flip = ternary(flip, -1, 1)
+	self.gun.flip = self.flip
+	
+	--[[
 	self.anim_sprs = self.anim_idle
 	self.spr = self.anim_idle[1]
-	
+
 	if self.is_walking then
 		self.anim_sprs = self.anim_walk
 		-- Walk anim
@@ -411,24 +442,66 @@ function animate_player(self)
 	else
 		self.anim_sprs = self.anim_idle
 	end	
+	--]]
 
 	-- Bounce :3
-	if self.is_walking then
-		local dt = love.timer.getDelta()
-		self.bounce_a = self.bounce_a + dt*15
-		local sin_a = math.abs(math.sin(self.bounce_a))
-		self.bounce_y = sin_a * 12
-		self.oy = self.bounce_y - 5
-		
-		self.bounce_squash = 1 - (sin_a-0.5)*0.15
+	local dt = love.timer.getDelta()
+	--- Compute bounce_a
+	local bounce_speed = 15
+	local bounce_height = 8
+	local squash_amount = 0.17
 
+	self.bounce_a = self.bounce_a + bounce_speed * dt
+
+	if self.is_walking then
+		self.bounce_a = self.bounce_a % pi
+	end
+
+	if self.bounce_a < pi + 0.001 then
+		--- Compute bounce height
+		local sin_a = math.sin(self.bounce_a)
+		self.bounce_y = math.abs(sin_a) * bounce_height
+		self.oy = self.bounce_y 
+		
+		--- Bounce squash
+		local speed_a = math.cos(self.bounce_a) --cos is the derivative, aka rate of change of sin
+		self.bounce_squash = speed_a*squash_amount + 1
 		self.sx = self.bounce_squash
 		self.sy = 1/self.bounce_squash
-	else 
+
+		--- Jump sprite
+		self.spr = self.spr_idle
+		if self.is_walking then
+			local below_threshold = (self.bounce_y <= 6)
+			self.spr = ternary(below_threshold, self.spr_idle, self.spr_jump)
+		end
+	else
 		self.sx = 1
 		self.sy = 1
 		self.oy = 0
+		self.bounce_a = pi
 	end
+
+	-- Particles
+	--[[
+	if self.is_walking and self.ptc_timer < 0 then
+		local rx, ry = random_neighbor(4), random_neighbor(4)
+		local rr = 4 + love.math.random()*5
+		particles:make_circ(self.x+rx, self.y+ry+16, rr, white, 0,0, nil, 0.99)
+		self.ptc_timer = self.ptc_timer + 0.1
+	end
+	--]]  
+end
+
+function reset_squash(self)
+	self.sx = 1
+	self.sy = 1
+	self.oy = 0
+	self.bounce_a = pi
+end
+
+function set_iframes(frames)
+	self.iframes_timer = frames
 end
 
 function damage_player(self, dmg)
@@ -437,7 +510,7 @@ function damage_player(self, dmg)
 		camera:shake(5)
 		
 		self.life = self.life - dmg
-		self.iframes_timer = self.iframes
+		self:set_iframes(self.iframes)
 	end
 end
 
@@ -450,6 +523,8 @@ function revive_player(self, life)
 	life = life or self.max_life
 	self.life = life
 	self.alive = true
+	
+	self.show_cu = true
 end
 
 function ply_set_gun(self, gun)

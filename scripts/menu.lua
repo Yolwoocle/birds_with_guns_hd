@@ -16,8 +16,8 @@ function init_menu_manager()
 	local m = {}
 	m.menus = {
 		title = make_menu({
-			{"new super birds with guns bros 2 HD ultra 3D"},
-			{"featuring dante from devil may cry series"},
+			{spr_logo, type="image"},
+			{""},
 			{""},
 			{"1 PLAYER", function() 
 				menu_manager:resume()
@@ -98,7 +98,7 @@ function init_menu_manager()
 	m.curmenu = m.menus.title
 
 	m.update = function(self, dt)
-		if self.curmenu then  self.curmenu:update(dt)  end
+		if self.curmenu then   self.curmenu:update(dt)   end
 
 		-- Update current menu
 		if self.curmenu ~= "none" then
@@ -135,7 +135,7 @@ function init_menu_manager()
 			self:pause()
 		end
 	end
-
+	
 	m.pause = function(self)
 		self.curmenu_name = "pause"
 		mouse_visible = true
@@ -167,17 +167,28 @@ function make_menu(items, custom_bg)
 	local height_of_items = (#items - 1) * m.spacing_items --classic fence post problem
 	local y = floor((window_h - height_of_items)/ 2)
 	for i=1, #items do
-		m.items[i] = make_menu_item(i, x, y, unpack(items[i]))
+
+		-- Create items 
+		local item_args = items[i]
+		local item_type = items[i].type
+		
+		if item_type then
+			if item_type == "image" then
+				m.items[i] = make_menu_item_image(i, x, y, unpack(items[i]))
+			else
+				m.items[i] = make_menu_item_text(i, x, y, unpack(items[i]))
+			end
+		else
+			-- If the type isn't specified, default to text 
+			m.items[i] = make_menu_item_text(i, x, y, unpack(items[i]))
+		end
 		y = y + m.spacing_items
+	
 	end
 
 	m.update = function(self, dt)
-		local btn_fire = input:button_pressed("fire", 1)
-		
 		for i,item in ipairs(self.items) do
-			if item:touches_mouse() and btn_fire then
-				item:on_click()
-			end
+			item:update()
 		end
 	end
 
@@ -197,17 +208,29 @@ end
 
 ------------------------
 
-function make_menu_item(n, x, y, text, on_click, display_val, is_hoverable)
-	font = font or font_default
+function make_menu_item(n,x,y)
 	local it = {}
-	it.n = n
+	it.n = n 
+	it.x = x
+	it.y = y
+
+	it.update = function(self)	
+	end
+	it.draw = function(self)
+	end
+
+	return it
+end
+
+function make_menu_item_text(n, x, y, text, on_click, display_val, is_hoverable)
+	text = text or ""
+	font = font or font_default
+
+	local it = make_menu_item(n, x, y)
 	it.text = text
 	it.caption_text = text
 	it.display_val = display_val
 	it.text_obj = love.graphics.newText(font, text)
-
-	it.x = x
-	it.y = y
 
 	it.set_text = function(self, newtext)
 		self.text = newtext
@@ -240,6 +263,14 @@ function make_menu_item(n, x, y, text, on_click, display_val, is_hoverable)
 	end
 	it.is_selected = false
 
+	it.update = function(self)
+		local btn_fire = input:button_pressed("fire")
+
+		if self:touches_mouse() and btn_fire then
+			self:on_click()
+		end
+	end
+
 	it.draw = function(self)
 		local text = self.text
 		if self.is_hoverable then
@@ -267,3 +298,22 @@ function make_menu_item(n, x, y, text, on_click, display_val, is_hoverable)
 end
 
 ------
+
+function make_menu_item_image(n, x, y, spr)
+	spr = spr or spr_missing
+	
+	local it = make_menu_item(n, x, y)
+	it.spr = spr
+	it.width = spr:getWidth()
+	it.height = spr:getHeight()
+
+	it.update = function(self)
+
+	end
+
+	it.draw = function(self)
+		draw_centered(self.spr, self.x, self.y)
+	end
+
+	return it
+end

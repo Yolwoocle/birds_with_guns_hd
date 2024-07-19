@@ -12,7 +12,7 @@ function make_game()
 		begin_2p_kb = begin_game_2p_kb,
 		begin_3p = begin_game_3p,
 		begin_4p = begin_game_4p,
-		------
+		-->  
 
 		update = update_game,
         draw = draw_game,
@@ -30,12 +30,9 @@ function init_game(self)
 	_shot_ = {}
 	sp_mark = {}
 
-	camera = init_camera()
-	camera:set_target(0, MAIN_PATH_PIXEL_Y)
-	camera.lock_x = true
-	camera.lock_y = true
-	camera.fake_y = MAIN_PATH_PIXEL_Y 
+	camera = make_camera()
 	
+	collision = make_collision_manager()
 	map = init_map(600, 300)
 
 	zones = {}
@@ -47,7 +44,7 @@ function init_game(self)
 	end 
 
 	pickups = make_pickups() 
-
+	
 	bullets = {}
 	_shot = {}
 	
@@ -58,6 +55,8 @@ function init_game(self)
 	g = 0
 
 	players = {}
+
+	debug_mode = false
 end
 
 function begin_game_1p(self)
@@ -84,6 +83,7 @@ function game_create_new_level(self)
 
 	local x = 84
 	local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
+	pickups:spawn("modifier", math.random(1,3), x+64, y+32)
 
 	for i,p in ipairs(players) do
 		p.x = x + 32*(i-1)
@@ -99,17 +99,35 @@ function begin_game(self, nb_ply)
 	number_of_players = nb_ply or 1
 
 	players = {}
+	--TODO: move this to some player_list.lua file
+	local removeme_bird_presets = {
+		[1] = {
+			spr_idle = spr_pigeon_idle,
+			spr_jump = spr_pigeon_jump,
+			spr_dead = spr_pigeon_dead,
+		},
+		[2] = {
+			spr_idle = spr_duck_idle,
+			spr_jump = spr_duck_jump,
+			spr_dead = spr_duck_dead,
+		},
+		[3] = {
+			spr_idle = spr_penguin,
+			spr_jump = spr_penguin,
+			spr_dead = spr_penguin,
+		},
+		[4] = {
+			spr_idle = spr_crow,
+			spr_jump = spr_crow,
+			spr_dead = spr_crow,
+		},
+	}
 	for i = 1,number_of_players do
-		local nbcontroller = 1
-		
-		birds_spr = {anim_pigeon_walk, anim_duck_walk, {spr_penguin}, anim_duck_walk,}
-		
 		local x = 84+i*32
 		local y = MAIN_PATH_PIXEL_Y+ROOM_PIXEL_H/2
-		local ply = init_player(i, x, y, birds_spr[i])
-		ply.anim_walk = birds_spr[i]
-		ply.anim_idle = birds_spr[i]
-		
+		local ply = make_player(i, x, y, removeme_bird_presets[i])
+		print("create", ply)
+
 		table.insert(players, ply)
 	end
 --	camera_manager = CameraManager:new(camera, players)
@@ -250,16 +268,33 @@ function draw_game(self)
 	for _,p in pairs(players) do
 		p:draw_hud()
 	end
+	for _,p in pairs(players) do
+		-- sCursor is *always* above everything else
+		p:draw_cursor()
+	end
 	--hud:draw()
 
 	-- Debug
 	debug_y = 0
-	debug_print("FPS. "..tostr(love.timer.getFPS()))
-	debug_print(notification)
+	if debug_mode then
+		-- collision boxes
+		local items, len = collision.world:getItems()
+		for k,v in pairs(items) do
+			local x,y,w,h = collision.world:getRect(v)
+			rect_color("fill",x,y,w,h, {1,0,0, 0.5})
+		end 
+		--info
+		debug_print("FPS. "..tostr(love.timer.getFPS()))
+		debug_print(notification)
+		if players[1] then debug_print(players[1].bounce_a) end
+		debug_print('Memory used (in kB): ' .. collectgarbage('count'))
+	end
 end
 
 function game_keypressed(self, key, scancode)
-	if key == "m" then
+	if key == "f12" then
+		debug_mode = not debug_mode
+	elseif key == "m" then
 		if love.keyboard.isDown("lctrl") then
 			set_setting("sound_on", not get_setting("sound_on"))
 			notification = "Sound on: "..tostring(settings.sound_on)

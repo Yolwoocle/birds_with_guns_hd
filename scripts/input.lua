@@ -10,6 +10,9 @@ local function aim_controller(self, player)
 	
 end
 
+BUTTONS = {
+	'left', 'right', 'up', 'down', 'fire', 'alt', 'middle'
+}
 SCHEME_P1_REGULAR = {
 	type = "keyboard",
 	left  = {"a", "left"},
@@ -55,19 +58,63 @@ SCHEME_CONTROLLER = {
 ------ INPUT USER ------
 ------------------------ 
 
-local function make_input_user(type, aim_method, keybinds)
-	return {
-		type = type,
-		aim_method = aim_method,
-		keybinds = keybinds,
-	}
+local function make_input_user(n, type, aim_method, keybinds)
+	local user = {}
+	user.n = n
+	user.type = type
+	user.aim_method = aim_method
+	user.keybinds = keybinds 
+	
+	user.button_states = {}
+	for _,v in pairs(BUTTONS) do
+		user.button_states[v] = 0
+	end
+
+	user.button_down = function(self, btn)
+		error("button_down not implemented")
+	end
+
+	user.update_button_states = function(self)
+		for button, state in pairs(self.button_states) do
+			-- 0: Button not down
+			-- 1: Button just pressed
+			-- 2: Button down
+			-- 3: Button just released
+			if input:button_down(button) then
+				if state == 0 then 
+					self:set_button_state(button, 1)
+				elseif state == 1 then 
+					self:set_button_state(button, 2)
+				end
+			else
+				if state == 1 or state == 2 then 
+					self:set_button_state(button, 3)
+				elseif state == 3 then
+					self:set_button_state(button, 0)
+				end
+			end
+		end
+	end
+
+	user.get_button_state = function(self, btn)
+		return self.button_states[btn]
+	end
+	user.set_button_state = function(self, btn, val)
+		self.button_states[btn] = val
+	end
+
+	user.get_keybinds = function(self, btn)
+		return self.keybinds[btn]
+	end
+
+	return user
 end
 
 ---- Keyboard ----
 
-local function make_kb_input_user(keybinds, aim_method)
+local function make_kb_input_user(n, keybinds, aim_method)
 	aim_method = aim_method or "keyboard"
-	local ip = make_input_user("keyboard", aim_method, keybinds)
+	local ip = make_input_user(n, "keyboard", aim_method, keybinds)
 
 	ip.get_movement_axis = function(self)
 		local x, y = 0, 0
@@ -79,9 +126,9 @@ local function make_kb_input_user(keybinds, aim_method)
 		return x, y
 	end
 
-	ip.button_down = function(self, cmd)
-		local keys = self.keybinds[cmd]
-		for _,k in pairs(keys) do
+	ip.button_down = function(self, btn)
+		local keys = self:get_keybinds(btn)
+		for _,k in pairs(keys) do 
 			if love.keyboard.isScancodeDown(k) then
 				return true
 			end 
@@ -102,60 +149,62 @@ local function make_kb_input_user(keybinds, aim_method)
 	return ip
 end
 
---------------------------
------- INPUT PLAYER ------
---------------------------
+---------------------------
+------ INPUT MANAGER ------
+---------------------------
 
 function make_input_manager()
 	local i = {}
 	i.init = function(self)
 		self:init_users()
-		self:init_last_button_state_table()
---		self:init_joystickbinds()
-	end
-
-	i.update = function(self)
+		--self:init_joystickbinds()
 	end
 
 	i.init_users = function(self) 
 		self.users = {
-			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "mouse"),
-			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
-			[3] = make_kb_input_user(SCHEME_CONTROLLER),
-			[4] = make_kb_input_user(SCHEME_CONTROLLER),
+			[1] = make_kb_input_user(1, SCHEME_P1_SPLIT, "mouse"),
+			[2] = make_kb_input_user(2, SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(3, SCHEME_P1_REGULAR),--SCHEME_CONTROLLER),
+			[4] = make_kb_input_user(4, SCHEME_P1_REGULAR),--SCHEME_CONTROLLER),
 		}
+	end
+
+	i.update = function(self)
+		for i,user in pairs(self.users) do
+			user:update_button_states()
+		end
 	end
 
 	i.init_users_1p = function(self)
 		self.users = {
-			[1] = make_kb_input_user(SCHEME_P1_REGULAR, "mouse"),
+			[1] = make_kb_input_user(1, SCHEME_P1_REGULAR, "mouse"),
 		}
 	end
 	i.init_users_2p_mouse = function(self)
 		self.users = {
-			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "mouse"),
-			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[1] = make_kb_input_user(1, SCHEME_P1_SPLIT, "mouse"),
+			[2] = make_kb_input_user(2, SCHEME_P2_SPLIT, "keyboard"),
 		}
 	end
 	i.init_users_2p_kb = function(self)
 		self.users = {
-			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
-			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[1] = make_kb_input_user(1, SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(2, SCHEME_P2_SPLIT, "keyboard"),
 		}
 	end
 	i.init_users_3p = function(self)
 		self.users = {
-			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
-			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
-			[3] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[1] = make_kb_input_user(1, SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(2, SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(3, SCHEME_P2_SPLIT, "keyboard"),
 		}
 	end
 	i.init_users_4p = function(self)
 		self.users = {
-			[1] = make_kb_input_user(SCHEME_P1_SPLIT, "keyboard"),
-			[2] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
-			[3] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
-			[4] = make_kb_input_user(SCHEME_P2_SPLIT, "keyboard"),
+			[1] = make_kb_input_user(1, SCHEME_P1_SPLIT, "keyboard"),
+			[2] = make_kb_input_user(2, SCHEME_P2_SPLIT, "keyboard"),
+			[3] = make_kb_input_user(3, SCHEME_P2_SPLIT, "keyboard"),
+			[4] = make_kb_input_user(4, SCHEME_P2_SPLIT, "keyboard"),
 		}
 	end
 
@@ -176,40 +225,22 @@ function make_input_manager()
 		return self:get_user(n).type
 	end
 
-	i.init_last_button_state_table = function(self)
-		self.last_button_state = {}
-		for n=1,4 do
-			self.last_button_state[n] = {}
-			for key,_ in pairs(self:get_keybinds(n)) do
-				self.last_button_state[n][key] = false
-			end 
-		end
-	end
-
-	i.button_down = function(self, cmd, n)
+	i.button_down = function(self, btn, n)
 		n = n or 1
 
 		-- Mouse 
-		if cmd == "fire" 	and n == 1 and love.mouse.isDown(1) then  return true  end
-		if cmd == "alt"  	and n == 1 and love.mouse.isDown(2) then  return true  end
-		if cmd == "middle"  and n == 1 and love.mouse.isDown(3) then  return true  end
+		if btn == "fire" 	and n == 1 and love.mouse.isDown(1) then  return true  end
+		if btn == "alt"  	and n == 1 and love.mouse.isDown(2) then  return true  end
+		if btn == "middle"  and n == 1 and love.mouse.isDown(3) then  return true  end
 
-		return self:get_user(n):button_down(cmd)
+		return self:get_user(n):button_down(btn)
 	end
 
-	i.button_pressed = function(self, cmd, n)
+	i.button_pressed = function(self, btn, n)
 		n = n or 1
-		local btnd = self:button_down(cmd, n)
-		local last_btnd = self.last_button_state[n][cmd]
-		if btnd then 
-			if not last_btnd then 
-				self.last_button_state[n][cmd] = true
-				return true 
-			end
-		else
-			self.last_button_state[n][cmd] = false
-		end
-		return false
+		
+		local btnstate = self:get_user(n):get_button_state(btn)
+		return (btnstate == 1)
 	end
 
 	i.get_movement_axis = function(self, n)
@@ -290,16 +321,16 @@ function button_down(command, user_n, input_device)
 	end
 end
 
-function button_pressed(cmd, n, input_device)
-	local btnd = button_down(cmd, n, input_device)
-	local last_btnd = button_last_state[cmd][n]
+function button_pressed(btn, n, input_device)
+	local btnd = button_down(btn, n, input_device)
+	local last_btnd = button_last_state[btn][n]
 	if btnd then 
 		if not last_btnd then
-			button_last_state[cmd][n] = true
+			button_last_state[btn][n] = true
 			return true 
 		end
 	else
-		button_last_state[cmd][n] = false
+		button_last_state[btn][n] = false
 	end
 	return false
 end

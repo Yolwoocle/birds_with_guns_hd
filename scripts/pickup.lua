@@ -125,6 +125,5 @@ end
 function draw_pickups(self)
 	for i,pick in ipairs(self.table) do
 		draw_centered(pick.spr, pick.x, pick.y)
-		love.graphics.print(pick.q , pick.x, pick.y)
 	end
 end

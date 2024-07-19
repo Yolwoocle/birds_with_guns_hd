@@ -18,6 +18,8 @@ function make_mob(a)
 		spd 	= a.spd	or 10,
 		x       = a.x	or 30,
 		y       = a.y   or 30,
+		ox = 0,
+		oy = 0,
 		w       = a.w   or 6,
 		h       = a.h   or 6,
 		dx      = a.dx  or 0,
